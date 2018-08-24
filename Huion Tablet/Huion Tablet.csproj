@@ -107,4 +107,11 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(ProjectDir)\other" "$(TargetDir)" /d /e /h /i /k /r /s /y /q /c</PostBuildEvent>
+  </PropertyGroup>
 </Project>
