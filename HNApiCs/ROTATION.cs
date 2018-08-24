@@ -6,10 +6,10 @@
 
 namespace Huion
 {
-  public struct ROTATION
-  {
-    public int roPitch;
-    public int roRoll;
-    public int roYaw;
-  }
+    public struct ROTATION
+    {
+        public int roPitch;
+        public int roRoll;
+        public int roYaw;
+    }
 }

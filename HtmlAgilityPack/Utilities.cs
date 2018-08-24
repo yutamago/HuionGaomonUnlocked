@@ -8,13 +8,14 @@ using System.Collections.Generic;
 
 namespace HtmlAgilityPack
 {
-  internal static class Utilities
-  {
-    public static TValue GetDictionaryValueOrNull<TKey, TValue>(Dictionary<TKey, TValue> dict, TKey key) where TKey : class
+    internal static class Utilities
     {
-      if (!dict.ContainsKey(key))
-        return default (TValue);
-      return dict[key];
+        public static TValue GetDictionaryValueOrNull<TKey, TValue>(Dictionary<TKey, TValue> dict, TKey key)
+            where TKey : class
+        {
+            if (!dict.ContainsKey(key))
+                return default(TValue);
+            return dict[key];
+        }
     }
-  }
 }

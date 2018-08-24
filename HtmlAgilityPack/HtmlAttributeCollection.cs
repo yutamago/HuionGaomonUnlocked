@@ -10,239 +10,228 @@ using System.Collections.Generic;
 
 namespace HtmlAgilityPack
 {
-  public class HtmlAttributeCollection : IList<HtmlAttribute>, ICollection<HtmlAttribute>, IEnumerable<HtmlAttribute>, IEnumerable
-  {
-    internal Dictionary<string, HtmlAttribute> Hashitems = new Dictionary<string, HtmlAttribute>();
-    private List<HtmlAttribute> items = new List<HtmlAttribute>();
-    private HtmlNode _ownernode;
-
-    internal HtmlAttributeCollection(HtmlNode ownernode)
+    public class HtmlAttributeCollection : IList<HtmlAttribute>, ICollection<HtmlAttribute>, IEnumerable<HtmlAttribute>,
+        IEnumerable
     {
-      this._ownernode = ownernode;
-    }
+        private HtmlNode _ownernode;
+        internal Dictionary<string, HtmlAttribute> Hashitems = new Dictionary<string, HtmlAttribute>();
+        private List<HtmlAttribute> items = new List<HtmlAttribute>();
 
-    public HtmlAttribute this[string name]
-    {
-      get
-      {
-        if (name == null)
-          throw new ArgumentNullException(nameof (name));
-        HtmlAttribute htmlAttribute;
-        if (!this.Hashitems.TryGetValue(name.ToLower(), out htmlAttribute))
-          return (HtmlAttribute) null;
-        return htmlAttribute;
-      }
-      set
-      {
-        this.Append(value);
-      }
-    }
+        internal HtmlAttributeCollection(HtmlNode ownernode)
+        {
+            this._ownernode = ownernode;
+        }
 
-    public int Count
-    {
-      get
-      {
-        return this.items.Count;
-      }
-    }
+        public HtmlAttribute this[string name]
+        {
+            get
+            {
+                if (name == null)
+                    throw new ArgumentNullException(nameof(name));
+                HtmlAttribute htmlAttribute;
+                if (!this.Hashitems.TryGetValue(name.ToLower(), out htmlAttribute))
+                    return (HtmlAttribute) null;
+                return htmlAttribute;
+            }
+            set { this.Append(value); }
+        }
 
-    public bool IsReadOnly
-    {
-      get
-      {
-        return false;
-      }
-    }
+        public int Count
+        {
+            get { return this.items.Count; }
+        }
 
-    public HtmlAttribute this[int index]
-    {
-      get
-      {
-        return this.items[index];
-      }
-      set
-      {
-        this.items[index] = value;
-      }
-    }
+        public bool IsReadOnly
+        {
+            get { return false; }
+        }
 
-    public void Add(HtmlAttribute item)
-    {
-      this.Append(item);
-    }
+        public HtmlAttribute this[int index]
+        {
+            get { return this.items[index]; }
+            set { this.items[index] = value; }
+        }
 
-    void ICollection<HtmlAttribute>.Clear()
-    {
-      this.items.Clear();
-    }
+        public void Add(HtmlAttribute item)
+        {
+            this.Append(item);
+        }
 
-    public bool Contains(HtmlAttribute item)
-    {
-      return this.items.Contains(item);
-    }
+        void ICollection<HtmlAttribute>.Clear()
+        {
+            this.items.Clear();
+        }
 
-    public void CopyTo(HtmlAttribute[] array, int arrayIndex)
-    {
-      this.items.CopyTo(array, arrayIndex);
-    }
+        public bool Contains(HtmlAttribute item)
+        {
+            return this.items.Contains(item);
+        }
 
-    IEnumerator<HtmlAttribute> IEnumerable<HtmlAttribute>.GetEnumerator()
-    {
-      return (IEnumerator<HtmlAttribute>) this.items.GetEnumerator();
-    }
+        public void CopyTo(HtmlAttribute[] array, int arrayIndex)
+        {
+            this.items.CopyTo(array, arrayIndex);
+        }
 
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-      return (IEnumerator) this.items.GetEnumerator();
-    }
+        IEnumerator<HtmlAttribute> IEnumerable<HtmlAttribute>.GetEnumerator()
+        {
+            return (IEnumerator<HtmlAttribute>) this.items.GetEnumerator();
+        }
 
-    public int IndexOf(HtmlAttribute item)
-    {
-      return this.items.IndexOf(item);
-    }
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return (IEnumerator) this.items.GetEnumerator();
+        }
 
-    public void Insert(int index, HtmlAttribute item)
-    {
-      if (item == null)
-        throw new ArgumentNullException(nameof (item));
-      this.Hashitems[item.Name] = item;
-      item._ownernode = this._ownernode;
-      this.items.Insert(index, item);
-      this._ownernode._innerchanged = true;
-      this._ownernode._outerchanged = true;
-    }
+        public int IndexOf(HtmlAttribute item)
+        {
+            return this.items.IndexOf(item);
+        }
 
-    bool ICollection<HtmlAttribute>.Remove(HtmlAttribute item)
-    {
-      return this.items.Remove(item);
-    }
+        public void Insert(int index, HtmlAttribute item)
+        {
+            if (item == null)
+                throw new ArgumentNullException(nameof(item));
+            this.Hashitems[item.Name] = item;
+            item._ownernode = this._ownernode;
+            this.items.Insert(index, item);
+            this._ownernode._innerchanged = true;
+            this._ownernode._outerchanged = true;
+        }
 
-    public void RemoveAt(int index)
-    {
-      this.Hashitems.Remove(this.items[index].Name);
-      this.items.RemoveAt(index);
-      this._ownernode._innerchanged = true;
-      this._ownernode._outerchanged = true;
-    }
+        bool ICollection<HtmlAttribute>.Remove(HtmlAttribute item)
+        {
+            return this.items.Remove(item);
+        }
 
-    public void Add(string name, string value)
-    {
-      this.Append(name, value);
-    }
+        public void RemoveAt(int index)
+        {
+            this.Hashitems.Remove(this.items[index].Name);
+            this.items.RemoveAt(index);
+            this._ownernode._innerchanged = true;
+            this._ownernode._outerchanged = true;
+        }
 
-    public HtmlAttribute Append(HtmlAttribute newAttribute)
-    {
-      if (newAttribute == null)
-        throw new ArgumentNullException(nameof (newAttribute));
-      this.Hashitems[newAttribute.Name] = newAttribute;
-      newAttribute._ownernode = this._ownernode;
-      this.items.Add(newAttribute);
-      this._ownernode._innerchanged = true;
-      this._ownernode._outerchanged = true;
-      return newAttribute;
-    }
+        public void Add(string name, string value)
+        {
+            this.Append(name, value);
+        }
 
-    public HtmlAttribute Append(string name)
-    {
-      return this.Append(this._ownernode._ownerdocument.CreateAttribute(name));
-    }
+        public HtmlAttribute Append(HtmlAttribute newAttribute)
+        {
+            if (newAttribute == null)
+                throw new ArgumentNullException(nameof(newAttribute));
+            this.Hashitems[newAttribute.Name] = newAttribute;
+            newAttribute._ownernode = this._ownernode;
+            this.items.Add(newAttribute);
+            this._ownernode._innerchanged = true;
+            this._ownernode._outerchanged = true;
+            return newAttribute;
+        }
 
-    public HtmlAttribute Append(string name, string value)
-    {
-      return this.Append(this._ownernode._ownerdocument.CreateAttribute(name, value));
-    }
+        public HtmlAttribute Append(string name)
+        {
+            return this.Append(this._ownernode._ownerdocument.CreateAttribute(name));
+        }
 
-    public bool Contains(string name)
-    {
-      for (int index = 0; index < this.items.Count; ++index)
-      {
-        if (this.items[index].Name.Equals(name.ToLower()))
-          return true;
-      }
-      return false;
-    }
+        public HtmlAttribute Append(string name, string value)
+        {
+            return this.Append(this._ownernode._ownerdocument.CreateAttribute(name, value));
+        }
 
-    public HtmlAttribute Prepend(HtmlAttribute newAttribute)
-    {
-      this.Insert(0, newAttribute);
-      return newAttribute;
-    }
+        public bool Contains(string name)
+        {
+            for (int index = 0; index < this.items.Count; ++index)
+            {
+                if (this.items[index].Name.Equals(name.ToLower()))
+                    return true;
+            }
 
-    public void Remove(HtmlAttribute attribute)
-    {
-      if (attribute == null)
-        throw new ArgumentNullException(nameof (attribute));
-      int attributeIndex = this.GetAttributeIndex(attribute);
-      if (attributeIndex == -1)
-        throw new IndexOutOfRangeException();
-      this.RemoveAt(attributeIndex);
-    }
+            return false;
+        }
 
-    public void Remove(string name)
-    {
-      if (name == null)
-        throw new ArgumentNullException(nameof (name));
-      string lower = name.ToLower();
-      for (int index = 0; index < this.items.Count; ++index)
-      {
-        if (this.items[index].Name == lower)
-          this.RemoveAt(index);
-      }
-    }
+        public HtmlAttribute Prepend(HtmlAttribute newAttribute)
+        {
+            this.Insert(0, newAttribute);
+            return newAttribute;
+        }
 
-    public void RemoveAll()
-    {
-      this.Hashitems.Clear();
-      this.items.Clear();
-      this._ownernode._innerchanged = true;
-      this._ownernode._outerchanged = true;
-    }
+        public void Remove(HtmlAttribute attribute)
+        {
+            if (attribute == null)
+                throw new ArgumentNullException(nameof(attribute));
+            int attributeIndex = this.GetAttributeIndex(attribute);
+            if (attributeIndex == -1)
+                throw new IndexOutOfRangeException();
+            this.RemoveAt(attributeIndex);
+        }
 
-    public IEnumerable<HtmlAttribute> AttributesWithName(string attributeName)
-    {
-      attributeName = attributeName.ToLower();
-      for (int i = 0; i < this.items.Count; ++i)
-      {
-        if (this.items[i].Name.Equals(attributeName))
-          yield return this.items[i];
-      }
-    }
+        public void Remove(string name)
+        {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+            string lower = name.ToLower();
+            for (int index = 0; index < this.items.Count; ++index)
+            {
+                if (this.items[index].Name == lower)
+                    this.RemoveAt(index);
+            }
+        }
 
-    public void Remove()
-    {
-      foreach (HtmlAttribute htmlAttribute in this.items)
-        htmlAttribute.Remove();
-    }
+        public void RemoveAll()
+        {
+            this.Hashitems.Clear();
+            this.items.Clear();
+            this._ownernode._innerchanged = true;
+            this._ownernode._outerchanged = true;
+        }
 
-    internal void Clear()
-    {
-      this.Hashitems.Clear();
-      this.items.Clear();
-    }
+        public IEnumerable<HtmlAttribute> AttributesWithName(string attributeName)
+        {
+            attributeName = attributeName.ToLower();
+            for (int i = 0; i < this.items.Count; ++i)
+            {
+                if (this.items[i].Name.Equals(attributeName))
+                    yield return this.items[i];
+            }
+        }
 
-    internal int GetAttributeIndex(HtmlAttribute attribute)
-    {
-      if (attribute == null)
-        throw new ArgumentNullException(nameof (attribute));
-      for (int index = 0; index < this.items.Count; ++index)
-      {
-        if (this.items[index] == attribute)
-          return index;
-      }
-      return -1;
-    }
+        public void Remove()
+        {
+            foreach (HtmlAttribute htmlAttribute in this.items)
+                htmlAttribute.Remove();
+        }
 
-    internal int GetAttributeIndex(string name)
-    {
-      if (name == null)
-        throw new ArgumentNullException(nameof (name));
-      string lower = name.ToLower();
-      for (int index = 0; index < this.items.Count; ++index)
-      {
-        if (this.items[index].Name == lower)
-          return index;
-      }
-      return -1;
+        internal void Clear()
+        {
+            this.Hashitems.Clear();
+            this.items.Clear();
+        }
+
+        internal int GetAttributeIndex(HtmlAttribute attribute)
+        {
+            if (attribute == null)
+                throw new ArgumentNullException(nameof(attribute));
+            for (int index = 0; index < this.items.Count; ++index)
+            {
+                if (this.items[index] == attribute)
+                    return index;
+            }
+
+            return -1;
+        }
+
+        internal int GetAttributeIndex(string name)
+        {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+            string lower = name.ToLower();
+            for (int index = 0; index < this.items.Count; ++index)
+            {
+                if (this.items[index].Name == lower)
+                    return index;
+            }
+
+            return -1;
+        }
     }
-  }
 }

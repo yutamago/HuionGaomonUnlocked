@@ -6,14 +6,14 @@
 
 namespace Huion
 {
-  public enum OEMType
-  {
-    NONE,
-    HUION,
-    GAOMON,
-    YINENG,
-    YOUSHANG,
-    SHIJUN,
-    KJC,
-  }
+    public enum OEMType
+    {
+        NONE,
+        HUION,
+        GAOMON,
+        YINENG,
+        YOUSHANG,
+        SHIJUN,
+        KJC,
+    }
 }

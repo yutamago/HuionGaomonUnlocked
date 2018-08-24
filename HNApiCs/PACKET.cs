@@ -6,11 +6,11 @@
 
 namespace Huion
 {
-  public struct PACKET
-  {
-    public uint pkButtons;
-    public uint pkX;
-    public uint pkY;
-    public uint pkNormalPressure;
-  }
+    public struct PACKET
+    {
+        public uint pkButtons;
+        public uint pkX;
+        public uint pkY;
+        public uint pkNormalPressure;
+    }
 }

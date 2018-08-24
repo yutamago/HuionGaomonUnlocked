@@ -14,80 +14,59 @@ using System.Runtime.CompilerServices;
 
 namespace HuionTablet.Properties
 {
-  [GeneratedCode("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
-  [DebuggerNonUserCode]
-  [CompilerGenerated]
-  internal class Resources
-  {
-    private static ResourceManager resourceMan;
-    private static CultureInfo resourceCulture;
-
-    internal Resources()
+    [GeneratedCode("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [DebuggerNonUserCode]
+    [CompilerGenerated]
+    internal class Resources
     {
-    }
+        private static ResourceManager resourceMan;
+        private static CultureInfo resourceCulture;
 
-    [EditorBrowsable(EditorBrowsableState.Advanced)]
-    internal static ResourceManager ResourceManager
-    {
-      get
-      {
-        if (HuionTablet.Properties.Resources.resourceMan == null)
-          HuionTablet.Properties.Resources.resourceMan = new ResourceManager("HuionTablet.Properties.Resources", typeof (HuionTablet.Properties.Resources).Assembly);
-        return HuionTablet.Properties.Resources.resourceMan;
-      }
-    }
+        internal Resources()
+        {
+        }
 
-    [EditorBrowsable(EditorBrowsableState.Advanced)]
-    internal static CultureInfo Culture
-    {
-      get
-      {
-        return HuionTablet.Properties.Resources.resourceCulture;
-      }
-      set
-      {
-        HuionTablet.Properties.Resources.resourceCulture = value;
-      }
-    }
+        [EditorBrowsable(EditorBrowsableState.Advanced)]
+        internal static ResourceManager ResourceManager
+        {
+            get
+            {
+                if (resourceMan == null)
+                    resourceMan = new ResourceManager("HuionTablet.Properties.Resources", typeof(Resources).Assembly);
+                return resourceMan;
+            }
+        }
 
-    internal static Bitmap bg
-    {
-      get
-      {
-        return (Bitmap) HuionTablet.Properties.Resources.ResourceManager.GetObject(nameof (bg), HuionTablet.Properties.Resources.resourceCulture);
-      }
-    }
+        [EditorBrowsable(EditorBrowsableState.Advanced)]
+        internal static CultureInfo Culture
+        {
+            get { return resourceCulture; }
+            set { resourceCulture = value; }
+        }
 
-    internal static Bitmap icon0
-    {
-      get
-      {
-        return (Bitmap) HuionTablet.Properties.Resources.ResourceManager.GetObject(nameof (icon0), HuionTablet.Properties.Resources.resourceCulture);
-      }
-    }
+        internal static Bitmap bg
+        {
+            get { return (Bitmap) ResourceManager.GetObject(nameof(bg), resourceCulture); }
+        }
 
-    internal static Bitmap icon1
-    {
-      get
-      {
-        return (Bitmap) HuionTablet.Properties.Resources.ResourceManager.GetObject(nameof (icon1), HuionTablet.Properties.Resources.resourceCulture);
-      }
-    }
+        internal static Bitmap icon0
+        {
+            get { return (Bitmap) ResourceManager.GetObject(nameof(icon0), resourceCulture); }
+        }
 
-    internal static Bitmap icon2
-    {
-      get
-      {
-        return (Bitmap) HuionTablet.Properties.Resources.ResourceManager.GetObject(nameof (icon2), HuionTablet.Properties.Resources.resourceCulture);
-      }
-    }
+        internal static Bitmap icon1
+        {
+            get { return (Bitmap) ResourceManager.GetObject(nameof(icon1), resourceCulture); }
+        }
 
-    internal static Bitmap icon3
-    {
-      get
-      {
-        return (Bitmap) HuionTablet.Properties.Resources.ResourceManager.GetObject(nameof (icon3), HuionTablet.Properties.Resources.resourceCulture);
-      }
+        internal static Bitmap icon2
+        {
+            get { return (Bitmap) ResourceManager.GetObject(nameof(icon2), resourceCulture); }
+        }
+
+        internal static Bitmap icon3
+        {
+            get { return (Bitmap) ResourceManager.GetObject(nameof(icon3), resourceCulture); }
+        }
     }
-  }
 }

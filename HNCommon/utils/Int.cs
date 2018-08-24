@@ -6,5 +6,5 @@
 
 namespace HuionTablet.utils
 {
-  public delegate void Int(int i);
+    public delegate void Int(int i);
 }

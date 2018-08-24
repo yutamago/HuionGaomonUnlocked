@@ -6,14 +6,14 @@
 
 namespace HuionTablet
 {
-  public struct USBControllerDevice
-  {
-    public string Antecedent;
-    public string Dependent;
-
-    public override string ToString()
+    public struct USBControllerDevice
     {
-      return this.Antecedent + "\n" + this.Dependent;
+        public string Antecedent;
+        public string Dependent;
+
+        public override string ToString()
+        {
+            return this.Antecedent + "\n" + this.Dependent;
+        }
     }
-  }
 }

@@ -6,10 +6,10 @@
 
 namespace Huion
 {
-  public struct ORIENTATION
-  {
-    public int orAzimuth;
-    public int orAltitude;
-    public int orTwist;
-  }
+    public struct ORIENTATION
+    {
+        public int orAzimuth;
+        public int orAltitude;
+        public int orTwist;
+    }
 }

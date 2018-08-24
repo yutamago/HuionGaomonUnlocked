@@ -6,5 +6,5 @@
 
 namespace HuionTablet
 {
-  public delegate void PressValueChanged(int value);
+    public delegate void PressValueChanged(int value);
 }

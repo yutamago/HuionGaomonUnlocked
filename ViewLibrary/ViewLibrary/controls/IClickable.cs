@@ -6,8 +6,8 @@
 
 namespace HuionTablet.view
 {
-  public interface IClickable
-  {
-    bool Clickable { set; get; }
-  }
+    public interface IClickable
+    {
+        bool Clickable { set; get; }
+    }
 }

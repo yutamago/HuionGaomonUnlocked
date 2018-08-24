@@ -10,16 +10,16 @@ using System.Security.Permissions;
 
 namespace HtmlAgilityPack
 {
-  public class PermissionHelper : IPermissionHelper
-  {
-    public bool GetIsRegistryAvailable()
+    public class PermissionHelper : IPermissionHelper
     {
-      return SecurityManager.IsGranted((IPermission) new RegistryPermission(PermissionState.Unrestricted));
-    }
+        public bool GetIsRegistryAvailable()
+        {
+            return SecurityManager.IsGranted((IPermission) new RegistryPermission(PermissionState.Unrestricted));
+        }
 
-    public bool GetIsDnsAvailable()
-    {
-      return SecurityManager.IsGranted((IPermission) new DnsPermission(PermissionState.Unrestricted));
+        public bool GetIsDnsAvailable()
+        {
+            return SecurityManager.IsGranted((IPermission) new DnsPermission(PermissionState.Unrestricted));
+        }
     }
-  }
 }

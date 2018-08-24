@@ -6,11 +6,11 @@
 
 namespace HuionTablet.Entity
 {
-  public enum HuionKeyType
-  {
-    HARDKEY,
-    SOFTKEY,
-    MULTIKEY,
-    PENKEY,
-  }
+    public enum HuionKeyType
+    {
+        HARDKEY,
+        SOFTKEY,
+        MULTIKEY,
+        PENKEY,
+    }
 }

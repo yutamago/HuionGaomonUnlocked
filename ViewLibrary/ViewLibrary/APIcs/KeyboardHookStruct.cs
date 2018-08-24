@@ -8,13 +8,13 @@ using System.Runtime.InteropServices;
 
 namespace Huion
 {
-  [StructLayout(LayoutKind.Sequential)]
-  public class KeyboardHookStruct
-  {
-    public int vkCode;
-    public int scanCode;
-    public int flags;
-    public int time;
-    public int dwExtraInfo;
-  }
+    [StructLayout(LayoutKind.Sequential)]
+    public class KeyboardHookStruct
+    {
+        public int dwExtraInfo;
+        public int flags;
+        public int scanCode;
+        public int time;
+        public int vkCode;
+    }
 }

@@ -8,26 +8,26 @@ using System.IO;
 
 namespace HuionTablet
 {
-  public class Depot
-  {
-    public Stream loadImage(string imageName)
+    public class Depot
     {
-      return this.GetType().Assembly.GetManifestResourceStream("HuionTablet.res." + imageName);
-    }
+        public Stream loadImage(string imageName)
+        {
+            return this.GetType().Assembly.GetManifestResourceStream("HuionTablet.res." + imageName);
+        }
 
-    public Stream loadHuionImage(string imageName)
-    {
-      return this.GetType().Assembly.GetManifestResourceStream("HuionTablet.res.Huion." + imageName);
-    }
+        public Stream loadHuionImage(string imageName)
+        {
+            return this.GetType().Assembly.GetManifestResourceStream("HuionTablet.res.Huion." + imageName);
+        }
 
-    public Stream loadGaomonImage(string imageName)
-    {
-      return this.GetType().Assembly.GetManifestResourceStream("HuionTablet.res.Gaomon." + imageName);
-    }
+        public Stream loadGaomonImage(string imageName)
+        {
+            return this.GetType().Assembly.GetManifestResourceStream("HuionTablet.res.Gaomon." + imageName);
+        }
 
-    public Stream loadTalbetDriverImage(string imageName)
-    {
-      return this.GetType().Assembly.GetManifestResourceStream("HuionTablet.res.TabletDriver." + imageName);
+        public Stream loadTalbetDriverImage(string imageName)
+        {
+            return this.GetType().Assembly.GetManifestResourceStream("HuionTablet.res.TabletDriver." + imageName);
+        }
     }
-  }
 }

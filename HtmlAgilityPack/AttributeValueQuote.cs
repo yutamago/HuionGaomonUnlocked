@@ -6,9 +6,9 @@
 
 namespace HtmlAgilityPack
 {
-  public enum AttributeValueQuote
-  {
-    SingleQuote,
-    DoubleQuote,
-  }
+    public enum AttributeValueQuote
+    {
+        SingleQuote,
+        DoubleQuote,
+    }
 }

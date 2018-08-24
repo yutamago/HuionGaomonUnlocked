@@ -8,13 +8,13 @@ using System.Runtime.InteropServices;
 
 namespace HuionTablet.Entity
 {
-  [StructLayout(LayoutKind.Sequential, Size = 1)]
-  public struct PointGravity
-  {
-    public const int LEFT = 1;
-    public const int RIGHT = 2;
-    public const int TOP = 4;
-    public const int BOTTOM = 8;
-    public const int CENTER = 16;
-  }
+    [StructLayout(LayoutKind.Sequential, Size = 1)]
+    public struct PointGravity
+    {
+        public const int LEFT = 1;
+        public const int RIGHT = 2;
+        public const int TOP = 4;
+        public const int BOTTOM = 8;
+        public const int CENTER = 16;
+    }
 }

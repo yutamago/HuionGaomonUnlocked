@@ -6,5 +6,5 @@
 
 namespace Huion
 {
-  public delegate void HuionKeyEventHandler(object sender, HuionKeyEventArgs e);
+    public delegate void HuionKeyEventHandler(object sender, HuionKeyEventArgs e);
 }

@@ -6,8 +6,8 @@
 
 namespace HuionTablet
 {
-  public interface IDestroy
-  {
-    void onDestroy();
-  }
+    public interface IDestroy
+    {
+        void onDestroy();
+    }
 }

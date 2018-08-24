@@ -6,5 +6,5 @@
 
 namespace HuionTablet
 {
-  public delegate void EKeyCallback(object holder, HNStruct.HNEkey value);
+    public delegate void EKeyCallback(object holder, HNStruct.HNEkey value);
 }

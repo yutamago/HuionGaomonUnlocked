@@ -8,66 +8,66 @@ using System.Timers;
 
 namespace HuionTablet.Lib
 {
-  public class TimerSession
-  {
-    public static TimerSession.UserLongtimeNoOperationCallback UserLongtimeNoOperationListener;
-    public const int IntervalTime = 600000;
-    private static Timer timer4UserOperation;
-    public static ElapsedEventHandler AutoOperationListener;
-    private static Timer timer4AutoConnection;
-
-    public static void startListenUserOperation()
+    public class TimerSession
     {
-      TimerSession.timer4UserOperation = new Timer(600000.0);
-      TimerSession.timer4UserOperation.Elapsed += new ElapsedEventHandler(TimerSession.ElapsedEventHandler4UserOperation);
-      TimerSession.timer4UserOperation.AutoReset = true;
-      TimerSession.timer4UserOperation.Enabled = true;
-      TimerSession.listenAutoConnection();
-    }
+        public delegate void UserLongtimeNoOperationCallback();
 
-    public static void userOperation()
-    {
-      if (TimerSession.timer4UserOperation == null)
-        return;
-      TimerSession.timer4UserOperation.Stop();
-      TimerSession.timer4UserOperation.Start();
-    }
+        public const int IntervalTime = 600000;
+        public static UserLongtimeNoOperationCallback UserLongtimeNoOperationListener;
+        private static Timer timer4UserOperation;
+        public static ElapsedEventHandler AutoOperationListener;
+        private static Timer timer4AutoConnection;
 
-    private static void ElapsedEventHandler4UserOperation(object sender, ElapsedEventArgs e)
-    {
-      if (TimerSession.UserLongtimeNoOperationListener == null)
-        return;
-      TimerSession.UserLongtimeNoOperationListener();
-    }
+        public static void startListenUserOperation()
+        {
+            timer4UserOperation = new Timer(600000.0);
+            timer4UserOperation.Elapsed += new ElapsedEventHandler(ElapsedEventHandler4UserOperation);
+            timer4UserOperation.AutoReset = true;
+            timer4UserOperation.Enabled = true;
+            listenAutoConnection();
+        }
 
-    public static void listenAutoConnection()
-    {
-      TimerSession.timer4AutoConnection = new Timer(30000.0);
-      TimerSession.timer4AutoConnection.Elapsed += new ElapsedEventHandler(TimerSession.ElapsedEventHandler4AutoOperation);
-      TimerSession.timer4AutoConnection.AutoReset = true;
-    }
+        public static void userOperation()
+        {
+            if (timer4UserOperation == null)
+                return;
+            timer4UserOperation.Stop();
+            timer4UserOperation.Start();
+        }
 
-    public static void startAutoConnection()
-    {
-      if (TimerSession.timer4AutoConnection == null || TimerSession.timer4AutoConnection.Enabled)
-        return;
-      TimerSession.timer4AutoConnection.Enabled = true;
-    }
+        private static void ElapsedEventHandler4UserOperation(object sender, ElapsedEventArgs e)
+        {
+            if (UserLongtimeNoOperationListener == null)
+                return;
+            UserLongtimeNoOperationListener();
+        }
 
-    public static void stopAutoConnection()
-    {
-      if (TimerSession.timer4AutoConnection == null || !TimerSession.timer4AutoConnection.Enabled)
-        return;
-      TimerSession.timer4AutoConnection.Enabled = false;
-    }
+        public static void listenAutoConnection()
+        {
+            timer4AutoConnection = new Timer(30000.0);
+            timer4AutoConnection.Elapsed += new ElapsedEventHandler(ElapsedEventHandler4AutoOperation);
+            timer4AutoConnection.AutoReset = true;
+        }
 
-    private static void ElapsedEventHandler4AutoOperation(object sender, ElapsedEventArgs e)
-    {
-      if (TimerSession.AutoOperationListener == null)
-        return;
-      TimerSession.AutoOperationListener(sender, e);
-    }
+        public static void startAutoConnection()
+        {
+            if (timer4AutoConnection == null || timer4AutoConnection.Enabled)
+                return;
+            timer4AutoConnection.Enabled = true;
+        }
 
-    public delegate void UserLongtimeNoOperationCallback();
-  }
+        public static void stopAutoConnection()
+        {
+            if (timer4AutoConnection == null || !timer4AutoConnection.Enabled)
+                return;
+            timer4AutoConnection.Enabled = false;
+        }
+
+        private static void ElapsedEventHandler4AutoOperation(object sender, ElapsedEventArgs e)
+        {
+            if (AutoOperationListener == null)
+                return;
+            AutoOperationListener(sender, e);
+        }
+    }
 }

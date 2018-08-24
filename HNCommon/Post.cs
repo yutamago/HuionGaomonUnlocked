@@ -6,5 +6,5 @@
 
 namespace HuionTablet
 {
-  public delegate void Post(object post, object msg);
+    public delegate void Post(object post, object msg);
 }

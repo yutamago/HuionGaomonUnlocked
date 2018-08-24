@@ -8,25 +8,19 @@ using System;
 
 namespace HuionTablet.view
 {
-  public class PictureViewEventArgs : EventArgs
-  {
-    private int mRotate;
-
-    public static PictureViewEventArgs getInstance(int rotate)
+    public class PictureViewEventArgs : EventArgs
     {
-      return new PictureViewEventArgs() { Rotate = rotate };
-    }
+        private int mRotate;
 
-    public int Rotate
-    {
-      set
-      {
-        this.mRotate = value;
-      }
-      get
-      {
-        return this.mRotate;
-      }
+        public int Rotate
+        {
+            set { this.mRotate = value; }
+            get { return this.mRotate; }
+        }
+
+        public static PictureViewEventArgs getInstance(int rotate)
+        {
+            return new PictureViewEventArgs() {Rotate = rotate};
+        }
     }
-  }
 }

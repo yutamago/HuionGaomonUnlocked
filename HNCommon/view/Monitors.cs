@@ -8,16 +8,16 @@ using System.Collections.Generic;
 
 namespace HuionTablet
 {
-  public class Monitors
-  {
-    public HNStruct.PHYSICAL_MONITOR PhysicalMonitor { get; set; }
+    public class Monitors
+    {
+        public HNStruct.PHYSICAL_MONITOR PhysicalMonitor { get; set; }
 
-    public string Model { get; set; }
+        public string Model { get; set; }
 
-    public List<uint> Capabilitys { get; set; }
+        public List<uint> Capabilitys { get; set; }
 
-    public List<uint> InputSources { get; set; }
+        public List<uint> InputSources { get; set; }
 
-    public List<uint> ColorPresets { get; set; }
-  }
+        public List<uint> ColorPresets { get; set; }
+    }
 }

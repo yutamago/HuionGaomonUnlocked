@@ -6,71 +6,54 @@
 
 namespace HtmlAgilityPack
 {
-  public class HtmlParseError
-  {
-    private HtmlParseErrorCode _code;
-    private int _line;
-    private int _linePosition;
-    private string _reason;
-    private string _sourceText;
-    private int _streamPosition;
-
-    internal HtmlParseError(HtmlParseErrorCode code, int line, int linePosition, int streamPosition, string sourceText, string reason)
+    public class HtmlParseError
     {
-      this._code = code;
-      this._line = line;
-      this._linePosition = linePosition;
-      this._streamPosition = streamPosition;
-      this._sourceText = sourceText;
-      this._reason = reason;
-    }
+        private HtmlParseErrorCode _code;
+        private int _line;
+        private int _linePosition;
+        private string _reason;
+        private string _sourceText;
+        private int _streamPosition;
 
-    public HtmlParseErrorCode Code
-    {
-      get
-      {
-        return this._code;
-      }
-    }
+        internal HtmlParseError(HtmlParseErrorCode code, int line, int linePosition, int streamPosition,
+            string sourceText, string reason)
+        {
+            this._code = code;
+            this._line = line;
+            this._linePosition = linePosition;
+            this._streamPosition = streamPosition;
+            this._sourceText = sourceText;
+            this._reason = reason;
+        }
 
-    public int Line
-    {
-      get
-      {
-        return this._line;
-      }
-    }
+        public HtmlParseErrorCode Code
+        {
+            get { return this._code; }
+        }
 
-    public int LinePosition
-    {
-      get
-      {
-        return this._linePosition;
-      }
-    }
+        public int Line
+        {
+            get { return this._line; }
+        }
 
-    public string Reason
-    {
-      get
-      {
-        return this._reason;
-      }
-    }
+        public int LinePosition
+        {
+            get { return this._linePosition; }
+        }
 
-    public string SourceText
-    {
-      get
-      {
-        return this._sourceText;
-      }
-    }
+        public string Reason
+        {
+            get { return this._reason; }
+        }
 
-    public int StreamPosition
-    {
-      get
-      {
-        return this._streamPosition;
-      }
+        public string SourceText
+        {
+            get { return this._sourceText; }
+        }
+
+        public int StreamPosition
+        {
+            get { return this._streamPosition; }
+        }
     }
-  }
 }
