@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--Project was exported from assembly: D:\Program Files (x86)\Huion Tablet\Depot.dll-->
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{630653AA-2522-4909-AC78-5471CCCEE92B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AssemblyName>Depot</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <ApplicationVersion>14.4.5.0</ApplicationVersion>
+    <FileAlignment>512</FileAlignment>
+    <RootNamespace>HuionTablet</RootNamespace>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Depot.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="res\221.png" />
+    <EmbeddedResource Include="res\Gaomon\128.ico" />
+    <EmbeddedResource Include="res\Gaomon\16.ico" />
+    <EmbeddedResource Include="res\Gaomon\16_off.ico" />
+    <EmbeddedResource Include="res\Gaomon\32.ico" />
+    <EmbeddedResource Include="res\Gaomon\64.ico" />
+    <EmbeddedResource Include="res\Gaomon\icon.ico" />
+    <EmbeddedResource Include="res\Gaomon\logo.png" />
+    <EmbeddedResource Include="res\Huion\128.ico" />
+    <EmbeddedResource Include="res\Huion\16.ico" />
+    <EmbeddedResource Include="res\Huion\16_off.ico" />
+    <EmbeddedResource Include="res\Huion\32.ico" />
+    <EmbeddedResource Include="res\Huion\64.ico" />
+    <EmbeddedResource Include="res\Huion\BANNER.jpg" />
+    <EmbeddedResource Include="res\Huion\icon.ico" />
+    <EmbeddedResource Include="res\Huion\info.jpg" />
+    <EmbeddedResource Include="res\Huion\logo.png" />
+    <EmbeddedResource Include="res\NEW1060PLUS.png" />
+    <EmbeddedResource Include="res\pen_COMMON.png" />
+    <EmbeddedResource Include="res\pen_HUION_P151.png" />
+    <EmbeddedResource Include="res\pen_HUION_P152.png" />
+    <EmbeddedResource Include="res\pen_HUION_P153.png" />
+    <EmbeddedResource Include="res\pen_HUION_P161.png" />
+    <EmbeddedResource Include="res\pen_HUION_P162.png" />
+    <EmbeddedResource Include="res\pen_HUION_P171.png" />
+    <EmbeddedResource Include="res\pen_HUION_P173.png" />
+    <EmbeddedResource Include="res\pen_HUION_P174.png" />
+    <EmbeddedResource Include="res\pen_HUION_P175.png" />
+    <EmbeddedResource Include="res\pen_HUION_P176.png" />
+    <EmbeddedResource Include="res\pen_HUION_P179.png" />
+    <EmbeddedResource Include="res\pen_HUION_P17b.png" />
+    <EmbeddedResource Include="res\pen_HUION_P180.png" />
+    <EmbeddedResource Include="res\pen_HUION_P184.png" />
+    <EmbeddedResource Include="res\pen_OEM00_P171.png" />
+    <EmbeddedResource Include="res\pen_OEM07_P163.png" />
+    <EmbeddedResource Include="res\pen_OEM07_T163.png" />
+    <EmbeddedResource Include="res\settings.png" />
+    <EmbeddedResource Include="res\tablet_HUION_M161.png" />
+    <EmbeddedResource Include="res\tablet_HUION_M162.png" />
+    <EmbeddedResource Include="res\tablet_HUION_M167.png" />
+    <EmbeddedResource Include="res\tablet_HUION_M168.png" />
+    <EmbeddedResource Include="res\tablet_HUION_M174.png" />
+    <EmbeddedResource Include="res\tablet_HUION_M175.png" />
+    <EmbeddedResource Include="res\tablet_HUION_M182.png" />
+    <EmbeddedResource Include="res\tablet_HUION_M189.png" />
+    <EmbeddedResource Include="res\tablet_HUION_T153.png" />
+    <EmbeddedResource Include="res\tablet_HUION_T161.png" />
+    <EmbeddedResource Include="res\tablet_HUION_T162.png" />
+    <EmbeddedResource Include="res\tablet_HUION_T164.png" />
+    <EmbeddedResource Include="res\tablet_HUION_T166.png" />
+    <EmbeddedResource Include="res\tablet_HUION_T167.png" />
+    <EmbeddedResource Include="res\tablet_HUION_T172.png" />
+    <EmbeddedResource Include="res\tablet_HUION_T173.png" />
+    <EmbeddedResource Include="res\tablet_HUION_T174.png" />
+    <EmbeddedResource Include="res\tablet_HUION_T175.png" />
+    <EmbeddedResource Include="res\tablet_HUION_T176.png" />
+    <EmbeddedResource Include="res\tablet_OEM00_M166.png" />
+    <EmbeddedResource Include="res\tablet_OEM00_M173.png" />
+    <EmbeddedResource Include="res\tablet_OEM02_M165.png" />
+    <EmbeddedResource Include="res\tablet_OEM02_M166.png" />
+    <EmbeddedResource Include="res\tablet_OEM02_M167.png" />
+    <EmbeddedResource Include="res\tablet_OEM02_M171.png" />
+    <EmbeddedResource Include="res\tablet_OEM02_T151.png" />
+    <EmbeddedResource Include="res\tablet_OEM02_T156.png" />
+    <EmbeddedResource Include="res\tablet_OEM02_T174.png" />
+    <EmbeddedResource Include="res\tablet_OEM02_T178.png" />
+    <EmbeddedResource Include="res\tablet_OEM02_T17b.png" />
+    <EmbeddedResource Include="res\tablet_OEM02_T17c.png" />
+    <EmbeddedResource Include="res\tablet_OEM07_T168.png" />
+    <EmbeddedResource Include="res\TabletDriver\128.ico" />
+    <EmbeddedResource Include="res\TabletDriver\16.ico" />
+    <EmbeddedResource Include="res\TabletDriver\16_off.ico" />
+    <EmbeddedResource Include="res\TabletDriver\32.ico" />
+    <EmbeddedResource Include="res\TabletDriver\64.ico" />
+    <EmbeddedResource Include="res\TabletDriver\icon.ico" />
+    <EmbeddedResource Include="res\TabletDriver\logo.png" />
+    <EmbeddedResource Include="res\TabletDriverUI.rc2" />
+    <EmbeddedResource Include="res\warnning.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

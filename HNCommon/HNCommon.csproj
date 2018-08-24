@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--Project was exported from assembly: D:\Program Files (x86)\Huion Tablet\HNCommon.dll-->
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1BD603C5-D834-43A2-84CD-020ED13F70A7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AssemblyName>HNCommon</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <RootNamespace>HuionTablet</RootNamespace>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>14.4.5.0</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Management" />
+    <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="HNApiCs">
+      <HintPath>lib\HNApiCs.dll</HintPath>
+    </Reference>
+    <Reference Include="Depot">
+      <HintPath>lib\Depot.dll</HintPath>
+    </Reference>
+    <Reference Include="HuionView">
+      <HintPath>lib\HuionView.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="Log">
+      <HintPath>lib\Log.dll</HintPath>
+    </Reference>
+    <Reference Include="Interop.IWshRuntimeLibrary">
+      <HintPath>lib\Interop.IWshRuntimeLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="Session">
+      <HintPath>lib\Session.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="callback\DeviceStatusUtils.cs" />
+    <Compile Include="callback\MiddleModule.cs" />
+    <Compile Include="callback\USBControllerDevice.cs" />
+    <Compile Include="callback\USB.cs" />
+    <Compile Include="dll\HuionDriverDLL.cs" />
+    <Compile Include="structs\HNStruct.cs" />
+    <Compile Include="structs\KBTable.cs" />
+    <Compile Include="utils\DpiHelper.cs" />
+    <Compile Include="utils\ImageHelper.cs" />
+    <Compile Include="utils\SettingsUtil.cs" />
+    <Compile Include="utils\ResourceCulture.cs" />
+    <Compile Include="utils\TabletConfigUtils.cs" />
+    <Compile Include="utils\TouchInfoReader.cs" />
+    <Compile Include="view\HuionWorkAreaPictureRect.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="view\RatioEventArgs.cs" />
+    <Compile Include="view\HuionWorkAreaPictureView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="view\PictureViewEventArgs.cs" />
+    <Compile Include="view\ViewUtils.cs" />
+    <Compile Include="utils\HuionDelayRun.cs" />
+    <Compile Include="utils\HuionRender.cs" />
+    <Compile Include="utils\KeyboardUtils.cs" />
+    <Compile Include="utils\MonitorInfosCallback.cs" />
+    <Compile Include="utils\ScreenHelper.cs" />
+    <Compile Include="utils\Runnable.cs" />
+    <Compile Include="utils\Void.cs" />
+    <Compile Include="utils\Boolean.cs" />
+    <Compile Include="utils\Utils.cs" />
+    <Compile Include="entity\HuionKeyLayout.cs" />
+    <Compile Include="entity\HuionKeyType.cs" />
+    <Compile Include="entity\MouseLocationType.cs" />
+    <Compile Include="entity\PointGravity.cs" />
+    <Compile Include="Send.cs" />
+    <Compile Include="Post.cs" />
+    <Compile Include="SendSreenNum.cs" />
+    <Compile Include="PnPEntityInfo.cs" />
+    <Compile Include="HuionDriverDLL_X64.cs" />
+    <Compile Include="HuionDriverDLL_X86.cs" />
+    <Compile Include="WinMessage.cs" />
+    <Compile Include="IDestroy.cs" />
+    <Compile Include="HnConst.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
