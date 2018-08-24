@@ -2,7 +2,7 @@
 // Type: HtmlAgilityPack.HtmlNode
 // Assembly: HtmlAgilityPack, Version=1.4.6.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a
 // MVID: 83185D3B-3939-439C-A54F-260F9279D9C8
-// Assembly location: D:\Program Files (x86)\Huion Tablet\Release\HtmlAgilityPack.dll
+// Assembly location: D:\Program Files (x86)\Huion Tablet\HtmlAgilityPack.dll
 
 using System;
 using System.Collections.Generic;
@@ -1116,13 +1116,7 @@ namespace HtmlAgilityPack
                     outText.Write(" " + str2);
                 else if (this._ownerdocument.OptionOutputOptimizeAttributeValues)
                 {
-                    if (att.Value.IndexOfAny(new char[4]
-                    {
-                        '\n',
-                        '\r',
-                        '\t',
-                        ' '
-                    }) < 0)
+                    if (att.Value.IndexOfAny(new char[4] {'\n', '\r', '\t', ' '}) < 0)
                         outText.Write(" " + str2 + "=" + att.Value);
                     else
                         outText.Write(" " + str2 + "=" + str1 + att.Value + str1);

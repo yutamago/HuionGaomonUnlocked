@@ -2,7 +2,7 @@
 // Type: HuionTablet.Program
 // Assembly: Huion Tablet, Version=14.4.5.0, Culture=neutral, PublicKeyToken=null
 // MVID: E9BBED94-79CD-4774-8A97-2E0171DB986F
-// Assembly location: D:\Program Files (x86)\Huion Tablet\app.publish\Huion Tablet.exe
+// Assembly location: D:\Program Files (x86)\Huion Tablet\Huion Tablet.exe
 
 using System;
 using System.Windows.Forms;

@@ -2,13 +2,16 @@
 // Type: HuionTablet.HuionTalbet
 // Assembly: Huion Tablet, Version=14.4.5.0, Culture=neutral, PublicKeyToken=null
 // MVID: E9BBED94-79CD-4774-8A97-2E0171DB986F
-// Assembly location: D:\Program Files (x86)\Huion Tablet\app.publish\Huion Tablet.exe
+// Assembly location: D:\Program Files (x86)\Huion Tablet\Huion Tablet.exe
 
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Management;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Timers;
 using System.Windows.Forms;
@@ -26,15 +29,21 @@ namespace HuionTablet
 {
     public class HuionTalbet : BaseForm
     {
+        public static bool EnableDebugConsole = false;
         public static bool IsReminder;
         private Button btnAdmin;
         private Button btnApplay;
         private Button btnClose;
         private Button btnOK;
+        private Timer checkForegroundWindowInterval;
         private IContainer components = (IContainer) null;
         private ContextMenuStrip contextMenuStrip1;
+        private string currentSettings = "";
+
         private USB ezUSB = new USB();
         private Label labelTabletState;
+
+        private string lastForegroundApplication;
         private List<Form> mForms;
         private TabType mTabType;
         private NotifyIcon notifyIcon1;
@@ -49,6 +58,11 @@ namespace HuionTablet
         private HNPanel panelTabletPen;
         private Panel panelWindow;
         private HNPanel panelWorkArea;
+        private Dictionary<string, HNStruct.PerAppSetting> perAppSettings;
+
+        private bool perAppSettingsActive;
+        private HNStruct.PerAppSetting? perAppSettingsRest;
+        private string perAppSettingsWorkspace;
         private Timer timer1;
         private ToolStripMenuItem tsmiExit;
         private ToolStripMenuItem tsmiSettings;
@@ -63,10 +77,24 @@ namespace HuionTablet
             this.mForms = new List<Form>();
             ThreadPool.SetMaxThreads(5, 5);
             this.notifyIcon1.Icon = Fixer4Main.getNotifyIcon(false);
+            this.checkForegroundWindowInterval = new Timer();
+            this.checkForegroundWindowInterval.Interval = 500;
+            this.checkForegroundWindowInterval.Tick += checkForegroundWindowTick;
+
             if (Utils.isWin10)
                 SettingsUtil.setAutorun(false);
             else
                 SettingsUtil.isCommonStartup = false;
+
+            this.perAppSettingsActive = SettingsUtil.isPerAppSettingsActive;
+            this.perAppSettings = SettingsUtil.perAppSettings;
+            this.perAppSettingsRest = SettingsUtil.perAppSettingsRest;
+            this.perAppSettingsWorkspace = SettingsUtil.perAppSettingsWorkspace;
+
+            if (this.perAppSettingsActive)
+            {
+                this.checkForegroundWindowInterval.Start();
+            }
         }
 
         public static bool isReminder
@@ -74,6 +102,103 @@ namespace HuionTablet
             get { return IsReminder; }
             set { IsReminder = value; }
         }
+
+        private void checkForegroundWindowTick(object sender, EventArgs e)
+        {
+            IntPtr hwnd = GetForegroundWindow();
+            int processId = GetWindowProcessID(hwnd);
+            if (processId == 1)
+            {
+                return;
+            }
+
+            Process process = Process.GetProcessById(processId);
+            string processFileName = Path.GetFileName(process.MainModule.FileName);
+            if (!processFileName.Equals(lastForegroundApplication))
+            {
+                lastForegroundApplication = processFileName;
+
+                HuionLog.printLog("FocusChanged", processFileName.ToLower());
+                handleFocusChange(processFileName.ToLower());
+            }
+        }
+
+        private void handleFocusChange(string processName)
+        {
+            if (processName.Equals(Path.GetFileName(Process.GetCurrentProcess().MainModule.FileName.ToLower())) ||
+                SettingsUtil.excludedApplications.Contains(processName))
+            {
+                // Excluded app
+                return;
+            }
+
+            HNStruct.PerAppSetting appSetting;
+            if (this.perAppSettings.ContainsKey(processName))
+            {
+                appSetting = this.perAppSettings[processName];
+            }
+            else if (this.perAppSettingsRest.HasValue)
+            {
+                appSetting = this.perAppSettingsRest.Value;
+            }
+            else
+            {
+                // No setting found
+                return;
+            }
+
+            if (this.currentSettings == appSetting.settingName)
+            {
+                HuionLog.printLog("FocusChanged", "Error: already active");
+                // already active
+                return;
+            }
+            else if (!appSetting.active)
+            {
+                HuionLog.printLog("FocusChanged", "Error: not enabled");
+                // setting not enabled
+                return;
+            }
+
+            string path = Path.GetFullPath(Path.Combine(this.perAppSettingsWorkspace, appSetting.settingName));
+            if (!File.Exists(path))
+            {
+                HuionLog.printLog("FocusChanged", "Error: file not found");
+                return;
+            }
+
+            HuionLog.printLog("FocusChanged", "Info: loading profile");
+
+            HNStruct.HNConfig cfg = new HNStruct.HNConfig();
+            IntPtr coTaskMemAuto = Marshal.StringToCoTaskMemAuto(path);
+            uint result = HuionDriverDLL.hnd_read_config(ref cfg, coTaskMemAuto);
+            HuionLog.printLog("FocusChanged", "Info: " + result);
+            HNStruct.globalInfo.userConfig = cfg;
+            new TabletConfigUtils().SetConfig(result);
+            currentSettings = appSetting.settingName;
+            Fixer4Main.applayClick(null, null);
+
+            HuionLog.printLog("FocusChanged", "Info: profile loaded");
+
+            this.notifyIcon1.ShowBalloonTip(3, "Profile switched", appSetting.settingName, ToolTipIcon.Info);
+            this.notifyIcon1.Text = ResourceCulture.GetString("FormHuionTabletNotifyIconText") + " (" +
+                                    appSetting.settingName + ")";
+            this.ResumeLayout(false);
+        }
+
+        [DllImport("user32.dll")]
+        static extern IntPtr GetForegroundWindow();
+
+        [DllImport("user32.dll")]
+        private static extern UInt32 GetWindowThreadProcessId(IntPtr hWnd, out Int32 lpdwProcessId);
+
+        private Int32 GetWindowProcessID(IntPtr hwnd)
+        {
+            Int32 pid = 1;
+            GetWindowThreadProcessId(hwnd, out pid);
+            return pid;
+        }
+
 
         private void onDisplayChanged()
         {
@@ -324,6 +449,11 @@ namespace HuionTablet
 
         private void HuionTalbet_Load(object sender, EventArgs e)
         {
+            if (EnableDebugConsole)
+            {
+                AllocConsole();
+            }
+
             Fixer4Main.MainForm = (Form) this;
             if (!SettingsUtil.CheckHotkey(this.Handle))
                 HuionMessageBox.HotkeyConflict();
@@ -367,6 +497,10 @@ namespace HuionTablet
             new Thread(new ThreadStart(myThread)).Start();
             showSettingBrightness();
         }
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool AllocConsole();
 
         private static void showSettingBrightness()
         {
@@ -457,6 +591,7 @@ namespace HuionTablet
                 this.panelWindow.Height - 1);
             pen.Dispose();
         }
+
 
         private void panelWindow_SizeChanged(object sender, EventArgs e)
         {

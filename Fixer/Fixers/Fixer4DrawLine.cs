@@ -141,7 +141,8 @@ namespace HuionTablet
 
         private void initPen()
         {
-            this.mPen = new Pen(HuionConst.HuionDrawLine, 2f);
+            //this.mPen = new Pen(HuionConst.HuionDrawLine, 2f);
+            this.mPen = new Pen(HuionConst.GaomonDrawLine, 2f);
             this.mPen.StartCap = LineCap.Round;
             this.mPen.EndCap = LineCap.Round;
             this.mPen.LineJoin = LineJoin.Round;

@@ -495,8 +495,8 @@ namespace HuionTablet
             this.huionWorkAreaPictrueView1 = new HuionWorkAreaPictureView();
             this.groupBoxRotate.SuspendLayout();
             this.groupBoxCustomArea.SuspendLayout();
-            ((ISupportInitialize) this.huionWorkAreaPictureRect1).BeginInit();
-            ((ISupportInitialize) this.huionWorkAreaPictrueView1).BeginInit();
+            // this.huionWorkAreaPictureRect1.BeginInit();
+            // this.huionWorkAreaPictrueView1.BeginInit();
             this.SuspendLayout();
             this.labelSelectScreen.Font = new Font("微软雅黑", 9f, FontStyle.Regular, GraphicsUnit.Point, (byte) 134);
             this.labelSelectScreen.Location = new Point(3, 7);
@@ -772,8 +772,8 @@ namespace HuionTablet
             this.groupBoxRotate.PerformLayout();
             this.groupBoxCustomArea.ResumeLayout(false);
             this.groupBoxCustomArea.PerformLayout();
-            ((ISupportInitialize) this.huionWorkAreaPictureRect1).EndInit();
-            ((ISupportInitialize) this.huionWorkAreaPictrueView1).EndInit();
+            // this.huionWorkAreaPictureRect1.EndInit();
+            // this.huionWorkAreaPictrueView1.EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
         }

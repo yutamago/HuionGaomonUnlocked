@@ -2,7 +2,7 @@
 // Type: HuionTablet.FormTabletPen
 // Assembly: Huion Tablet, Version=14.4.5.0, Culture=neutral, PublicKeyToken=null
 // MVID: E9BBED94-79CD-4774-8A97-2E0171DB986F
-// Assembly location: D:\Program Files (x86)\Huion Tablet\app.publish\Huion Tablet.exe
+// Assembly location: D:\Program Files (x86)\Huion Tablet\Huion Tablet.exe
 
 using System;
 using System.ComponentModel;
@@ -147,7 +147,7 @@ namespace HuionTablet
                 this.penLayouts[index].KeyType = HuionKeyType.PENKEY;
             }
 
-            if (HNStruct.OemType != OEMType.HUION || Convert.ToBoolean(HNStruct.globalInfo.tabletInfo.bMonitor))
+            if ( /*HNStruct.OemType != OEMType.HUION || */Convert.ToBoolean(HNStruct.globalInfo.tabletInfo.bMonitor))
                 this.checkBoxMouseMode.Hide();
             this.trackBar1.Top = this.pictureBoxPressCurve.Top - 5;
             this.trackBar1.Height = this.pictureBoxPressCurve.Height + 10;
@@ -384,7 +384,7 @@ namespace HuionTablet
             ((ISupportInitialize) this.pictureBoxPressCurve).BeginInit();
             this.trackBar1.BeginInit();
             ((ISupportInitialize) this.pictureBoxDrawTest).BeginInit();
-            ((ISupportInitialize) this.pictureBoxDrawLine).BeginInit();
+            // this.pictureBoxDrawLine.BeginInit();
             this.SuspendLayout();
             this.imgPen.BackColor = Color.Transparent;
             this.imgPen.BackgroundImageLayout = ImageLayout.None;
@@ -613,7 +613,7 @@ namespace HuionTablet
             ((ISupportInitialize) this.pictureBoxPressCurve).EndInit();
             this.trackBar1.EndInit();
             ((ISupportInitialize) this.pictureBoxDrawTest).EndInit();
-            ((ISupportInitialize) this.pictureBoxDrawLine).EndInit();
+            // this.pictureBoxDrawLine.EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
         }

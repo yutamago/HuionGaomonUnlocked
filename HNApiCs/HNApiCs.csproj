@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{16DB487D-168D-41E1-896C-0CCACB925DFB}</ProjectGuid>
+    <ProjectGuid>{188D2B3E-E87C-401A-B38B-AFB6DF22EE3D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AssemblyName>HNApiCs</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>

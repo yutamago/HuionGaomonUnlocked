@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{937CFDC0-0ACB-4A35-A4F9-119B88656031}</ProjectGuid>
+    <ProjectGuid>{450FF20E-10A5-42D2-8957-7AB8FB5A8EA9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AssemblyName>Session</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>

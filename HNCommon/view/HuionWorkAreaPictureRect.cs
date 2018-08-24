@@ -21,30 +21,14 @@ namespace HuionTablet.view
         private Rectangle mDeviceDrawRect;
         private HNStruct.HNRectRatio mDeviceDrawRectRatio;
         private Rectangle mDeviceRect;
-
-        private HNStruct.HNRectRatio mDeviceRectRatio = new HNStruct.HNRectRatio()
-        {
-            l = 0.0f,
-            t = 0.0f,
-            r = 1f,
-            b = 1f
-        };
-
+        private HNStruct.HNRectRatio mDeviceRectRatio = new HNStruct.HNRectRatio() {l = 0.0f, t = 0.0f, r = 1f, b = 1f};
         private int mDeviceRectRotate;
         private MouseButtons mMouseButton;
         private Rectangle mMouseInRect;
         private Point mMouseLocation;
         private Rectangle mScreenDrawRect;
         private Rectangle mScreenRect;
-
-        private HNStruct.HNRectRatio mScreenRectRatio = new HNStruct.HNRectRatio()
-        {
-            l = 0.0f,
-            t = 0.0f,
-            r = 1f,
-            b = 1f
-        };
-
+        private HNStruct.HNRectRatio mScreenRectRatio = new HNStruct.HNRectRatio() {l = 0.0f, t = 0.0f, r = 1f, b = 1f};
         public EventHandler ScreenRatioChanged;
 
         public Rectangle ScreenRect

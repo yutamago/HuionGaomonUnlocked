@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{BB8E0A26-0C21-497A-ABEE-FA8FABBA1302}</ProjectGuid>
+    <ProjectGuid>{5CE031DB-1FE9-4CBA-9014-0B5DBD186C32}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AssemblyName>HuionView</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
@@ -55,19 +55,6 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HuionTextView.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="KeyboardHookStruct.cs" />
-    <Compile Include="HuionKeyEventArgs.cs" />
-    <Compile Include="HuionKeyEventHandler.cs" />
-    <Compile Include="KeyBoardHook.cs" />
-    <Compile Include="KeyCodeUtils.cs" />
-    <Compile Include="ViewUtils.cs" />
-    <Compile Include="TitleBar.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs" />
     <Compile Include="HuionPictureBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -81,12 +68,29 @@
     <Compile Include="TouchPressBar.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="HuionTextView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="KeyboardHookStruct.cs" />
+    <Compile Include="HuionKeyEventArgs.cs" />
+    <Compile Include="HuionKeyEventHandler.cs" />
+    <Compile Include="KeyBoardHook.cs" />
+    <Compile Include="KeyCodeUtils.cs" />
+    <Compile Include="ViewUtils.cs" />
+    <Compile Include="TitleBar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs" />
     <Compile Include="AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Huion\Properties\Resources.resx" />
-    <EmbeddedResource Include="Huion\TitleBar.resx" />
-    <EmbeddedResource Include="HuionTablet\view\HNPanel.resx" />
+    <EmbeddedResource Include="Huion\TitleBar.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HuionTablet\view\HNPanel.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="HuionTablet\view\TouchPressBar.resx" />
   </ItemGroup>
   <ItemGroup>

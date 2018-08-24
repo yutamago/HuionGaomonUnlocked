@@ -259,7 +259,7 @@ namespace HuionTablet
 
         private void clickBtn_Click(object sender, EventArgs e)
         {
-            if (DeployConfig.getOemType() == OEMType.HUION && DeployConfig.isNewUI)
+            if ( /*DeployConfig.getOemType() == OEMType.HUION && */DeployConfig.isNewUI)
             {
                 FormEKey_New formEkeyNew =
                     new FormEKey_New((object) this.mCheckedKeyLayout, this.mCheckedKeyLayout.Key);
@@ -346,7 +346,7 @@ namespace HuionTablet
             if (this.keyLayouts == null)
                 return;
             HuionKeyLayout keyLayout = this.keyLayouts[this.keyLayouts.Length - 1];
-            if (DeployConfig.getOemType() == OEMType.HUION && DeployConfig.isNewUI)
+            if ( /*DeployConfig.getOemType() == OEMType.HUION && */DeployConfig.isNewUI)
             {
                 FormEKey_New formEkeyNew = new FormEKey_New((object) keyLayout, keyLayout.MutliKeys[this.getMeIndex()]);
                 formEkeyNew.callback += new EKeyCallback(this.form_TransfEvent);

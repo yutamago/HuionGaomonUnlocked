@@ -61,6 +61,23 @@ namespace HuionTablet
             }
         }
 
+        private OEMType getActualOemType()
+        {
+            if (TabletConfigUtils.isHuionTablet(HNStruct.globalInfo.tabletInfo.devType))
+                return OEMType.HUION;
+            if (TabletConfigUtils.isGaomonTablet(HNStruct.globalInfo.tabletInfo.devType))
+                return OEMType.GAOMON;
+            if (TabletConfigUtils.isYinengTablet(HNStruct.globalInfo.tabletInfo.devType))
+                return OEMType.YINENG;
+            if (TabletConfigUtils.isYoushangTablet(HNStruct.globalInfo.tabletInfo.devType))
+                return OEMType.YOUSHANG;
+            if (TabletConfigUtils.isShijunTablet(HNStruct.globalInfo.tabletInfo.devType))
+                return OEMType.SHIJUN;
+            if (TabletConfigUtils.isKJCTablet(HNStruct.globalInfo.tabletInfo.devType))
+                return OEMType.KJC;
+            return HNStruct.OemType;
+        }
+
         private void onDelayCallback(object o)
         {
             uint num = (uint) o;
@@ -73,6 +90,8 @@ namespace HuionTablet
                 if (HNStruct.globalInfo.tabletInfo.devType != 0U)
                 {
                     Console.Write(HNStruct.globalInfo.tabletInfo.devType.ToString());
+
+                    HNStruct.OemType = getActualOemType();
                     switch (HNStruct.OemType)
                     {
                         case OEMType.HUION:

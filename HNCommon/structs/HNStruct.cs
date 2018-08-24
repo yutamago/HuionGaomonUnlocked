@@ -29,6 +29,26 @@ namespace HuionTablet
         public static string devTypeString;
         public static OEMType OemType;
 
+        public struct PerAppSetting
+        {
+            public string processName;
+            public string settingName;
+            public bool active;
+
+            public PerAppSetting(string processName, string settingName, bool active)
+            {
+                this.processName = processName;
+                this.settingName = settingName;
+                this.active = active;
+            }
+
+            public override string ToString()
+            {
+                return "{ ProcessName: \"" + processName + "\", SettingsName: \"" + settingName + "\", active: " +
+                       (active ? "True" : "False") + " }";
+            }
+        }
+
         public struct HNRect
         {
             public int left;
@@ -162,7 +182,7 @@ namespace HuionTablet
                     if (this.kbtn.bWin != (byte) 0)
                         str += "Win+";
                     for (int index = 0; index < 16 && this.kbtn.kbKeys[index] != (byte) 0; ++index)
-                        str += (string) (object) KBTable.getKey8Code(this.kbtn.kbKeys[index]);
+                        str += KBTable.getKey8Code(this.kbtn.kbKeys[index]).ToString();
                 }
 
                 if (Convert.ToBoolean(this.funcBit & 16U))

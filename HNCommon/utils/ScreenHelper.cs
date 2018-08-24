@@ -107,13 +107,7 @@ namespace HuionTablet.utils
                 num4 = monitorinfoex.Monitor.Bottom;
             }
 
-            return new HNStruct.RECT()
-            {
-                Left = num1,
-                Bottom = num4,
-                Right = num2,
-                Top = num3
-            };
+            return new HNStruct.RECT() {Left = num1, Bottom = num4, Right = num2, Top = num3};
         }
     }
 }
