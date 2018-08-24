@@ -8,5 +8,6 @@ using System;
 
 namespace HuionTablet.utils
 {
-  public delegate bool MonitorInfosCallback(IntPtr hMonitor, IntPtr hdcMonitor, ref HNStruct.RECT lprcMonitor, IntPtr dwData);
+    public delegate bool MonitorInfosCallback(IntPtr hMonitor, IntPtr hdcMonitor, ref HNStruct.RECT lprcMonitor,
+        IntPtr dwData);
 }

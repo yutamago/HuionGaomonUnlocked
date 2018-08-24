@@ -8,20 +8,14 @@ using System.Windows.Forms;
 
 namespace HuionTablet.view
 {
-  public class HuionClickableButton : Button, IClickable
-  {
-    private bool isClickable = true;
-
-    public bool Clickable
+    public class HuionClickableButton : Button, IClickable
     {
-      get
-      {
-        return this.isClickable;
-      }
-      set
-      {
-        this.isClickable = value;
-      }
+        private bool isClickable = true;
+
+        public bool Clickable
+        {
+            get { return this.isClickable; }
+            set { this.isClickable = value; }
+        }
     }
-  }
 }

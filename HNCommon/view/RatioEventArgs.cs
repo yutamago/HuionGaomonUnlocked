@@ -8,25 +8,19 @@ using System;
 
 namespace HuionTablet.view
 {
-  public class RatioEventArgs : EventArgs
-  {
-    private HNStruct.HNRectRatio mRatio;
-
-    public static RatioEventArgs getInstance(HNStruct.HNRectRatio ratio)
+    public class RatioEventArgs : EventArgs
     {
-      return new RatioEventArgs() { Ratio = ratio };
-    }
+        private HNStruct.HNRectRatio mRatio;
 
-    public HNStruct.HNRectRatio Ratio
-    {
-      get
-      {
-        return this.mRatio;
-      }
-      set
-      {
-        this.mRatio = value;
-      }
+        public HNStruct.HNRectRatio Ratio
+        {
+            get { return this.mRatio; }
+            set { this.mRatio = value; }
+        }
+
+        public static RatioEventArgs getInstance(HNStruct.HNRectRatio ratio)
+        {
+            return new RatioEventArgs() {Ratio = ratio};
+        }
     }
-  }
 }

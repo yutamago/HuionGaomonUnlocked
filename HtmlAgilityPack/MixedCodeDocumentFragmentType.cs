@@ -6,9 +6,9 @@
 
 namespace HtmlAgilityPack
 {
-  public enum MixedCodeDocumentFragmentType
-  {
-    Code,
-    Text,
-  }
+    public enum MixedCodeDocumentFragmentType
+    {
+        Code,
+        Text,
+    }
 }

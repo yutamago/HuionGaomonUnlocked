@@ -6,11 +6,11 @@
 
 namespace HuionTablet
 {
-  public enum TabType
-  {
-    TabHotkey,
-    TabTabletPen,
-    TabWorkArea,
-    TabInfo,
-  }
+    public enum TabType
+    {
+        TabHotkey,
+        TabTabletPen,
+        TabWorkArea,
+        TabInfo,
+    }
 }

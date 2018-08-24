@@ -6,13 +6,13 @@
 
 namespace HuionTablet.Entity
 {
-  public enum MouseLocationType
-  {
-    EXTERNAL = 0,
-    LEFT = 1,
-    RIGHT = 2,
-    TOP = 4,
-    BOTTOM = 8,
-    INNER = 100, // 0x00000064
-  }
+    public enum MouseLocationType
+    {
+        EXTERNAL = 0,
+        LEFT = 1,
+        RIGHT = 2,
+        TOP = 4,
+        BOTTOM = 8,
+        INNER = 100, // 0x00000064
+    }
 }

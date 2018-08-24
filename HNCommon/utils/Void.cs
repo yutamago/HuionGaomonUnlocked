@@ -6,5 +6,5 @@
 
 namespace HuionTablet.utils
 {
-  public delegate void Void();
+    public delegate void Void();
 }

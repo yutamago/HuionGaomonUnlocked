@@ -6,5 +6,5 @@
 
 namespace HuionTablet.utils
 {
-  public delegate void Runnable(object t);
+    public delegate void Runnable(object t);
 }

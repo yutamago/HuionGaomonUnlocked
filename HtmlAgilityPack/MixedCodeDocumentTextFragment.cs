@@ -6,23 +6,17 @@
 
 namespace HtmlAgilityPack
 {
-  public class MixedCodeDocumentTextFragment : MixedCodeDocumentFragment
-  {
-    internal MixedCodeDocumentTextFragment(MixedCodeDocument doc)
-      : base(doc, MixedCodeDocumentFragmentType.Text)
+    public class MixedCodeDocumentTextFragment : MixedCodeDocumentFragment
     {
-    }
+        internal MixedCodeDocumentTextFragment(MixedCodeDocument doc)
+            : base(doc, MixedCodeDocumentFragmentType.Text)
+        {
+        }
 
-    public string Text
-    {
-      get
-      {
-        return this.FragmentText;
-      }
-      set
-      {
-        this.FragmentText = value;
-      }
+        public string Text
+        {
+            get { return this.FragmentText; }
+            set { this.FragmentText = value; }
+        }
     }
-  }
 }

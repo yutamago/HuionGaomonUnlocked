@@ -9,55 +9,49 @@ using System.Drawing;
 
 namespace HuionTablet
 {
-  public class DpiHelper
-  {
-    private float xDpi = 1f;
-    private float yDpi = 1f;
-    private static DpiHelper mInstance;
-
-    private DpiHelper(Graphics g)
+    public class DpiHelper
     {
-      this.xDpi = g.DpiX / 96f;
-      this.yDpi = g.DpiY / 96f;
-    }
+        private static DpiHelper mInstance;
+        private float xDpi = 1f;
+        private float yDpi = 1f;
 
-    public static DpiHelper createInstance(Graphics g)
-    {
-      if (DpiHelper.mInstance == null)
-        DpiHelper.mInstance = new DpiHelper(g);
-      return DpiHelper.mInstance;
-    }
+        private DpiHelper(Graphics g)
+        {
+            this.xDpi = g.DpiX / 96f;
+            this.yDpi = g.DpiY / 96f;
+        }
 
-    public static DpiHelper getInstance()
-    {
-      return DpiHelper.mInstance;
-    }
+        public float XDpi
+        {
+            get { return this.xDpi; }
+        }
 
-    public float XDpi
-    {
-      get
-      {
-        return this.xDpi;
-      }
-    }
+        public float YDpi
+        {
+            get { return this.yDpi; }
+        }
 
-    public float YDpi
-    {
-      get
-      {
-        return this.yDpi;
-      }
-    }
+        public static DpiHelper createInstance(Graphics g)
+        {
+            if (mInstance == null)
+                mInstance = new DpiHelper(g);
+            return mInstance;
+        }
 
-    public int DpiMatrix(int x)
-    {
-      return (int) Math.Round((double) x * (double) this.xDpi);
-    }
+        public static DpiHelper getInstance()
+        {
+            return mInstance;
+        }
 
-    public void DpiMatrix(ref int x, ref int y)
-    {
-      x = (int) Math.Round((double) x * (double) this.xDpi);
-      y = (int) Math.Round((double) y * (double) this.xDpi);
+        public int DpiMatrix(int x)
+        {
+            return (int) Math.Round((double) x * (double) this.xDpi);
+        }
+
+        public void DpiMatrix(ref int x, ref int y)
+        {
+            x = (int) Math.Round((double) x * (double) this.xDpi);
+            y = (int) Math.Round((double) y * (double) this.xDpi);
+        }
     }
-  }
 }

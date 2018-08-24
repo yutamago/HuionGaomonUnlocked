@@ -6,5 +6,5 @@
 
 namespace HuionTablet.utils
 {
-  public delegate void Boolean(bool b);
+    public delegate void Boolean(bool b);
 }

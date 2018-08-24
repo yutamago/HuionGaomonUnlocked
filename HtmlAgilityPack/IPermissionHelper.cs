@@ -6,10 +6,10 @@
 
 namespace HtmlAgilityPack
 {
-  public interface IPermissionHelper
-  {
-    bool GetIsRegistryAvailable();
+    public interface IPermissionHelper
+    {
+        bool GetIsRegistryAvailable();
 
-    bool GetIsDnsAvailable();
-  }
+        bool GetIsDnsAvailable();
+    }
 }

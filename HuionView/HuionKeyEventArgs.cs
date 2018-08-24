@@ -9,109 +9,76 @@ using System.Windows.Forms;
 
 namespace Huion
 {
-  public class HuionKeyEventArgs : EventArgs
-  {
-    private bool isControl;
-    private bool isAlt;
-    private bool isShift;
-    private bool isWin;
-    private bool mHandled;
-    private Keys key;
-    private string mKeyText;
-
-    public HuionKeyEventArgs(Keys keyData, bool control, bool alt, bool shift, bool win)
+    public class HuionKeyEventArgs : EventArgs
     {
-      this.key = keyData;
-      this.isControl = control;
-      this.isAlt = alt;
-      this.isShift = shift;
-      this.isWin = win;
-    }
+        private bool isAlt;
+        private bool isControl;
+        private bool isShift;
+        private bool isWin;
+        private Keys key;
+        private bool mHandled;
+        private string mKeyText;
 
-    public bool Alt
-    {
-      get
-      {
-        return this.isAlt;
-      }
-    }
+        public HuionKeyEventArgs(Keys keyData, bool control, bool alt, bool shift, bool win)
+        {
+            this.key = keyData;
+            this.isControl = control;
+            this.isAlt = alt;
+            this.isShift = shift;
+            this.isWin = win;
+        }
 
-    public bool Control
-    {
-      get
-      {
-        return this.isControl;
-      }
-    }
+        public bool Alt
+        {
+            get { return this.isAlt; }
+        }
 
-    public Keys KeyCode
-    {
-      get
-      {
-        return this.key;
-      }
-      set
-      {
-        this.key = value;
-      }
-    }
+        public bool Control
+        {
+            get { return this.isControl; }
+        }
 
-    public int KeyValue
-    {
-      get
-      {
-        return (int) this.key;
-      }
-    }
+        public Keys KeyCode
+        {
+            get { return this.key; }
+            set { this.key = value; }
+        }
 
-    public bool Shift
-    {
-      get
-      {
-        return this.isShift;
-      }
-    }
+        public int KeyValue
+        {
+            get { return (int) this.key; }
+        }
 
-    public bool Window
-    {
-      get
-      {
-        return this.isWin;
-      }
-    }
+        public bool Shift
+        {
+            get { return this.isShift; }
+        }
 
-    public bool Handled
-    {
-      get
-      {
-        return this.mHandled;
-      }
-      set
-      {
-        this.mHandled = value;
-      }
-    }
+        public bool Window
+        {
+            get { return this.isWin; }
+        }
 
-    public bool HasControls
-    {
-      get
-      {
-        if (!this.isControl && !this.isAlt && !this.isShift)
-          return this.isWin;
-        return true;
-      }
-    }
+        public bool Handled
+        {
+            get { return this.mHandled; }
+            set { this.mHandled = value; }
+        }
 
-    public string KeyText
-    {
-      get
-      {
-        return this.mKeyText;
-      }
-      set
-      {
-        this.mKeyText = value;
-      }
+        public bool HasControls
+        {
+            get
+            {
+                if (!this.isControl && !this.isAlt && !this.isShift)
+                    return this.isWin;
+                return true;
+            }
+        }
+
+        public string KeyText
+        {
+            get { return this.mKeyText; }
+            set { this.mKeyText = value; }
+        }
     }
-  }
 }

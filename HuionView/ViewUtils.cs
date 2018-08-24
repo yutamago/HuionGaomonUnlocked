@@ -10,26 +10,26 @@ using System.Windows.Forms;
 
 namespace Huion
 {
-  public class ViewUtils
-  {
-    public static ToolTip CreateTip(Control v, string text)
+    public class ViewUtils
     {
-      ToolTip toolTip = new ToolTip();
-      toolTip.AutoPopDelay = 5000;
-      toolTip.InitialDelay = 500;
-      toolTip.ReshowDelay = 500;
-      toolTip.ShowAlways = true;
-      toolTip.SetToolTip(v, text);
-      return toolTip;
-    }
+        public static ToolTip CreateTip(Control v, string text)
+        {
+            ToolTip toolTip = new ToolTip();
+            toolTip.AutoPopDelay = 5000;
+            toolTip.InitialDelay = 500;
+            toolTip.ReshowDelay = 500;
+            toolTip.ShowAlways = true;
+            toolTip.SetToolTip(v, text);
+            return toolTip;
+        }
 
-    public static IntPtr CreateCursor()
-    {
-      Bitmap bitmap = new Bitmap(8, 8);
-      Graphics graphics = Graphics.FromImage((Image) bitmap);
-      graphics.DrawEllipse(Pens.Black, new Rectangle(0, 0, bitmap.Width - 1, bitmap.Height - 1));
-      graphics.Dispose();
-      return bitmap.GetHicon();
+        public static IntPtr CreateCursor()
+        {
+            Bitmap bitmap = new Bitmap(8, 8);
+            Graphics graphics = Graphics.FromImage((Image) bitmap);
+            graphics.DrawEllipse(Pens.Black, new Rectangle(0, 0, bitmap.Width - 1, bitmap.Height - 1));
+            graphics.Dispose();
+            return bitmap.GetHicon();
+        }
     }
-  }
 }

@@ -6,5 +6,5 @@
 
 namespace HuionTablet
 {
-  public delegate void SendSreenNum(object senderScreen, object msg);
+    public delegate void SendSreenNum(object senderScreen, object msg);
 }

@@ -6,5 +6,5 @@
 
 namespace HuionTablet
 {
-  public delegate void Send(object sender, object msg);
+    public delegate void Send(object sender, object msg);
 }
