@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{16DB487D-168D-41E1-896C-0CCACB925DFB}</ProjectGuid>
+    <ProjectGuid>{ECA6531D-C15C-4F39-A012-E41AB761280D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AssemblyName>HNApiCs</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <ApplicationVersion>14.4.5.0</ApplicationVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <ApplicationVersion>14.4.5.1</ApplicationVersion>
     <FileAlignment>512</FileAlignment>
     <RootNamespace>Huion</RootNamespace>
     <FileUpgradeFlags>
@@ -16,6 +16,7 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -41,15 +42,15 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HuionApiCsLibrary\HuionApi.cs" />
-    <Compile Include="HuionApiCsLibrary\Wintab32.cs" />
-    <Compile Include="DeployConfigLibrary\DeployConfig.cs" />
-    <Compile Include="DeployConfigLibrary\HuionConst.cs" />
     <Compile Include="DllUtils.cs" />
+    <Compile Include="HuionApi.cs" />
+    <Compile Include="Wintab32.cs" />
     <Compile Include="LOGCONTEXTA.cs" />
     <Compile Include="ORIENTATION.cs" />
     <Compile Include="ROTATION.cs" />
     <Compile Include="PACKET.cs" />
+    <Compile Include="DeployConfig.cs" />
+    <Compile Include="HuionConst.cs" />
     <Compile Include="OEMType.cs" />
     <Compile Include="AssemblyInfo.cs" />
   </ItemGroup>

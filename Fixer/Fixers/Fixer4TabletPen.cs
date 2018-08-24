@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HuionTablet.Fixer4TabletPen
-// Assembly: Fixer, Version=14.4.5.0, Culture=neutral, PublicKeyToken=null
-// MVID: 0244B443-444F-4961-B0E5-29DA8D9959BB
+// Assembly: Fixer, Version=14.4.7.4, Culture=neutral, PublicKeyToken=null
+// MVID: F573D0D8-B2B9-493C-AB71-EC374499E1DC
 // Assembly location: D:\Program Files (x86)\Huion Tablet\Fixer.dll
 
 using HuionTablet.utils;
@@ -17,68 +17,44 @@ namespace HuionTablet
     public static void savePenButtonValue(int index, HNStruct.HNEkey value)
     {
       HNStruct.globalInfo.pbtns[index] = value;
-      IntPtr ptr = HNStruct.globalInfo.userConfig.pbtns;
-      switch (IntPtr.Size)
+      for (int index1 = 0; index1 < (int) HNStruct.globalInfo.tabletInfo.pbtnNum; ++index1)
       {
-        case 4:
-          int index1 = 0;
-          while (index1 < (int) HNStruct.globalInfo.tabletInfo.pbtnNum)
-          {
-            if (index1 == index)
-            {
-              HNStruct.globalInfo.pbtns[index1] = value;
-              Marshal.StructureToPtr((object) HNStruct.globalInfo.pbtns[index1], ptr, false);
-            }
-            else
-              Marshal.StructureToPtr((object) HNStruct.globalInfo.pbtns[index1], ptr, false);
-            ++index1;
-            ptr = new IntPtr(ptr.ToInt32() + Marshal.SizeOf(typeof (HNStruct.HNEkey)));
-          }
-          break;
-        case 8:
-          int index2 = 0;
-          while (index2 < (int) HNStruct.globalInfo.tabletInfo.pbtnNum)
-          {
-            if (index2 == index)
-            {
-              HNStruct.globalInfo.pbtns[index2] = value;
-              Marshal.StructureToPtr((object) HNStruct.globalInfo.pbtns[index2], ptr, false);
-            }
-            else
-              Marshal.StructureToPtr((object) HNStruct.globalInfo.pbtns[index2], ptr, false);
-            ++index2;
-            ptr = new IntPtr(ptr.ToInt64() + (long) Marshal.SizeOf(typeof (HNStruct.HNEkey)));
-          }
-          break;
+        if (index1 == index)
+        {
+          HNStruct.globalInfo.pbtns[index1] = value;
+          TabletConfigUtils.config.ctxEkeys[0].pbtns[index1] = HNStruct.globalInfo.pbtns[index1];
+        }
+        else
+          TabletConfigUtils.config.ctxEkeys[0].pbtns[index1] = HNStruct.globalInfo.pbtns[index1];
       }
     }
 
     public static void bGameCheckedChanged(object sender, EventArgs e)
     {
       byte num = Convert.ToByte(((CheckBox) sender).Checked);
-      HNStruct.globalInfo.userConfig.bGame = num;
-      Console.WriteLine(HNStruct.globalInfo.userConfig.bGame.ToString());
+      TabletConfigUtils.config.bGame = num;
+      Console.WriteLine(TabletConfigUtils.config.bGame.ToString());
     }
 
     public static void inkCheckedChanged(object sender, EventArgs e)
     {
       byte num = Convert.ToByte(((CheckBox) sender).Checked);
-      HNStruct.globalInfo.userConfig.bTabletpc = num;
+      TabletConfigUtils.config.bTabletpc = num;
     }
 
     public static void wintabCheckedChanged(object sender, EventArgs e)
     {
       byte num = Convert.ToByte(((CheckBox) sender).Checked);
-      HNStruct.globalInfo.userConfig.bImproveLinearity = num;
+      TabletConfigUtils.config.bImproveLinearity = num;
     }
 
     public static void onMouseModeChanged(object sender, EventArgs e)
     {
       CheckBox checkBox = (CheckBox) sender;
-      HNStruct.globalInfo.userConfig.bAbsoluteMode = checkBox.Checked ? (byte) 0 : (byte) 1;
+      TabletConfigUtils.config.bAbsoluteMode = checkBox.Checked ? (byte) 0 : (byte) 1;
     }
 
-    public static uint calibratePressVal(HNStruct.HNConfig cfg, uint psVal, uint maxP)
+    public static uint calibratePressVal(HNStruct.HNConfigXML cfg, uint psVal, uint maxP)
     {
       try
       {
@@ -120,7 +96,7 @@ namespace HuionTablet
 
     public static Image getPenImage()
     {
-      return (Image) HuionRender.blowupImage(ImageHelper.getDllImage(Marshal.PtrToStringUni(HuionDriverDLL.hnc_get_pen_image((HnConst.HNTabletType) HNStruct.globalInfo.tabletInfo.devType))), DpiHelper.getInstance().XDpi);
+      return (Image) HuionRender.blowupImage(ImageHelper.getDllImage(Marshal.PtrToStringUni(HuionDriverDLL.hnp_get_pen_image((HnConst.HNTabletType) HNStruct.globalInfo.tabletInfo.devType))), DpiHelper.getInstance().XDpi);
     }
   }
 }

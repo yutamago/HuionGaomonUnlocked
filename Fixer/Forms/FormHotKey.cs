@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HuionTablet.FormHotKey
-// Assembly: Fixer, Version=14.4.5.0, Culture=neutral, PublicKeyToken=null
-// MVID: 0244B443-444F-4961-B0E5-29DA8D9959BB
+// Assembly: Fixer, Version=14.4.7.4, Culture=neutral, PublicKeyToken=null
+// MVID: F573D0D8-B2B9-493C-AB71-EC374499E1DC
 // Assembly location: D:\Program Files (x86)\Huion Tablet\Fixer.dll
 
 using Huion;
@@ -12,7 +12,6 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace HuionTablet
@@ -139,7 +138,7 @@ namespace HuionTablet
           else if (!"双指逆时针旋转".Equals(name))
             this.comboBoxMekey.Items.Add((object) (name + "    " + str));
         }
-        if (HNStruct.globalInfo.names.Length == 0)
+        if (HNStruct.globalInfo.tabletInfo.sDevType.Equals("HUION_M182") || HNStruct.globalInfo.names.Length == 0)
           return;
         this.comboBoxMekey.Text = this.comboBoxMekey.Items[selectIndex].ToString();
       }
@@ -151,13 +150,13 @@ namespace HuionTablet
     {
       bool boolean1 = Convert.ToBoolean(HNStruct.globalInfo.tabletInfo.hbtnNum);
       bool boolean2 = Convert.ToBoolean(HNStruct.globalInfo.tabletInfo.sbtnNum);
-      bool boolean3 = Convert.ToBoolean(HNStruct.globalInfo.userConfig.mekeyNum);
+      bool boolean3 = Convert.ToBoolean(HNStruct.globalInfo.layoutTablet.mekeyNum);
       this.chkHEkey.Enabled = boolean1;
       this.chkSEkey.Enabled = boolean2;
       this.chkMEkey.Enabled = boolean3;
-      bool boolean4 = Convert.ToBoolean(HNStruct.globalInfo.userConfig.bEnableHBtn);
-      bool boolean5 = Convert.ToBoolean(HNStruct.globalInfo.userConfig.bEnableSBtn);
-      bool boolean6 = Convert.ToBoolean(HNStruct.globalInfo.userConfig.bEnableMBtn);
+      bool boolean4 = Convert.ToBoolean(TabletConfigUtils.config.bEnableHBtn);
+      bool boolean5 = Convert.ToBoolean(TabletConfigUtils.config.bEnableSBtn);
+      bool boolean6 = Convert.ToBoolean(TabletConfigUtils.config.bEnableMBtn);
       this.chkHEkey.Checked = boolean4;
       this.chkSEkey.Checked = boolean5;
       this.chkMEkey.Checked = boolean6;
@@ -219,19 +218,19 @@ namespace HuionTablet
     private void chkHEkey_CheckedChanged(object sender, EventArgs e)
     {
       int num = (int) Convert.ToByte(this.chkHEkey.Checked);
-      HNStruct.globalInfo.userConfig.bEnableHBtn = Convert.ToByte(this.chkHEkey.Checked);
+      TabletConfigUtils.config.bEnableHBtn = Convert.ToByte(this.chkHEkey.Checked);
     }
 
     private void chkSEkey_CheckedChanged(object sender, EventArgs e)
     {
       int num = (int) Convert.ToByte(this.chkSEkey.Checked);
-      HNStruct.globalInfo.userConfig.bEnableSBtn = Convert.ToByte(this.chkSEkey.Checked);
+      TabletConfigUtils.config.bEnableSBtn = Convert.ToByte(this.chkSEkey.Checked);
     }
 
     private void chkMEkey_CheckedChanged(object sender, EventArgs e)
     {
       int num = (int) Convert.ToByte(this.chkMEkey.Checked);
-      HNStruct.globalInfo.userConfig.bEnableMBtn = Convert.ToByte(this.chkMEkey.Checked);
+      TabletConfigUtils.config.bEnableMBtn = Convert.ToByte(this.chkMEkey.Checked);
     }
 
     private void clickBtn_Click(object sender, EventArgs e)
@@ -256,56 +255,28 @@ namespace HuionTablet
       if (huionKeyLayout.KeyType == HuionKeyType.HARDKEY)
       {
         this.clickBtn.Text = value.ToString();
-        IntPtr ptr = HNStruct.globalInfo.userConfig.hbtns;
         huionKeyLayout.Key = value;
         HNStruct.globalInfo.hbtns[huionKeyLayout.KeyIndex] = value;
-        switch (IntPtr.Size)
-        {
-          case 4:
-            ptr = new IntPtr(ptr.ToInt32() + huionKeyLayout.KeyIndex * Marshal.SizeOf(typeof (HNStruct.HNEkey)));
-            break;
-          case 8:
-            ptr = new IntPtr(ptr.ToInt64() + (long) (huionKeyLayout.KeyIndex * Marshal.SizeOf(typeof (HNStruct.HNEkey))));
-            break;
-        }
-        Marshal.StructureToPtr((object) HNStruct.globalInfo.hbtns[huionKeyLayout.KeyIndex], ptr, false);
+        TabletConfigUtils.config.ctxEkeys[0].hbtns[huionKeyLayout.KeyIndex] = HNStruct.globalInfo.hbtns[huionKeyLayout.KeyIndex];
       }
       else if (huionKeyLayout.KeyType == HuionKeyType.SOFTKEY)
       {
         this.clickBtn.Text = value.ToString();
-        IntPtr ptr = HNStruct.globalInfo.userConfig.sbtns;
         huionKeyLayout.Key = value;
         HNStruct.globalInfo.sbtns[huionKeyLayout.KeyIndex] = value;
-        switch (IntPtr.Size)
-        {
-          case 4:
-            ptr = new IntPtr(ptr.ToInt32() + huionKeyLayout.KeyIndex * Marshal.SizeOf(typeof (HNStruct.HNEkey)));
-            break;
-          case 8:
-            ptr = new IntPtr(ptr.ToInt64() + (long) (huionKeyLayout.KeyIndex * Marshal.SizeOf(typeof (HNStruct.HNEkey))));
-            break;
-        }
-        Marshal.StructureToPtr((object) HNStruct.globalInfo.sbtns[huionKeyLayout.KeyIndex], ptr, false);
+        TabletConfigUtils.config.ctxEkeys[0].sbtns[huionKeyLayout.KeyIndex] = HNStruct.globalInfo.sbtns[huionKeyLayout.KeyIndex];
       }
       else
       {
         if (huionKeyLayout.KeyType != HuionKeyType.MULTIKEY)
           return;
-        IntPtr ptr = HNStruct.globalInfo.meKeys[huionKeyLayout.KeyIndex].ekeys;
         int meIndex = this.getMeIndex();
         huionKeyLayout.MutliKeys[meIndex] = value;
         HNStruct.globalInfo.mbtns[meIndex] = value;
         this.SetTouchSinger(this.mTouchIndex);
-        switch (IntPtr.Size)
-        {
-          case 4:
-            ptr = new IntPtr(ptr.ToInt32() + meIndex * Marshal.SizeOf(typeof (HNStruct.HNEkey)));
-            break;
-          case 8:
-            ptr = new IntPtr(ptr.ToInt64() + (long) (meIndex * Marshal.SizeOf(typeof (HNStruct.HNEkey))));
-            break;
-        }
-        Marshal.StructureToPtr((object) HNStruct.globalInfo.mbtns[meIndex], ptr, false);
+        for (int index = 0; index < (int) TabletConfigUtils.config.ctxEkeys[0].ctxMek[0].eks[0].num; ++index)
+          TabletConfigUtils.config.ctxEkeys[0].ctxMek[0].eks[0].eks[index] = HNStruct.globalInfo.mbtns[index];
+        Console.WriteLine("shezhi");
       }
     }
 

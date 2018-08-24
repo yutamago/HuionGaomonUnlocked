@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HuionTablet.FormSettings
-// Assembly: Fixer, Version=14.4.5.0, Culture=neutral, PublicKeyToken=null
-// MVID: 0244B443-444F-4961-B0E5-29DA8D9959BB
+// Assembly: Fixer, Version=14.4.7.4, Culture=neutral, PublicKeyToken=null
+// MVID: F573D0D8-B2B9-493C-AB71-EC374499E1DC
 // Assembly location: D:\Program Files (x86)\Huion Tablet\Fixer.dll
 
 using Huion;
@@ -31,6 +31,7 @@ namespace HuionTablet
     private HuionClickableButton btnShortcuts;
     private HuionClickableButton btnCommon;
     private Panel panel2;
+    private HuionClickableButton btnBrightness;
 
     public static void showForm(IntPtr mainFormHandle, bool fromToolbar, int tabIndex)
     {
@@ -55,6 +56,7 @@ namespace HuionTablet
       this.btnCommon.Text = ResourceCulture.GetString("SetttingsCommon");
       this.btnShortcuts.Text = ResourceCulture.GetString("SettingsHotkey");
       this.btnAbout.Text = ResourceCulture.GetString("soft_update");
+      this.btnBrightness.Text = "亮度设置";
       MiddleModule.eventPost += new Post(this.MiddleModule_eventSend);
     }
 
@@ -78,6 +80,7 @@ namespace HuionTablet
         this.btnShortcuts.PerformClick();
       else
         this.btnCommon.PerformClick();
+      this.btnBrightness.Visible = false;
       if (this.isFromToolbar)
         this.CenterToScreen();
       else
@@ -98,6 +101,7 @@ namespace HuionTablet
       this.btnCommon.Clickable = true;
       this.btnShortcuts.Clickable = true;
       this.btnAbout.Clickable = true;
+      this.btnBrightness.Clickable = true;
       huionClickableButton.Clickable = false;
       this.panelTab.Invalidate();
       Form form = (Form) null;
@@ -107,6 +111,8 @@ namespace HuionTablet
         form = (Form) new FormShortcut(this.mMainFormHandle);
       else if (huionClickableButton == this.btnAbout)
         form = (Form) new FormSettingAbout();
+      else if (huionClickableButton == this.btnBrightness)
+        form = (Form) new FormSetingBrightness();
       if (form == null)
         return;
       foreach (Form control in (ArrangedElementCollection) this.panel2.Controls)
@@ -154,6 +160,7 @@ namespace HuionTablet
       this.panelContent = new Panel();
       this.panel2 = new Panel();
       this.panelTab = new Panel();
+      this.btnBrightness = new HuionClickableButton();
       this.panelMain = new Panel();
       this.pictureBox1 = new PictureBox();
       this.panel1 = new Panel();
@@ -178,6 +185,7 @@ namespace HuionTablet
       this.panel2.Name = "panel2";
       this.panel2.Size = new Size(415, 169);
       this.panel2.TabIndex = 2;
+      this.panelTab.Controls.Add((Control) this.btnBrightness);
       this.panelTab.Controls.Add((Control) this.panelMain);
       this.panelTab.Controls.Add((Control) this.panel1);
       this.panelTab.Controls.Add((Control) this.btnAbout);
@@ -191,6 +199,24 @@ namespace HuionTablet
       this.panelTab.Size = new Size(133, 428);
       this.panelTab.TabIndex = 0;
       this.panelTab.Paint += new PaintEventHandler(this.panelTab_Paint);
+      this.btnBrightness.AutoEllipsis = true;
+      this.btnBrightness.BackColor = Color.Transparent;
+      this.btnBrightness.BackgroundImageLayout = ImageLayout.Stretch;
+      this.btnBrightness.Clickable = true;
+      this.btnBrightness.Dock = DockStyle.Top;
+      this.btnBrightness.FlatAppearance.BorderSize = 0;
+      this.btnBrightness.FlatStyle = FlatStyle.Flat;
+      this.btnBrightness.ForeColor = SystemColors.InactiveCaptionText;
+      this.btnBrightness.Location = new Point(0, 169);
+      this.btnBrightness.Margin = new Padding(3, 4, 3, 4);
+      this.btnBrightness.Name = "btnBrightness";
+      this.btnBrightness.Size = new Size(132, 56);
+      this.btnBrightness.TabIndex = 4;
+      this.btnBrightness.Text = "OSD";
+      this.btnBrightness.TextAlign = ContentAlignment.MiddleLeft;
+      this.btnBrightness.UseVisualStyleBackColor = false;
+      this.btnBrightness.Click += new EventHandler(this.tabBtnOnClick);
+      this.btnBrightness.Paint += new PaintEventHandler(this.tabBtnOnPaint);
       this.panelMain.BackColor = SystemColors.Control;
       this.panelMain.BackgroundImage = (Image) componentResourceManager.GetObject("panelMain.BackgroundImage");
       this.panelMain.BackgroundImageLayout = ImageLayout.Stretch;
@@ -208,9 +234,9 @@ namespace HuionTablet
       this.pictureBox1.TabIndex = 2;
       this.pictureBox1.TabStop = false;
       this.panel1.BackgroundImageLayout = ImageLayout.Stretch;
-      this.panel1.Location = new Point(0, 166);
+      this.panel1.Location = new Point(0, 227);
       this.panel1.Name = "panel1";
-      this.panel1.Size = new Size(132, 262);
+      this.panel1.Size = new Size(132, 201);
       this.panel1.TabIndex = 3;
       this.btnAbout.AutoEllipsis = true;
       this.btnAbout.BackColor = Color.Transparent;
@@ -219,7 +245,7 @@ namespace HuionTablet
       this.btnAbout.FlatAppearance.BorderColor = SystemColors.Control;
       this.btnAbout.FlatAppearance.BorderSize = 0;
       this.btnAbout.FlatStyle = FlatStyle.Flat;
-      this.btnAbout.ForeColor = SystemColors.Window;
+      this.btnAbout.ForeColor = SystemColors.InfoText;
       this.btnAbout.Location = new Point(0, 112);
       this.btnAbout.Margin = new Padding(3, 4, 3, 4);
       this.btnAbout.Name = "btnAbout";

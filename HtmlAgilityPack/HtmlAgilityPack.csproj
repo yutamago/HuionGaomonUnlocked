@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{03EBD266-B24B-4E62-9F14-B6C840E3690C}</ProjectGuid>
+    <ProjectGuid>{090CA7D9-F1ED-4D10-A36D-97CD7A1B27B9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AssemblyName>HtmlAgilityPack</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <ApplicationVersion>1.4.6.0</ApplicationVersion>
     <FileAlignment>512</FileAlignment>
     <RootNamespace>HtmlAgilityPack</RootNamespace>
@@ -16,6 +16,7 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>

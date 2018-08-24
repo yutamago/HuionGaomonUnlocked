@@ -940,19 +940,7 @@ namespace HtmlAgilityPack
       if (userId != null && password != null)
       {
         credentials = new NetworkCredential(userId, password);
-        CredentialCache credentialCache = new CredentialCache()
-        {
-          {
-            proxy.Address,
-            "Basic",
-            credentials
-          },
-          {
-            proxy.Address,
-            "Digest",
-            credentials
-          }
-        };
+        CredentialCache credentialCache = new CredentialCache() { { proxy.Address, "Basic", credentials }, { proxy.Address, "Digest", credentials } };
       }
       return this.Load(url, "GET", proxy, credentials);
     }

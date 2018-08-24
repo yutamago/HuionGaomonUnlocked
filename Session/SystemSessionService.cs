@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HuionTablet.Lib.SystemSessionService
-// Assembly: Session, Version=14.4.5.0, Culture=neutral, PublicKeyToken=null
-// MVID: 39273FDA-F068-4F27-97F0-71CFA7804C8D
+// Assembly: Session, Version=14.4.5.1, Culture=neutral, PublicKeyToken=null
+// MVID: FD4A05A9-AB6B-45B7-AB2F-2850B74E1F56
 // Assembly location: D:\Program Files (x86)\Huion Tablet\Session.dll
 
 using Microsoft.Win32;

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HuionTablet.FormInfo
-// Assembly: Fixer, Version=14.4.5.0, Culture=neutral, PublicKeyToken=null
-// MVID: 0244B443-444F-4961-B0E5-29DA8D9959BB
+// Assembly: Fixer, Version=14.4.7.4, Culture=neutral, PublicKeyToken=null
+// MVID: F573D0D8-B2B9-493C-AB71-EC374499E1DC
 // Assembly location: D:\Program Files (x86)\Huion Tablet\Fixer.dll
 
 using Huion;
@@ -111,7 +111,7 @@ namespace HuionTablet
         this.labelCompany.Text = ResourceCulture.GetString("FormInfo_lbCommpanyText");
       else
         this.labelCompany.Text = "Company Name";
-      this.labelVersion.Text = ResourceCulture.GetString("FormInfo_lbVersionText") + "v14.5.0";
+      this.labelVersion.Text = ResourceCulture.GetString("FormInfo_lbVersionText") + "v14.7.4";
       this.labelRight.Text = ResourceCulture.GetString("FormInfo_lbReservedText") + "2011-2018";
       this.buttonExport.Text = ResourceCulture.GetString("FormInfo_btEmportText");
       this.buttonImport.Text = ResourceCulture.GetString("FormInfo_btImportText");

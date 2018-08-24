@@ -1153,13 +1153,7 @@ namespace HtmlAgilityPack
           outText.Write(" " + str2);
         else if (this._ownerdocument.OptionOutputOptimizeAttributeValues)
         {
-          if (att.Value.IndexOfAny(new char[4]
-          {
-            '\n',
-            '\r',
-            '\t',
-            ' '
-          }) < 0)
+          if (att.Value.IndexOfAny(new char[4]{ '\n', '\r', '\t', ' ' }) < 0)
             outText.Write(" " + str2 + "=" + att.Value);
           else
             outText.Write(" " + str2 + "=" + str1 + att.Value + str1);

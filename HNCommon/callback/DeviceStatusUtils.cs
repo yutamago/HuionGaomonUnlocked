@@ -1,13 +1,14 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HuionTablet.DeviceStatusUtils
-// Assembly: HNCommon, Version=14.4.5.0, Culture=neutral, PublicKeyToken=null
-// MVID: F61A447E-F5B9-4160-AD25-173BA5066379
+// Assembly: HNCommon, Version=14.4.7.4, Culture=neutral, PublicKeyToken=null
+// MVID: 25752B5D-65A2-4F38-BCC4-D8B7ED057FB9
 // Assembly location: D:\Program Files (x86)\Huion Tablet\HNCommon.dll
 
 using Huion;
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace HuionTablet
 {
@@ -18,23 +19,33 @@ namespace HuionTablet
     public const int HD_MSG_VAL_CLOSE = 0;
     public const int HD_MSG_VAL_OPEN = 1;
     public const int HD_MSG_VAL_CONFIG_CHANGE = 2;
+    public const int HD_MSG_VAL_MUXKEY0 = 16;
+    public const int HD_MSG_VAL_MUXKEY1 = 17;
+    public const int HD_MSG_VAL_MUXKEY2 = 18;
     private static DeviceStatusUtils.OpenDeviceCallbcak mConfigCallback;
     public static DeviceStatusUtils.DeviceConfigChanged deviceConfigListener;
+    public static DeviceStatusUtils.MekeyIndexChanged mekeyIndexListener;
 
     public static void deviceConfigCallback(uint msgVal)
     {
-      if (msgVal != 2U || DeviceStatusUtils.deviceConfigListener == null)
+      if (msgVal != 2U && msgVal != 16U && (msgVal != 17U && msgVal != 18U) || DeviceStatusUtils.deviceConfigListener == null)
         return;
-      DeviceStatusUtils.deviceConfigListener(2);
+      DeviceStatusUtils.deviceConfigListener((int) msgVal);
     }
 
     public static void autoOpenDevice(object obj)
     {
       try
       {
+        string s1 = Application.StartupPath + "\\res\\config_user.xml";
+        string s2 = Application.StartupPath + "\\res\\layout_tablet.xml";
+        IntPtr coTaskMemAuto1 = Marshal.StringToCoTaskMemAuto(s1);
+        IntPtr coTaskMemAuto2 = Marshal.StringToCoTaskMemAuto(s2);
         if (DeviceStatusUtils.mConfigCallback == null)
           DeviceStatusUtils.mConfigCallback = new DeviceStatusUtils.OpenDeviceCallbcak(DeviceStatusUtils.deviceConfigCallback);
-        int num = (int) HuionDriverDLL.hnd_open(DeviceStatusUtils.mConfigCallback);
+        int num = (int) HuionDriverDLL.hnd_open(DeviceStatusUtils.mConfigCallback, coTaskMemAuto1, coTaskMemAuto2);
+        Marshal.FreeCoTaskMem(coTaskMemAuto1);
+        Marshal.FreeCoTaskMem(coTaskMemAuto2);
       }
       catch (Exception ex)
       {
@@ -45,15 +56,11 @@ namespace HuionTablet
 
     public void openDeviceCallback(uint msgVal)
     {
-      if (msgVal == 2U)
-      {
-        DeviceStatusUtils.deviceConfigCallback(2U);
-      }
+      HuionLog.printLog("openDeviceCallback1", "uint msgVal = " + (object) msgVal);
+      if (msgVal == 2U || msgVal == 16U || (msgVal == 17U || msgVal == 18U))
+        DeviceStatusUtils.deviceConfigCallback(msgVal);
       else
-      {
-        HuionLog.printLog("openDeviceCallback1", "uint msgVal = " + (object) msgVal);
         this.onDelayCallback((object) msgVal);
-      }
     }
 
     private void onDelayCallback(object o)
@@ -130,5 +137,7 @@ namespace HuionTablet
     public delegate void OpenDeviceCallbcak(uint msgVal);
 
     public delegate void DeviceConfigChanged(int type);
+
+    public delegate void MekeyIndexChanged(int type);
   }
 }

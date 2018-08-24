@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HuionTablet.view.HuionWorkAreaPictureRect
-// Assembly: HNCommon, Version=14.4.5.0, Culture=neutral, PublicKeyToken=null
-// MVID: F61A447E-F5B9-4160-AD25-173BA5066379
+// Assembly: HNCommon, Version=14.4.7.4, Culture=neutral, PublicKeyToken=null
+// MVID: 25752B5D-65A2-4F38-BCC4-D8B7ED057FB9
 // Assembly location: D:\Program Files (x86)\Huion Tablet\HNCommon.dll
 
 using HuionTablet.Entity;
@@ -16,20 +16,8 @@ namespace HuionTablet.view
 {
   public class HuionWorkAreaPictureRect : PictureBox
   {
-    private HNStruct.HNRectRatio mScreenRectRatio = new HNStruct.HNRectRatio()
-    {
-      l = 0.0f,
-      t = 0.0f,
-      r = 1f,
-      b = 1f
-    };
-    private HNStruct.HNRectRatio mDeviceRectRatio = new HNStruct.HNRectRatio()
-    {
-      l = 0.0f,
-      t = 0.0f,
-      r = 1f,
-      b = 1f
-    };
+    private HNStruct.HNRectRatio mScreenRectRatio = new HNStruct.HNRectRatio() { l = 0.0f, t = 0.0f, r = 1f, b = 1f };
+    private HNStruct.HNRectRatio mDeviceRectRatio = new HNStruct.HNRectRatio() { l = 0.0f, t = 0.0f, r = 1f, b = 1f };
     public EventHandler ScreenRatioChanged;
     public EventHandler DeviceRatioChanged;
     private Rectangle mScreenRect;

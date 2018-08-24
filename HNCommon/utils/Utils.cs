@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HuionTablet.utils.Utils
-// Assembly: HNCommon, Version=14.4.5.0, Culture=neutral, PublicKeyToken=null
-// MVID: F61A447E-F5B9-4160-AD25-173BA5066379
+// Assembly: HNCommon, Version=14.4.7.4, Culture=neutral, PublicKeyToken=null
+// MVID: 25752B5D-65A2-4F38-BCC4-D8B7ED057FB9
 // Assembly location: D:\Program Files (x86)\Huion Tablet\HNCommon.dll
 
 using HuionTablet.Entity;
@@ -43,13 +43,7 @@ namespace HuionTablet.utils
     {
       float num1 = (float) imageSize.Width / (float) keyPanelSize.cx;
       float num2 = (float) imageSize.Height / (float) keyPanelSize.cy;
-      return new Rectangle()
-      {
-        X = (int) Math.Round((double) keyRect.left * (double) num1),
-        Y = (int) Math.Round((double) keyRect.top * (double) num2),
-        Width = (int) Math.Round((double) (keyRect.right - keyRect.left) * (double) num1),
-        Height = (int) Math.Round((double) (keyRect.bottom - keyRect.top) * (double) num2)
-      };
+      return new Rectangle() { X = (int) Math.Round((double) keyRect.left * (double) num1), Y = (int) Math.Round((double) keyRect.top * (double) num2), Width = (int) Math.Round((double) (keyRect.right - keyRect.left) * (double) num1), Height = (int) Math.Round((double) (keyRect.bottom - keyRect.top) * (double) num2) };
     }
 
     public static Rectangle rotateRatioRect(Rectangle src, HNStruct.HNRectRatio ratio, int angle)
@@ -270,15 +264,14 @@ namespace HuionTablet.utils
       startInfo.WorkingDirectory = Environment.CurrentDirectory;
       startInfo.FileName = Application.ExecutablePath;
       startInfo.Verb = "runas";
-      if (!single)
-        startInfo.Arguments = "huion-luwu";
       try
       {
         Process.Start(startInfo);
         Application.Exit();
       }
-      catch
+      catch (Exception ex)
       {
+        HuionLog.saveLog("run as admin", ex.Message);
       }
     }
 

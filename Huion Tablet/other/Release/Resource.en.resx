@@ -150,4 +150,7 @@
   <data name="Version" xml:space="preserve">
     <value>Version Number：</value>
   </data>
+  <data name="Check_updateTxt" xml:space="preserve">
+    <value>Click to view updates</value>
+  </data>
 </root>

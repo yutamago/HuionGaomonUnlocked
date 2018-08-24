@@ -167,11 +167,7 @@ namespace HtmlAgilityPack
 
     public HtmlAttribute Clone()
     {
-      return new HtmlAttribute(this._ownerdocument)
-      {
-        Name = this.Name,
-        Value = this.Value
-      };
+      return new HtmlAttribute(this._ownerdocument) { Name = this.Name, Value = this.Value };
     }
 
     public void Remove()

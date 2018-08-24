@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HuionTablet.SettingsUtil
-// Assembly: HNCommon, Version=14.4.5.0, Culture=neutral, PublicKeyToken=null
-// MVID: F61A447E-F5B9-4160-AD25-173BA5066379
+// Assembly: HNCommon, Version=14.4.7.4, Culture=neutral, PublicKeyToken=null
+// MVID: 25752B5D-65A2-4F38-BCC4-D8B7ED057FB9
 // Assembly location: D:\Program Files (x86)\Huion Tablet\HNCommon.dll
 
 using Huion;
@@ -9,6 +9,7 @@ using HuionTablet.utils;
 using IWshRuntimeLibrary;
 using Microsoft.Win32;
 using System;
+using System.IO;
 using System.Security.AccessControl;
 using System.Windows.Forms;
 using System.Xml;
@@ -59,13 +60,39 @@ namespace HuionTablet
       {
         if (value)
         {
-          IWshShortcut shortcut = (IWshShortcut) ((IWshShell3) new WshShellClass()).CreateShortcut(Utils.CommonStartupLinkPath);
+          IWshShortcut shortcut = (IWshShortcut)new WshShellClass().CreateShortcut(Utils.CommonStartupLinkPath);
           shortcut.TargetPath = Utils.ExecutablePath;
           shortcut.WindowStyle = 7;
           shortcut.Save();
         }
-        else
+        else if (Utils.isWin10)
+        {
           System.IO.File.Delete(Utils.CommonStartupLinkPath);
+        }
+        else
+        {
+          try
+          {
+            if (!System.IO.File.Exists(Utils.CommonStartupLinkPath))
+              return;
+            string commonStartupLinkPath = Utils.CommonStartupLinkPath;
+            FileInfo fileInfo = new FileInfo(commonStartupLinkPath);
+            if (fileInfo.IsReadOnly)
+            {
+              FileSecurity accessControl = fileInfo.GetAccessControl();
+              accessControl.AddAccessRule(new FileSystemAccessRule("Everyone", FileSystemRights.FullControl, AccessControlType.Allow));
+              accessControl.AddAccessRule(new FileSystemAccessRule("Users", FileSystemRights.FullControl, AccessControlType.Allow));
+              fileInfo.SetAccessControl(accessControl);
+              System.IO.File.Delete(commonStartupLinkPath);
+            }
+            else
+              System.IO.File.Delete(Utils.CommonStartupLinkPath);
+          }
+          catch (Exception ex)
+          {
+            HuionLog.saveLog("删除win7启动快捷方式", ex.Message);
+          }
+        }
       }
     }
 

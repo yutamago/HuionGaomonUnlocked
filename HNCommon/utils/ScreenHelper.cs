@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HuionTablet.utils.ScreenHelper
-// Assembly: HNCommon, Version=14.4.5.0, Culture=neutral, PublicKeyToken=null
-// MVID: F61A447E-F5B9-4160-AD25-173BA5066379
+// Assembly: HNCommon, Version=14.4.7.4, Culture=neutral, PublicKeyToken=null
+// MVID: 25752B5D-65A2-4F38-BCC4-D8B7ED057FB9
 // Assembly location: D:\Program Files (x86)\Huion Tablet\HNCommon.dll
 
 using System;
@@ -109,13 +109,7 @@ namespace HuionTablet.utils
         num2 = monitorinfoex.Monitor.Right;
         num4 = monitorinfoex.Monitor.Bottom;
       }
-      return new HNStruct.RECT()
-      {
-        Left = num1,
-        Bottom = num4,
-        Right = num2,
-        Top = num3
-      };
+      return new HNStruct.RECT() { Left = num1, Bottom = num4, Right = num2, Top = num3 };
     }
   }
 }

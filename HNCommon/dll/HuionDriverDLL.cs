@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HuionTablet.HuionDriverDLL
-// Assembly: HNCommon, Version=14.4.5.0, Culture=neutral, PublicKeyToken=null
-// MVID: F61A447E-F5B9-4160-AD25-173BA5066379
+// Assembly: HNCommon, Version=14.4.7.4, Culture=neutral, PublicKeyToken=null
+// MVID: 25752B5D-65A2-4F38-BCC4-D8B7ED057FB9
 // Assembly location: D:\Program Files (x86)\Huion Tablet\HNCommon.dll
 
 using HuionTablet.utils;
@@ -18,11 +18,11 @@ namespace HuionTablet
     public static readonly bool isX64 = IntPtr.Size == 8;
     public const string DLLNAME_USER32 = "User32.dll";
 
-    public static uint hnd_open(DeviceStatusUtils.OpenDeviceCallbcak callback)
+    public static uint hnd_open(DeviceStatusUtils.OpenDeviceCallbcak callback, IntPtr xmlPathConfig, IntPtr xmlPathLayout)
     {
       if (HuionDriverDLL.isX64)
-        return HuionDriverDLL_X64.hnd_open(callback);
-      return HuionDriverDLL_X86.hnd_open(callback);
+        return HuionDriverDLL_X64.hnd_open(callback, xmlPathConfig, xmlPathLayout);
+      return HuionDriverDLL_X86.hnd_open(callback, xmlPathConfig, xmlPathLayout);
     }
 
     public static void hnd_close()
@@ -48,46 +48,56 @@ namespace HuionTablet
       return HuionDriverDLL_X86.hnd_get_tablet_info();
     }
 
-    public static uint hnd_init_config()
+    public static void hnx_free_PHNConfig(IntPtr cfg)
     {
       if (HuionDriverDLL.isX64)
-        return HuionDriverDLL_X64.hnd_init_config();
-      return HuionDriverDLL_X86.hnd_init_config();
+        HuionDriverDLL_X64.hnx_free_PHNConfig(cfg);
+      else
+        HuionDriverDLL_X86.hnx_free_PHNConfig(cfg);
     }
 
-    public static IntPtr hnd_get_tablet_layout()
+    public static void hnx_free_PHNLayoutTablet(IntPtr cfg)
     {
       if (HuionDriverDLL.isX64)
-        return HuionDriverDLL_X64.hnd_get_tablet_layout();
-      return HuionDriverDLL_X86.hnd_get_tablet_layout();
+        HuionDriverDLL_X64.hnx_free_PHNLayoutTablet(cfg);
+      else
+        HuionDriverDLL_X86.hnx_free_PHNLayoutTablet(cfg);
     }
 
-    public static uint hnd_read_config(ref HNStruct.HNConfig cfg, IntPtr path)
+    public static void hnx_free_PHNLayoutPen(IntPtr cfg)
     {
       if (HuionDriverDLL.isX64)
-        return HuionDriverDLL_X64.hnd_read_config(ref cfg, path);
-      return HuionDriverDLL_X86.hnd_read_config(ref cfg, path);
+        HuionDriverDLL_X64.hnx_free_PHNLayoutPen(cfg);
+      else
+        HuionDriverDLL_X86.hnx_free_PHNLayoutPen(cfg);
     }
 
-    public static uint hnd_read_layout_tablet(ref HNStruct.HNLayoutTablet layoutTablet, ref HNStruct.HNConfig cfg)
+    public static IntPtr hnx_read_layout_tablet(ref HNStruct.HNTabletInfo tabletinfo, IntPtr cfg, IntPtr path)
     {
       if (HuionDriverDLL.isX64)
-        return HuionDriverDLL_X64.hnd_read_layout_tablet(ref layoutTablet, ref cfg);
-      return HuionDriverDLL_X86.hnd_read_layout_tablet(ref layoutTablet, ref cfg);
+        return HuionDriverDLL_X64.hnx_read_layout_tablet(ref tabletinfo, cfg, path);
+      return HuionDriverDLL_X86.hnx_read_layout_tablet(ref tabletinfo, cfg, path);
     }
 
-    public static uint hnd_read_layout_pen(ref HNStruct.HNLayoutPen layoutPen, string sPenNode)
+    public static IntPtr hnx_read_config(ref HNStruct.HNTabletInfo tabletinfo, IntPtr path)
     {
       if (HuionDriverDLL.isX64)
-        return HuionDriverDLL_X64.hnd_read_layout_pen(ref layoutPen, sPenNode);
-      return HuionDriverDLL_X86.hnd_read_layout_pen(ref layoutPen, sPenNode);
+        return HuionDriverDLL_X64.hnx_read_config(ref tabletinfo, path);
+      return HuionDriverDLL_X86.hnx_read_config(ref tabletinfo, path);
     }
 
-    public static uint hnd_save_config(ref HNStruct.HNConfig cfg, IntPtr path)
+    public static IntPtr hnx_read_layout_pen(ref HNStruct.HNTabletInfo tabletinfo, IntPtr path)
     {
       if (HuionDriverDLL.isX64)
-        return HuionDriverDLL_X64.hnd_save_config(ref cfg, path);
-      return HuionDriverDLL_X86.hnd_save_config(ref cfg, path);
+        return HuionDriverDLL_X64.hnx_read_layout_pen(ref tabletinfo, path);
+      return HuionDriverDLL_X86.hnx_read_layout_pen(ref tabletinfo, path);
+    }
+
+    public static char hnx_save_config(IntPtr cfg, IntPtr tabletinfo, IntPtr sourcePath, IntPtr savePath)
+    {
+      if (HuionDriverDLL.isX64)
+        return HuionDriverDLL_X64.hnx_save_config(cfg, tabletinfo, sourcePath, savePath);
+      return HuionDriverDLL_X86.hnx_save_config(cfg, tabletinfo, sourcePath, savePath);
     }
 
     public static void hnd_notify_config_changed()
@@ -96,13 +106,6 @@ namespace HuionTablet
         HuionDriverDLL_X64.hnd_notify_config_changed();
       else
         HuionDriverDLL_X86.hnd_notify_config_changed();
-    }
-
-    public static uint hnd_restore_config(ref HNStruct.HNConfig cfg)
-    {
-      if (HuionDriverDLL.isX64)
-        return HuionDriverDLL_X64.hnd_restore_config(ref cfg);
-      return HuionDriverDLL_X86.hnd_restore_config(ref cfg);
     }
 
     public static void hnd_refresh_monitors(IntPtr mi, uint num)
@@ -127,6 +130,21 @@ namespace HuionTablet
         HuionDriverDLL_X64.hnd_end_calibrate();
       else
         HuionDriverDLL_X86.hnd_end_calibrate();
+    }
+
+    public static void hnd_set_screenSaverRunning(int isRunning)
+    {
+      if (HuionDriverDLL.isX64)
+        HuionDriverDLL_X64.hnd_set_screenSaverRunning(isRunning);
+      else
+        HuionDriverDLL_X86.hnd_set_screenSaverRunning(isRunning);
+    }
+
+    public static uint hnc_calibrate_press_tablet(IntPtr pconfig, ref HNStruct.HNTabletInfo tabletinfo, uint psVal, uint maxP)
+    {
+      if (HuionDriverDLL.isX64)
+        return HuionDriverDLL_X64.hnc_calibrate_press_tablet(pconfig, ref tabletinfo, psVal, maxP);
+      return HuionDriverDLL_X86.hnc_calibrate_press_tablet(pconfig, ref tabletinfo, psVal, maxP);
     }
 
     public static uint hnc_equation_power(double pv, double x, double maxP)
@@ -164,33 +182,33 @@ namespace HuionTablet
       return HuionDriverDLL_X86.hnc_get_dev_type(t);
     }
 
-    public static IntPtr hnc_get_pen_image(HnConst.HNTabletType t)
+    public static IntPtr hnp_get_pen_image(HnConst.HNTabletType t)
     {
       if (HuionDriverDLL.isX64)
-        return HuionDriverDLL_X64.hnc_get_pen_image(t);
-      return HuionDriverDLL_X86.hnc_get_pen_image(t);
+        return HuionDriverDLL_X64.hnp_get_pen_image(t);
+      return HuionDriverDLL_X86.hnp_get_pen_image(t);
     }
 
-    public static IntPtr hnc_get_pen_node(HnConst.HNTabletType t)
+    public static IntPtr hnp_get_pen_node(HnConst.HNTabletType t)
     {
       if (HuionDriverDLL.isX64)
-        return HuionDriverDLL_X64.hnc_get_pen_node(t);
-      return HuionDriverDLL_X86.hnc_get_pen_node(t);
+        return HuionDriverDLL_X64.hnp_get_pen_node(t);
+      return HuionDriverDLL_X86.hnp_get_pen_node(t);
     }
 
-    public static IntPtr hnc_get_tablet_image(HnConst.HNTabletType t)
+    public static IntPtr hnp_get_tablet_image(HnConst.HNTabletType t)
     {
       if (HuionDriverDLL.isX64)
-        return HuionDriverDLL_X64.hnc_get_tablet_image(t);
-      return HuionDriverDLL_X86.hnc_get_tablet_image(t);
+        return HuionDriverDLL_X64.hnp_get_tablet_image(t);
+      return HuionDriverDLL_X86.hnp_get_tablet_image(t);
     }
 
-    public static void hnc_calibrate_monitor(ref HNStruct.HNTabletInfo di, ref HNStruct.HNConfig cfg, IntPtr pt)
+    public static void hnc_calibrate_monitor(IntPtr di, IntPtr cfg, IntPtr pt)
     {
       if (HuionDriverDLL.isX64)
-        HuionDriverDLL_X64.hnc_calibrate_monitor(ref di, ref cfg, pt);
+        HuionDriverDLL_X64.hnc_calibrate_monitor(di, cfg, pt);
       else
-        HuionDriverDLL_X86.hnc_calibrate_monitor(ref di, ref cfg, pt);
+        HuionDriverDLL_X86.hnc_calibrate_monitor(di, cfg, pt);
     }
 
     public static int hndh_get_cursor(ref HNStruct.HNPenData p)
@@ -217,6 +235,9 @@ namespace HuionTablet
 
     [DllImport("User32.dll")]
     public static extern int PostMessage(IntPtr hWnd, int Msg, IntPtr wParam, IntPtr lParam);
+
+    [DllImport("User32.dll", SetLastError = true)]
+    public static extern bool SystemParametersInfo(int action, int param, ref int retval, int updini);
 
     [DllImport("User32.dll", CharSet = CharSet.Unicode)]
     public static extern IntPtr MonitorFromWindow(IntPtr hwnd, uint dwFlags);

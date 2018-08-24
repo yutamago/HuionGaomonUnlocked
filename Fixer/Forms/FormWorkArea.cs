@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HuionTablet.FormWorkArea
-// Assembly: Fixer, Version=14.4.5.0, Culture=neutral, PublicKeyToken=null
-// MVID: 0244B443-444F-4961-B0E5-29DA8D9959BB
+// Assembly: Fixer, Version=14.4.7.4, Culture=neutral, PublicKeyToken=null
+// MVID: F573D0D8-B2B9-493C-AB71-EC374499E1DC
 // Assembly location: D:\Program Files (x86)\Huion Tablet\Fixer.dll
 
 using HuionTablet.Lib;
@@ -16,8 +16,8 @@ namespace HuionTablet
 {
   public class FormWorkArea : Form, IDestroy
   {
-    public HNStruct.MONITORINFOEX[] monitorInfos = new HNStruct.MONITORINFOEX[10];
     public int displayNum;
+    public HNStruct.MONITORINFOEX[] monitorInfos;
     private IContainer components;
     private Label labelSelectScreen;
     private ComboBox comboBoxSelectScreen;
@@ -58,9 +58,9 @@ namespace HuionTablet
 
     private void buttonWhileDisplay_Click(object sender, EventArgs e)
     {
-      HNStruct.globalInfo.userConfig.screenAreaRatio = HNStruct.HNRectRatio.DEFAULT;
-      this.huionWorkAreaPictureRect1.ScreenRectRatio = HNStruct.globalInfo.userConfig.screenAreaRatio;
-      this.huionWorkAreaPictrueView1.Screenshot = ScreenHelper.getScreenImage((int) HNStruct.globalInfo.userConfig.curScreenIndex, this.monitorInfos);
+      TabletConfigUtils.config.screenAreaRatio = HNStruct.HNRectRatio.DEFAULT;
+      this.huionWorkAreaPictureRect1.ScreenRectRatio = TabletConfigUtils.config.screenAreaRatio;
+      this.huionWorkAreaPictrueView1.Screenshot = ScreenHelper.getScreenImage((int) TabletConfigUtils.config.curScreenIndex, this.monitorInfos);
     }
 
     private void FormWorkArea_Load(object sender, EventArgs e)
@@ -74,23 +74,23 @@ namespace HuionTablet
       this.buttonCalibration.Click += new EventHandler(this.ButtonCalibration_Click);
       this.SetComboxDisplay();
       this.huionWorkAreaPictureRect1.Parent = (Control) this.huionWorkAreaPictrueView1;
-      this.huionWorkAreaPictureRect1.DeviceRectRotate = (int) HNStruct.globalInfo.userConfig.rotateAngle;
-      this.huionWorkAreaPictureRect1.ScreenRectRatio = HNStruct.globalInfo.userConfig.screenAreaRatio;
-      this.huionWorkAreaPictureRect1.DeviceRectRatio = HNStruct.globalInfo.userConfig.workAreaRatio;
+      this.huionWorkAreaPictureRect1.DeviceRectRotate = (int) TabletConfigUtils.config.rotateAngle;
+      this.huionWorkAreaPictureRect1.ScreenRectRatio = TabletConfigUtils.config.screenAreaRatio;
+      this.huionWorkAreaPictureRect1.DeviceRectRatio = TabletConfigUtils.config.workAreaRatio;
       this.huionWorkAreaPictureRect1.ScreenRatioChanged += new EventHandler(this.HuionWorkAreaPictureRect1_ScreenRatioChanged);
       this.huionWorkAreaPictureRect1.DeviceRatioChanged += new EventHandler(this.HuionWorkAreaPictureRect1_DeviceRatioChanged);
       this.huionWorkAreaPictrueView1.Callback += new EventHandler(this.HuionWorkAreaPictrueView1_Callback);
       this.huionWorkAreaPictrueView1.DeviceImage = HuionRender.blowupImage(ImageHelper.getDllImage(HNStruct.devTypeString), DpiHelper.getInstance().XDpi);
-      this.huionWorkAreaPictrueView1.setDeviceInfo(HNStruct.globalInfo.layoutTablet.size, HNStruct.globalInfo.layoutTablet.penArea, (int) HNStruct.globalInfo.userConfig.rotateAngle);
-      this.textBoxLeft.Text = Convert.ToDouble(HNStruct.globalInfo.userConfig.workAreaRatio.l).ToString("0.000");
-      this.textBoxRight.Text = Convert.ToDouble(HNStruct.globalInfo.userConfig.workAreaRatio.r).ToString("0.000");
-      this.textBoxTop.Text = Convert.ToDouble(HNStruct.globalInfo.userConfig.workAreaRatio.t).ToString("0.000");
-      this.textBoxBottom.Text = Convert.ToDouble(HNStruct.globalInfo.userConfig.workAreaRatio.b).ToString("0.000");
+      this.huionWorkAreaPictrueView1.setDeviceInfo(HNStruct.globalInfo.layoutTablet.size, HNStruct.globalInfo.layoutTablet.penArea, (int) TabletConfigUtils.config.rotateAngle);
+      this.textBoxLeft.Text = Convert.ToDouble(TabletConfigUtils.config.workAreaRatio.l).ToString("0.000");
+      this.textBoxRight.Text = Convert.ToDouble(TabletConfigUtils.config.workAreaRatio.r).ToString("0.000");
+      this.textBoxTop.Text = Convert.ToDouble(TabletConfigUtils.config.workAreaRatio.t).ToString("0.000");
+      this.textBoxBottom.Text = Convert.ToDouble(TabletConfigUtils.config.workAreaRatio.b).ToString("0.000");
       this.textBoxLeft.Click += new EventHandler(this.onTextFocusEnter);
       this.textBoxRight.Click += new EventHandler(this.onTextFocusEnter);
       this.textBoxTop.Click += new EventHandler(this.onTextFocusEnter);
       this.textBoxBottom.Click += new EventHandler(this.onTextFocusEnter);
-      switch (HNStruct.globalInfo.userConfig.rotateAngle)
+      switch (TabletConfigUtils.config.rotateAngle)
       {
         case 0:
           this.rotateZero.Checked = true;
@@ -109,9 +109,9 @@ namespace HuionTablet
 
     private void ButtonCalibration_Click(object sender, EventArgs e)
     {
-      if (HNStruct.globalInfo.userConfig.curScreenIndex < 0U || (long) HNStruct.globalInfo.userConfig.curScreenIndex >= (long) this.displayNum)
+      if (TabletConfigUtils.config.curScreenIndex < 0U || (long) TabletConfigUtils.config.curScreenIndex >= (long) this.displayNum)
         return;
-      FormCalibrate.showForm(this.monitorInfos[(int) HNStruct.globalInfo.userConfig.curScreenIndex].Monitor);
+      FormCalibrate.showForm(this.monitorInfos[(int) TabletConfigUtils.config.curScreenIndex].Monitor);
     }
 
     private void HuionWorkAreaPictrueView1_Callback(object sender, EventArgs e)
@@ -129,31 +129,101 @@ namespace HuionTablet
     private void HuionWorkAreaPictureRect1_ScreenRatioChanged(object sender, EventArgs e)
     {
       RatioEventArgs ratioEventArgs = (RatioEventArgs) e;
-      HNStruct.globalInfo.userConfig.screenAreaRatio = ratioEventArgs.Ratio;
+      TabletConfigUtils.config.screenAreaRatio = ratioEventArgs.Ratio;
     }
 
     private void HuionWorkAreaPictureRect1_DeviceRatioChanged(object sender, EventArgs e)
     {
       RatioEventArgs ratioEventArgs = (RatioEventArgs) e;
-      HNStruct.globalInfo.userConfig.workAreaRatio = ratioEventArgs.Ratio;
+      TabletConfigUtils.config.workAreaRatio = ratioEventArgs.Ratio;
       this.textBoxLeft.Tag = (object) "1";
       this.textBoxRight.Tag = (object) "1";
       this.textBoxTop.Tag = (object) "1";
       this.textBoxBottom.Tag = (object) "1";
-      this.textBoxLeft.Text = Convert.ToDouble(ratioEventArgs.Ratio.l).ToString("0.000");
-      this.textBoxRight.Text = Convert.ToDouble(ratioEventArgs.Ratio.r).ToString("0.000");
-      this.textBoxTop.Text = Convert.ToDouble(ratioEventArgs.Ratio.t).ToString("0.000");
-      this.textBoxBottom.Text = Convert.ToDouble(ratioEventArgs.Ratio.b).ToString("0.000");
+      this.textBoxSetting(this.textBoxLeft, e);
+      this.textBoxSetting(this.textBoxRight, e);
+      this.textBoxSetting(this.textBoxTop, e);
+      this.textBoxSetting(this.textBoxBottom, e);
       this.textBoxLeft.Tag = (object) null;
       this.textBoxRight.Tag = (object) null;
       this.textBoxTop.Tag = (object) null;
       this.textBoxBottom.Tag = (object) null;
     }
 
+    private void textBoxSetting(TextBox textbox, EventArgs e)
+    {
+      RatioEventArgs ratioEventArgs = (RatioEventArgs) e;
+      switch (textbox.Text.Length)
+      {
+        case 3:
+          if (textbox == this.textBoxLeft)
+          {
+            textbox.Text = Convert.ToDouble(ratioEventArgs.Ratio.l).ToString("0.0");
+            break;
+          }
+          if (textbox == this.textBoxRight)
+          {
+            textbox.Text = Convert.ToDouble(ratioEventArgs.Ratio.r).ToString("0.0");
+            break;
+          }
+          if (textbox == this.textBoxTop)
+          {
+            textbox.Text = Convert.ToDouble(ratioEventArgs.Ratio.t).ToString("0.0");
+            break;
+          }
+          if (textbox != this.textBoxBottom)
+            break;
+          textbox.Text = Convert.ToDouble(ratioEventArgs.Ratio.b).ToString("0.0");
+          break;
+        case 4:
+          if (textbox == this.textBoxLeft)
+          {
+            textbox.Text = Convert.ToDouble(ratioEventArgs.Ratio.l).ToString("0.00");
+            break;
+          }
+          if (textbox == this.textBoxRight)
+          {
+            textbox.Text = Convert.ToDouble(ratioEventArgs.Ratio.r).ToString("0.00");
+            break;
+          }
+          if (textbox == this.textBoxTop)
+          {
+            textbox.Text = Convert.ToDouble(ratioEventArgs.Ratio.t).ToString("0.00");
+            break;
+          }
+          if (textbox != this.textBoxBottom)
+            break;
+          textbox.Text = Convert.ToDouble(ratioEventArgs.Ratio.b).ToString("0.00");
+          break;
+        case 5:
+          if (textbox == this.textBoxLeft)
+          {
+            textbox.Text = Convert.ToDouble(ratioEventArgs.Ratio.l).ToString("0.000");
+            break;
+          }
+          if (textbox == this.textBoxRight)
+          {
+            textbox.Text = Convert.ToDouble(ratioEventArgs.Ratio.r).ToString("0.000");
+            break;
+          }
+          if (textbox == this.textBoxTop)
+          {
+            textbox.Text = Convert.ToDouble(ratioEventArgs.Ratio.t).ToString("0.000");
+            break;
+          }
+          if (textbox != this.textBoxBottom)
+            break;
+          textbox.Text = Convert.ToDouble(ratioEventArgs.Ratio.b).ToString("0.000");
+          break;
+      }
+    }
+
     private void SetComboxDisplay()
     {
-      if (this.displayNum == 1 && (int) HNStruct.globalInfo.userConfig.curScreenIndex == this.displayNum || (int) HNStruct.globalInfo.userConfig.curScreenIndex > this.displayNum)
-        HNStruct.globalInfo.userConfig.curScreenIndex = 0U;
+      if (this.displayNum == 1)
+        TabletConfigUtils.config.curScreenIndex = 0U;
+      if (this.displayNum != 1 && (int) TabletConfigUtils.config.curScreenIndex > this.displayNum)
+        TabletConfigUtils.config.curScreenIndex = (uint) this.displayNum;
       this.comboBoxSelectScreen.Items.Clear();
       for (int index = 0; index < this.displayNum; ++index)
       {
@@ -166,8 +236,8 @@ namespace HuionTablet
       }
       if (this.displayNum > 1)
         this.comboBoxSelectScreen.Items.Add((object) ResourceCulture.GetString("FormWorkArea_AllScreenText"));
-      this.huionWorkAreaPictrueView1.Screenshot = ScreenHelper.getScreenImage((int) HNStruct.globalInfo.userConfig.curScreenIndex, this.monitorInfos);
-      this.comboBoxSelectScreen.SelectedIndex = (int) HNStruct.globalInfo.userConfig.curScreenIndex;
+      this.huionWorkAreaPictrueView1.Screenshot = ScreenHelper.getScreenImage((int) TabletConfigUtils.config.curScreenIndex, this.monitorInfos);
+      this.comboBoxSelectScreen.SelectedIndex = (int) TabletConfigUtils.config.curScreenIndex;
     }
 
     private void setViewTextLocale()
@@ -188,39 +258,39 @@ namespace HuionTablet
 
     private void rotateZero_CheckedChanged(object sender, EventArgs e)
     {
-      HNStruct.globalInfo.userConfig.rotateAngle = 0U;
-      this.huionWorkAreaPictrueView1.Rotate = (int) HNStruct.globalInfo.userConfig.rotateAngle;
+      TabletConfigUtils.config.rotateAngle = 0U;
+      this.huionWorkAreaPictrueView1.Rotate = (int) TabletConfigUtils.config.rotateAngle;
     }
 
     private void rotateNinety_CheckedChanged(object sender, EventArgs e)
     {
-      HNStruct.globalInfo.userConfig.rotateAngle = 90U;
-      this.huionWorkAreaPictrueView1.Rotate = (int) HNStruct.globalInfo.userConfig.rotateAngle;
+      TabletConfigUtils.config.rotateAngle = 90U;
+      this.huionWorkAreaPictrueView1.Rotate = (int) TabletConfigUtils.config.rotateAngle;
     }
 
     private void rotateTwoNinety_CheckedChanged(object sender, EventArgs e)
     {
-      HNStruct.globalInfo.userConfig.rotateAngle = 180U;
-      this.huionWorkAreaPictrueView1.Rotate = (int) HNStruct.globalInfo.userConfig.rotateAngle;
+      TabletConfigUtils.config.rotateAngle = 180U;
+      this.huionWorkAreaPictrueView1.Rotate = (int) TabletConfigUtils.config.rotateAngle;
     }
 
     private void rotateThreeNinety_CheckedChanged(object sender, EventArgs e)
     {
-      HNStruct.globalInfo.userConfig.rotateAngle = 270U;
-      this.huionWorkAreaPictrueView1.Rotate = (int) HNStruct.globalInfo.userConfig.rotateAngle;
+      TabletConfigUtils.config.rotateAngle = 270U;
+      this.huionWorkAreaPictrueView1.Rotate = (int) TabletConfigUtils.config.rotateAngle;
     }
 
     private void comboBoxSelectScreen_SelectIndexCommitted(object sender, EventArgs e)
     {
-      if (this.comboBoxSelectScreen.SelectedItem == null || (int) HNStruct.globalInfo.userConfig.curScreenIndex == this.comboBoxSelectScreen.SelectedIndex)
+      if (this.comboBoxSelectScreen.SelectedItem == null || (int) TabletConfigUtils.config.curScreenIndex == this.comboBoxSelectScreen.SelectedIndex)
         return;
-      HNStruct.globalInfo.userConfig.curScreenIndex = (uint) this.comboBoxSelectScreen.SelectedIndex;
+      TabletConfigUtils.config.curScreenIndex = (uint) this.comboBoxSelectScreen.SelectedIndex;
       this.huionWorkAreaPictrueView1.Screenshot = ScreenHelper.getScreenImage(this.comboBoxSelectScreen.SelectedIndex, this.monitorInfos);
     }
 
     private void buttonScreenRatio_Click(object sender, EventArgs e)
     {
-      HNStruct.RECT screenRect = ScreenHelper.getScreenRect((int) HNStruct.globalInfo.userConfig.curScreenIndex, this.monitorInfos);
+      HNStruct.RECT screenRect = ScreenHelper.getScreenRect((int) TabletConfigUtils.config.curScreenIndex, this.monitorInfos);
       float num1 = (float) (screenRect.Right - screenRect.Left) / (float) (screenRect.Bottom - screenRect.Top);
       float num2 = (float) HNStruct.globalInfo.tabletInfo.maxX / (float) HNStruct.globalInfo.tabletInfo.maxY;
       HNStruct.HNRectRatio hnRectRatio = HNStruct.HNRectRatio.DEFAULT;
@@ -239,8 +309,8 @@ namespace HuionTablet
 
     private void buttonWhileBoard_Click(object sender, EventArgs e)
     {
-      HNStruct.globalInfo.userConfig.workAreaRatio = HNStruct.HNRectRatio.DEFAULT;
-      this.huionWorkAreaPictureRect1.DeviceRectRatio = HNStruct.globalInfo.userConfig.workAreaRatio;
+      TabletConfigUtils.config.workAreaRatio = HNStruct.HNRectRatio.DEFAULT;
+      this.huionWorkAreaPictureRect1.DeviceRectRatio = TabletConfigUtils.config.workAreaRatio;
     }
 
     private void customer_TextChanged(object sender, EventArgs e)
@@ -276,91 +346,91 @@ namespace HuionTablet
     {
       float num = 0.0f;
       this.textBoxTop.Select(this.textBoxTop.Text.Length, 0);
-      if (this.textBoxTop.Text.Trim() != "" && this.textBoxTop.Text.Length == 5)
+      if (this.textBoxTop.Text.Trim() != string.Empty && this.textBoxTop.Text.Length != 0)
         num = (float) Convert.ToDouble(this.textBoxTop.Text);
-      if ((double) HNStruct.globalInfo.userConfig.workAreaRatio.t == (double) num)
+      if ((double) TabletConfigUtils.config.workAreaRatio.t == (double) num)
         return;
       if ((double) num > 1.0 || (double) num < 0.0)
       {
         this.textBoxTop.Text = Convert.ToSingle(0).ToString("0.000");
         float single = Convert.ToSingle(this.textBoxTop.Text);
-        HNStruct.globalInfo.userConfig.workAreaRatio.t = single;
+        TabletConfigUtils.config.workAreaRatio.t = single;
       }
       else
-        HNStruct.globalInfo.userConfig.workAreaRatio.t = num;
+        TabletConfigUtils.config.workAreaRatio.t = num;
       if (this.textBoxTop.Tag != null)
         return;
-      this.huionWorkAreaPictureRect1.DeviceRectRatio = HNStruct.globalInfo.userConfig.workAreaRatio;
+      this.huionWorkAreaPictureRect1.DeviceRectRatio = TabletConfigUtils.config.workAreaRatio;
     }
 
     private void textBoxBottom_TextChanged(object sender, EventArgs e)
     {
       float num = 0.0f;
       this.textBoxBottom.Select(this.textBoxBottom.Text.Length, 0);
-      if (this.textBoxBottom.Text.Length == 5)
+      if (this.textBoxBottom.Text.Trim() != string.Empty && this.textBoxBottom.Text.Length != 0)
         num = (float) Convert.ToDouble(this.textBoxBottom.Text);
-      if ((double) HNStruct.globalInfo.userConfig.workAreaRatio.b == (double) num)
+      if ((double) TabletConfigUtils.config.workAreaRatio.b == (double) num)
         return;
       if ((double) num > 1.0 || (double) num < 0.0)
       {
         this.textBoxBottom.Text = Convert.ToSingle(1).ToString("0.000");
         float single = Convert.ToSingle(this.textBoxBottom.Text);
-        HNStruct.globalInfo.userConfig.workAreaRatio.b = single;
+        TabletConfigUtils.config.workAreaRatio.b = single;
       }
       else
       {
         if ((double) num == 0.0)
           return;
-        HNStruct.globalInfo.userConfig.workAreaRatio.b = num;
+        TabletConfigUtils.config.workAreaRatio.b = num;
       }
       if (this.textBoxBottom.Tag != null)
         return;
-      this.huionWorkAreaPictureRect1.DeviceRectRatio = HNStruct.globalInfo.userConfig.workAreaRatio;
+      this.huionWorkAreaPictureRect1.DeviceRectRatio = TabletConfigUtils.config.workAreaRatio;
     }
 
     private void textBoxLeft_TextChanged(object sender, EventArgs e)
     {
       float num = 0.0f;
       this.textBoxLeft.Select(this.textBoxLeft.Text.Length, 0);
-      if (this.textBoxLeft.Text.Trim() != "" && this.textBoxLeft.Text.Length == 5)
+      if (this.textBoxLeft.Text.Trim() != string.Empty && this.textBoxLeft.Text.Length != 0)
         num = (float) Convert.ToDouble(this.textBoxLeft.Text);
-      if ((double) HNStruct.globalInfo.userConfig.workAreaRatio.l == (double) num)
+      if ((double) TabletConfigUtils.config.workAreaRatio.l == (double) num)
         return;
       if ((double) num > 1.0 || (double) num < 0.0)
       {
         this.textBoxLeft.Text = Convert.ToSingle(0).ToString("0.000");
         float single = Convert.ToSingle(this.textBoxLeft.Text);
-        HNStruct.globalInfo.userConfig.workAreaRatio.l = single;
+        TabletConfigUtils.config.workAreaRatio.l = single;
       }
       else
-        HNStruct.globalInfo.userConfig.workAreaRatio.l = num;
+        TabletConfigUtils.config.workAreaRatio.l = num;
       if (this.textBoxLeft.Tag != null)
         return;
-      this.huionWorkAreaPictureRect1.DeviceRectRatio = HNStruct.globalInfo.userConfig.workAreaRatio;
+      this.huionWorkAreaPictureRect1.DeviceRectRatio = TabletConfigUtils.config.workAreaRatio;
     }
 
     private void textBoxRight_TextChanged(object sender, EventArgs e)
     {
       float num = 0.0f;
       this.textBoxRight.Select(this.textBoxRight.Text.Length, 0);
-      if (this.textBoxRight.Text.Length == 5)
+      if (this.textBoxRight.Text.Trim() != string.Empty && this.textBoxRight.Text.Length != 0)
         num = (float) Convert.ToDouble(this.textBoxRight.Text);
-      if ((double) HNStruct.globalInfo.userConfig.workAreaRatio.r == (double) num)
+      if ((double) TabletConfigUtils.config.workAreaRatio.r == (double) num)
         return;
       if ((double) num > 1.0 || (double) num < 0.0)
       {
         this.textBoxRight.Text = Convert.ToSingle(1).ToString("0.000");
         float single = Convert.ToSingle(this.textBoxRight.Text);
-        HNStruct.globalInfo.userConfig.workAreaRatio.r = single;
+        TabletConfigUtils.config.workAreaRatio.r = single;
       }
       else
       {
         if ((double) num == 0.0)
           return;
-        HNStruct.globalInfo.userConfig.workAreaRatio.r = num;
+        TabletConfigUtils.config.workAreaRatio.r = num;
       }
       if (this.textBoxRight.Tag == null)
-        this.huionWorkAreaPictureRect1.DeviceRectRatio = HNStruct.globalInfo.userConfig.workAreaRatio;
+        this.huionWorkAreaPictureRect1.DeviceRectRatio = TabletConfigUtils.config.workAreaRatio;
       Console.WriteLine((object) this.huionWorkAreaPictureRect1.DeviceRectRatio);
     }
 
@@ -405,7 +475,7 @@ namespace HuionTablet
       for (int index = 0; index < this.displayNum; ++index)
       {
         HNStruct.RECT monitor = this.monitorInfos[index].Monitor;
-        new FormIdentify(index + 1, new Point(monitor.Left + 20, monitor.Top + 20), (long) HNStruct.globalInfo.userConfig.curScreenIndex == (long) index).Show();
+        new FormIdentify(index + 1, new Point(monitor.Left + 20, monitor.Top + 20), (long) TabletConfigUtils.config.curScreenIndex == (long) index).Show();
       }
       this.Focus();
     }
@@ -416,19 +486,52 @@ namespace HuionTablet
         this.comboBoxSelectScreen.Items.RemoveAt(index);
     }
 
-    private void textBoxLeft_KeyDown(object sender, KeyEventArgs e)
+    protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
     {
-      if (e.KeyCode != Keys.Return)
-        return;
-      int num = (int) MessageBox.Show("fdsf");
-      e.Handled = true;
-    }
-
-    private void textBoxLeft_KeyUp(object sender, KeyEventArgs e)
-    {
-      if (e.KeyCode != Keys.Return)
-        return;
-      int num = (int) MessageBox.Show("fhdsuihaf");
+      switch (keyData)
+      {
+        case Keys.Return:
+        case Keys.Down:
+          TextBox textBoxLeft1 = this.textBoxLeft;
+          TextBox textBoxLeft2 = this.textBoxLeft;
+          float single1 = Convert.ToSingle(this.textBoxLeft.Text);
+          string str1;
+          string str2 = str1 = single1.ToString("0.000");
+          textBoxLeft2.Text = str1;
+          string str3 = str2;
+          textBoxLeft1.Text = str3;
+          TextBox textBoxRight1 = this.textBoxRight;
+          TextBox textBoxRight2 = this.textBoxRight;
+          float single2 = Convert.ToSingle(this.textBoxRight.Text);
+          string str4;
+          string str5 = str4 = single2.ToString("0.000");
+          textBoxRight2.Text = str4;
+          string str6 = str5;
+          textBoxRight1.Text = str6;
+          TextBox textBoxTop1 = this.textBoxTop;
+          TextBox textBoxTop2 = this.textBoxTop;
+          float single3 = Convert.ToSingle(this.textBoxTop.Text);
+          string str7;
+          string str8 = str7 = single3.ToString("0.000");
+          textBoxTop2.Text = str7;
+          string str9 = str8;
+          textBoxTop1.Text = str9;
+          TextBox textBoxBottom1 = this.textBoxBottom;
+          TextBox textBoxBottom2 = this.textBoxBottom;
+          float single4 = Convert.ToSingle(this.textBoxBottom.Text);
+          string str10;
+          string str11 = str10 = single4.ToString("0.000");
+          textBoxBottom2.Text = str10;
+          string str12 = str11;
+          textBoxBottom1.Text = str12;
+          SendKeys.SendWait("{Tab}");
+          return true;
+        case Keys.Up:
+          SendKeys.SendWait("+{TAB}");
+          return true;
+        default:
+          return base.ProcessCmdKey(ref msg, keyData);
+      }
     }
 
     protected override void Dispose(bool disposing)
@@ -467,7 +570,7 @@ namespace HuionTablet
       this.groupBoxRotate.SuspendLayout();
       this.groupBoxCustomArea.SuspendLayout();
       ((ISupportInitialize)this.huionWorkAreaPictureRect1).BeginInit();
-      ((ISupportInitialize)this.huionWorkAreaPictrueView1).BeginInit();
+      ((ISupportInitialize) this.huionWorkAreaPictrueView1).BeginInit();
       this.SuspendLayout();
       this.labelSelectScreen.Font = new Font("微软雅黑", 9f, FontStyle.Regular, GraphicsUnit.Point, (byte) 134);
       this.labelSelectScreen.Location = new Point(3, 7);
@@ -561,15 +664,14 @@ namespace HuionTablet
       this.textBoxBottom.TabIndex = 12;
       this.textBoxBottom.TextChanged += new EventHandler(this.customer_TextChanged);
       this.textBoxBottom.KeyPress += new KeyPressEventHandler(this.inputNumber_Key);
+      this.textBoxLeft.CharacterCasing = CharacterCasing.Upper;
       this.textBoxLeft.Location = new Point(59, 26);
       this.textBoxLeft.Margin = new Padding(3, 4, 3, 4);
       this.textBoxLeft.Name = "textBoxLeft";
       this.textBoxLeft.Size = new Size(42, 23);
       this.textBoxLeft.TabIndex = 9;
       this.textBoxLeft.TextChanged += new EventHandler(this.customer_TextChanged);
-      this.textBoxLeft.KeyDown += new KeyEventHandler(this.textBoxLeft_KeyDown);
       this.textBoxLeft.KeyPress += new KeyPressEventHandler(this.inputNumber_Key);
-      this.textBoxLeft.KeyUp += new KeyEventHandler(this.textBoxLeft_KeyUp);
       this.textBoxRight.Location = new Point(161, 26);
       this.textBoxRight.Margin = new Padding(3, 4, 3, 4);
       this.textBoxRight.Name = "textBoxRight";
@@ -737,13 +839,12 @@ namespace HuionTablet
       this.Name = nameof (FormWorkArea);
       this.Text = nameof (FormWorkArea);
       this.Load += new EventHandler(this.FormWorkArea_Load);
-      this.KeyDown += new KeyEventHandler(this.textBoxLeft_KeyDown);
       this.groupBoxRotate.ResumeLayout(false);
       this.groupBoxRotate.PerformLayout();
       this.groupBoxCustomArea.ResumeLayout(false);
       this.groupBoxCustomArea.PerformLayout();
-            ((ISupportInitialize)this.huionWorkAreaPictureRect1).EndInit();
-            ((ISupportInitialize)this.huionWorkAreaPictrueView1).EndInit();
+      ((ISupportInitialize) this.huionWorkAreaPictureRect1).EndInit();
+      ((ISupportInitialize) this.huionWorkAreaPictrueView1).EndInit();
       this.ResumeLayout(false);
       this.PerformLayout();
     }

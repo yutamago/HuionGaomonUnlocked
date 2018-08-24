@@ -1,10 +1,11 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HuionTablet.HuionTalbet
-// Assembly: Huion Tablet, Version=14.4.5.0, Culture=neutral, PublicKeyToken=null
-// MVID: E9BBED94-79CD-4774-8A97-2E0171DB986F
+// Assembly: Huion Tablet, Version=14.4.7.4, Culture=neutral, PublicKeyToken=null
+// MVID: 89741050-C3D9-47F7-9E24-1E7879C81D96
 // Assembly location: D:\Program Files (x86)\Huion Tablet\app.publish\Huion Tablet.exe
 
 using Huion;
+using HuionTablet.Forms;
 using HuionTablet.Lib;
 using HuionTablet.Properties;
 using HuionTablet.utils;
@@ -12,8 +13,8 @@ using HuionTablet.view;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
-using System.Management;
 using System.Threading;
 using System.Timers;
 using System.Windows.Forms;
@@ -25,9 +26,12 @@ namespace HuionTablet
   {
     private USB ezUSB = new USB();
     private int openNum = 0;
+    private bool curEnabled = false;
     private IContainer components = (IContainer) null;
     private List<Form> mForms;
     public static bool IsReminder;
+    private int isRunning;
+    private int curIsRunning;
     private TabType mTabType;
     private Panel panelWindow;
     private HNPanel panel1;
@@ -49,6 +53,8 @@ namespace HuionTablet
     private Panel panelTabControl;
     private Panel panelBottom;
     private NotifyIcon notifyIcon2;
+    private System.Windows.Forms.Timer timer2;
+    private System.Windows.Forms.Timer timer3;
 
     public HuionTalbet()
     {
@@ -77,7 +83,7 @@ namespace HuionTablet
 
     private void MiddleModule_eventPost(object post, object msg)
     {
-      this.Invoke((Delegate) new utils.Boolean(this.setViewState), (object) HNStruct.globalInfo.bOpenedTablet);
+      this.Invoke((Delegate) new HuionTablet.utils.Boolean(this.setViewState), (object) HNStruct.globalInfo.bOpenedTablet);
     }
 
     private void HuionTablet_SizeChanged(object sender, EventArgs e)
@@ -107,7 +113,7 @@ namespace HuionTablet
       else
       {
         this.ShowInTaskbar = false;
-        KeyboardUtils.listenHotKey(this.Handle, new utils.Void(this.KeyboardUtils_showFormEvent), SettingsUtil.ShowUIShortcut);
+        KeyboardUtils.listenHotKey(this.Handle, new HuionTablet.utils.Void(this.KeyboardUtils_showFormEvent), SettingsUtil.ShowUIShortcut);
       }
       this.showBalloonTip();
     }
@@ -150,12 +156,17 @@ namespace HuionTablet
       ToolStripMenuItem toolStripMenuItem = (ToolStripMenuItem) sender;
       if (toolStripMenuItem == this.tsmiExit)
       {
-        this.tsmiExit.CheckOnClick = true;
-        this.Dispose();
-        this.Dispose(true);
-        this.Close();
-        this.ezUSB.RemoveUSBEventWatcher();
-        Environment.Exit(0);
+        try
+        {
+          this.Dispose(true);
+          this.Close();
+          this.ezUSB.RemoveUSBEventWatcher();
+          Process.GetCurrentProcess().Kill();
+        }
+        catch (Exception ex)
+        {
+          HuionLog.saveLog("退出程序", ex.Message);
+        }
       }
       else
       {
@@ -286,9 +297,19 @@ namespace HuionTablet
           TimerSession.userOperation();
           break;
         case 536:
+          switch (m.WParam.ToInt32())
+          {
+            case 4:
+              this.timer3.Stop();
+              ThreadPool.QueueUserWorkItem(new WaitCallback(TabletConfigUtils.closeDevice));
+              break;
+            case 7:
+              this.timer3.Start();
+              break;
+          }
+          MiddleModule.eventPost += new Post(this.MiddleModule_eventPost);
           break;
         case 1044:
-          ThreadPool.QueueUserWorkItem(new WaitCallback(Fixer4Main.openDevice));
           break;
         case 1054:
           if (this.Visible)
@@ -299,7 +320,7 @@ namespace HuionTablet
         case 1064:
           if (this.Visible)
             break;
-          KeyboardUtils.listenHotKey(this.Handle, new utils.Void(this.KeyboardUtils_showFormEvent), SettingsUtil.ShowUIShortcut);
+          KeyboardUtils.listenHotKey(this.Handle, new HuionTablet.utils.Void(this.KeyboardUtils_showFormEvent), SettingsUtil.ShowUIShortcut);
           break;
         default:
           Fixer4Main.onDeviceChanged(ref m);
@@ -317,17 +338,24 @@ namespace HuionTablet
       this.Icon = ImageHelper.getDllIcon("32.ico", HNStruct.OemType);
       MiddleModule.initMainFormHandle((Form) this);
       MiddleModule.eventPost += new Post(this.MiddleModule_eventPost);
-      ThreadPool.QueueUserWorkItem(new WaitCallback(Fixer4Main.openDevice));
+      this.timer3.Start();
       Fixer4Main.setDisplayChangedCallback(new SystemSessionService.SystemDisplayChangedCallback(this.onDisplayChanged));
       Fixer4Main.listenSystemStatus();
       DeviceStatusUtils.deviceConfigListener += new DeviceStatusUtils.DeviceConfigChanged(this.onDeviceConfigChanged);
       this.btnApplay.Click += new EventHandler(Fixer4Main.applayClick);
       this.btnOK.Click += new EventHandler(Fixer4Main.okClick);
       this.btnClose.Click += new EventHandler(Fixer4Main.closeClick);
+      this.btnAdmin.MouseDown += new MouseEventHandler(this.btnColor);
+      this.btnApplay.MouseDown += new MouseEventHandler(this.btnColor);
+      this.btnOK.MouseDown += new MouseEventHandler(this.btnColor);
+      this.btnClose.MouseDown += new MouseEventHandler(this.btnColor);
+      this.btnAdmin.MouseUp += new MouseEventHandler(this.btnColorDefault);
+      this.btnApplay.MouseUp += new MouseEventHandler(this.btnColorDefault);
+      this.btnOK.MouseUp += new MouseEventHandler(this.btnColorDefault);
+      this.btnClose.MouseUp += new MouseEventHandler(this.btnColorDefault);
       this.FormClosed += new FormClosedEventHandler(Fixer4Main.FormClosed);
       this.KeyDown += new KeyEventHandler(KeyboardUtils.onKeyDown);
       this.displayFormation();
-      this.ezUSB.AddUSBEventWatcher(new EventArrivedEventHandler(Fixer4Main.USBEventHandler), new EventArrivedEventHandler(Fixer4Main.USBEventHandler), new TimeSpan(0, 0, 1));
       this.KeyPreview = true;
       this.buttonInfo_Click(sender, (EventArgs) null);
       this.SetDisplayMonitors();
@@ -343,20 +371,33 @@ namespace HuionTablet
       this.panelWorkArea.Tag = (object) TabType.TabWorkArea;
       TimerSession.UserLongtimeNoOperationListener += new TimerSession.UserLongtimeNoOperationCallback(this.onUserLongtimeNoOperation);
       TimerSession.AutoOperationListener += new ElapsedEventHandler(Fixer4Main.T_Elapsed);
+      new Thread(new ThreadStart(BaseForm.myThread)).Start();
+      this.timer2.Start();
       this.Hide();
       this.WindowState = FormWindowState.Minimized;
       this.notifyIcon1.MouseClick += new MouseEventHandler(this.notifyIcon1_MouseClick);
-      new Thread(new ThreadStart(BaseForm.myThread)).Start();
-      HuionTalbet.showSettingBrightness();
-    }
-
-    private static void showSettingBrightness()
-    {
     }
 
     private void onDeviceConfigChanged(int type)
     {
-      this.Invoke((Delegate) new utils.Void(this.onDeviceConfigChanged));
+      switch (type)
+      {
+        case 2:
+          this.Invoke((Delegate) new HuionTablet.utils.Void(this.onDeviceConfigChanged));
+          break;
+        case 16:
+          keyDisplay.keydisplayText = 1;
+          this.Invoke((Delegate) new HuionTablet.utils.Void(this.onMKeyIndexChanged));
+          break;
+        case 17:
+          keyDisplay.keydisplayText = 2;
+          this.Invoke((Delegate) new HuionTablet.utils.Void(this.onMKeyIndexChanged));
+          break;
+        case 18:
+          keyDisplay.keydisplayText = 3;
+          this.Invoke((Delegate) new HuionTablet.utils.Void(this.onMKeyIndexChanged));
+          break;
+      }
     }
 
     private void onDeviceConfigChanged()
@@ -368,10 +409,21 @@ namespace HuionTablet
       this.buttonWorkArea_Click((object) null, (EventArgs) null);
     }
 
+    private void onMKeyIndexChanged()
+    {
+      if (keyDisplay.keydisplay == null)
+      {
+        keyDisplay.keydisplay = new keyDisplay();
+        keyDisplay.keydisplay.Show();
+      }
+      else
+        keyDisplay.keydisplay.Activate();
+    }
+
     private void onUserLongtimeNoOperation()
     {
-      this.Invoke((Delegate) new utils.Void(this.setPanelWindow));
-      this.Invoke((Delegate) new utils.Void(this.clearBufferForms));
+      this.Invoke((Delegate) new HuionTablet.utils.Void(this.setPanelWindow));
+      this.Invoke((Delegate) new HuionTablet.utils.Void(this.clearBufferForms));
       MiddleModule.PostMessage((object) this, (object) 0);
     }
 
@@ -412,17 +464,21 @@ namespace HuionTablet
 
     private void setViewState(bool enabled)
     {
-      this.labelTabletState.Text = Fixer4Main.getStatusText(enabled);
-      this.labelTabletState.Enabled = enabled;
-      this.panelHotKey.Enabled = enabled;
-      this.panelTabletPen.Enabled = enabled;
-      this.panelWorkArea.Enabled = enabled;
-      this.panelInfo.Enabled = enabled;
-      this.btnOK.Enabled = enabled;
-      this.btnApplay.Enabled = enabled;
-      this.notifyIcon1.Icon = Fixer4Main.getNotifyIcon(enabled);
-      this.showBalloonTip();
-      this.setPanelWindow();
+      if (this.curEnabled != enabled)
+      {
+        this.labelTabletState.Text = Fixer4Main.getStatusText(enabled);
+        this.labelTabletState.Enabled = enabled;
+        this.panelHotKey.Enabled = enabled;
+        this.panelTabletPen.Enabled = enabled;
+        this.panelWorkArea.Enabled = enabled;
+        this.panelInfo.Enabled = enabled;
+        this.btnOK.Enabled = enabled;
+        this.btnApplay.Enabled = enabled;
+        this.notifyIcon1.Icon = Fixer4Main.getNotifyIcon(enabled);
+        this.showBalloonTip();
+        this.setPanelWindow();
+      }
+      this.curEnabled = enabled;
     }
 
     private void setPanelWindow()
@@ -467,6 +523,31 @@ namespace HuionTablet
       }
     }
 
+    private void timer2_Tick(object sender, EventArgs e)
+    {
+      this.isRunning = 0;
+      HuionDriverDLL.SystemParametersInfo(114, 0, ref this.isRunning, 0);
+      if (this.curIsRunning == this.isRunning)
+        return;
+      this.curIsRunning = this.isRunning;
+      HuionDriverDLL.hnd_set_screenSaverRunning(this.isRunning);
+    }
+
+    private void btnColor(object sender, EventArgs e)
+    {
+      ((Control) sender).BackColor = Color.FromArgb(5, 0, 89, 128);
+    }
+
+    private void btnColorDefault(object sender, EventArgs e)
+    {
+      ((Control) sender).BackColor = Color.Transparent;
+    }
+
+    private void timer3_Tick(object sender, EventArgs e)
+    {
+      Fixer4Main.OpenDevice();
+    }
+
     protected override void Dispose(bool disposing)
     {
       if (disposing && this.components != null)
@@ -498,6 +579,8 @@ namespace HuionTablet
       this.panel1 = new HNPanel();
       this.labelTabletState = new Label();
       this.notifyIcon2 = new NotifyIcon(this.components);
+      this.timer2 = new System.Windows.Forms.Timer(this.components);
+      this.timer3 = new System.Windows.Forms.Timer(this.components);
       this.contextMenuStrip1.SuspendLayout();
       this.panelContent.SuspendLayout();
       this.panelBottom.SuspendLayout();
@@ -558,15 +641,15 @@ namespace HuionTablet
         (ToolStripItem) this.tsmiExit
       });
       this.contextMenuStrip1.Name = "contextMenuStrip1";
-      this.contextMenuStrip1.Size = new Size(153, 70);
+      this.contextMenuStrip1.Size = new Size(123, 48);
       this.tsmiSettings.ImageAlign = ContentAlignment.MiddleLeft;
       this.tsmiSettings.Name = "tsmiSettings";
-      this.tsmiSettings.Size = new Size(152, 22);
+      this.tsmiSettings.Size = new Size(122, 22);
       this.tsmiSettings.Text = "Settings";
       this.tsmiSettings.Click += new EventHandler(this.tsmiItemClick);
       this.tsmiExit.ImageAlign = ContentAlignment.BottomRight;
       this.tsmiExit.Name = "tsmiExit";
-      this.tsmiExit.Size = new Size(152, 22);
+      this.tsmiExit.Size = new Size(122, 22);
       this.tsmiExit.Text = "退出";
       this.tsmiExit.Click += new EventHandler(this.tsmiItemClick);
       this.btnAdmin.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
@@ -706,6 +789,12 @@ namespace HuionTablet
       this.labelTabletState.TextAlign = ContentAlignment.MiddleCenter;
       this.notifyIcon2.Text = "notifyIcon2";
       this.notifyIcon2.Visible = true;
+      this.timer2.Enabled = true;
+      this.timer2.Interval = 3000;
+      this.timer2.Tick += new EventHandler(this.timer2_Tick);
+      this.timer3.Enabled = true;
+      this.timer3.Interval = 1000;
+      this.timer3.Tick += new EventHandler(this.timer3_Tick);
       this.AcceptButton = (IButtonControl) this.btnOK;
       this.AutoScaleDimensions = new SizeF(96f, 96f);
       this.AutoScaleMode = AutoScaleMode.Dpi;

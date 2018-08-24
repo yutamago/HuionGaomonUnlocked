@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CFE73A90-2C70-4C95-9D1C-FEB60CB3DDCC}</ProjectGuid>
+    <ProjectGuid>{29BFEC4B-6B2D-4947-8BD1-E774C0116BA6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AssemblyName>Fixer</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <RootNamespace>HuionTablet</RootNamespace>
     <FileUpgradeFlags>
@@ -26,10 +26,11 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>14.4.5.0</ApplicationVersion>
+    <ApplicationVersion>14.4.7.4</ApplicationVersion>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -40,7 +41,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -50,31 +50,12 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="HNCommon">
-      <HintPath>lib\HNCommon.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
-    <Reference Include="Session">
-      <HintPath>lib\Session.dll</HintPath>
-    </Reference>
     <Reference Include="System.Management" />
-    <Reference Include="HNApiCs">
-      <HintPath>lib\HNApiCs.dll</HintPath>
-    </Reference>
-    <Reference Include="HuionView">
-      <HintPath>lib\HuionView.dll</HintPath>
-    </Reference>
-    <Reference Include="Log">
-      <HintPath>lib\Log.dll</HintPath>
-    </Reference>
-    <Reference Include="HtmlAgilityPack">
-      <HintPath>lib\HtmlAgilityPack.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Fixers\Fixer4DrawLine.cs" />
@@ -136,6 +117,9 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Properties\Resources.Designer.cs" />
+    <Compile Include="Forms\keyDisplay.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="PressValueChanged.cs" />
     <Compile Include="TabType.cs" />
     <Compile Include="EKeyCallback.cs" />
@@ -152,6 +136,7 @@
     <EmbeddedResource Include="FormIdentify.resx" />
     <EmbeddedResource Include="FormInfo.resx" />
     <EmbeddedResource Include="FormInsatll.resx" />
+    <EmbeddedResource Include="Forms\keyDisplay.resx" />
     <EmbeddedResource Include="FormSetingBrightness.resx" />
     <EmbeddedResource Include="FormSettingAbout.resx" />
     <EmbeddedResource Include="FormSettings.resx" />
@@ -168,6 +153,20 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HNCommon\HNCommon.csproj">
+      <Project>{33cfeff5-c015-4d6c-8a5f-8cf853df92bd}</Project>
+      <Name>HNCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HtmlAgilityPack\HtmlAgilityPack.csproj">
+      <Project>{090ca7d9-f1ed-4d10-a36d-97cd7a1b27b9}</Project>
+      <Name>HtmlAgilityPack</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ViewLibrary\ViewLibrary.csproj">
+      <Project>{ea3bb2ac-4a02-4611-8f08-e03a8b4b82ec}</Project>
+      <Name>ViewLibrary</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

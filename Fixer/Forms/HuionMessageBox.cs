@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HuionTablet.HuionMessageBox
-// Assembly: Fixer, Version=14.4.5.0, Culture=neutral, PublicKeyToken=null
-// MVID: 0244B443-444F-4961-B0E5-29DA8D9959BB
+// Assembly: Fixer, Version=14.4.7.4, Culture=neutral, PublicKeyToken=null
+// MVID: F573D0D8-B2B9-493C-AB71-EC374499E1DC
 // Assembly location: D:\Program Files (x86)\Huion Tablet\Fixer.dll
 
 using System;
@@ -39,7 +39,13 @@ namespace HuionTablet
 
     public static void UpdateOnline()
     {
-      HuionMessageBox.compareVersion();
+      if (HuionMessageBox.compareVersion())
+        return;
+      HuionMessageBox huionMessageBox = new HuionMessageBox();
+      huionMessageBox.HintText = "发现新版本，是否立即更新？";
+      huionMessageBox.btnOK.Click += new EventHandler(HuionMessageBox.UpdateOnlineOKClick);
+      huionMessageBox.btnOK.Text = "立即更新";
+      huionMessageBox.Show();
     }
 
     private static string getHtml(string url)
@@ -56,14 +62,8 @@ namespace HuionTablet
       string html = HuionMessageBox.getHtml("http://driver.huion.com/win/Public/html/update.html");
       HtmlAgilityPack.HtmlDocument htmlDocument = new HtmlAgilityPack.HtmlDocument();
       htmlDocument.LoadHtml(html);
-      string strA = htmlDocument.GetElementbyId("LayuiWin").InnerText.Trim().Split(new char[1]
-      {
-        '_'
-      }, StringSplitOptions.RemoveEmptyEntries)[2];
-      string strB = "HuionTablet_WinDriver_v14.5.0.exe".Split(new char[1]
-      {
-        '_'
-      }, StringSplitOptions.RemoveEmptyEntries)[2];
+      string strA = htmlDocument.GetElementbyId("LayuiWin").InnerText.Trim().Split(new char[1]{ '_' }, StringSplitOptions.RemoveEmptyEntries)[2];
+      string strB = "HuionTablet_WinDriver_v14.7.4.exe".Split(new char[1]{ '_' }, StringSplitOptions.RemoveEmptyEntries)[2];
       Console.WriteLine(strA);
       Console.WriteLine(strB);
       if (string.Compare(strA, strB, true) > 0)
