@@ -3,6 +3,7 @@
 This is a modification of the official driver for **ALL graphics tablets from Huion and Gaomon** and a few other Chinese manufacturers, unlocked from any limitations and improved by useful features and bugfixes.
 
 It is based on Huion/Gaomon driver version 14.7.4 (released on 2018/08/24).
+You can download it here: https://github.com/yutamago/HuionGaomonUnlocked/releases/tag/v14.7.4.0-alpha.1
 
 This includes:
 - Removed all locks for Gaomon-devices (includes ui/features and general compatibility)
