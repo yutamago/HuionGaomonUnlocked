@@ -151,9 +151,9 @@ namespace HuionTablet
                 this.penLayouts[index].KeyType = HuionKeyType.PENKEY;
             }
 
-            if (HNStruct.OemType != OEMType.HUION || Convert.ToBoolean(HNStruct.globalInfo.tabletInfo.bMonitor))
+            if (Convert.ToBoolean(HNStruct.globalInfo.tabletInfo.bMonitor))
             {
-                this.checkBoxMouseMode.Checked = true;
+                // this.checkBoxMouseMode.Checked = true;
                 this.checkBoxMouseMode.Hide();
             }
 
