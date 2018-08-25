@@ -82,6 +82,10 @@
       <Project>{33cfeff5-c015-4d6c-8a5f-8cf853df92bd}</Project>
       <Name>HNCommon</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Log\Log.csproj">
+      <Project>{C9A66C0C-2079-4793-8C6E-FDA67744B1D0}</Project>
+      <Name>Log</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ViewLibrary\ViewLibrary.csproj">
       <Project>{ea3bb2ac-4a02-4611-8f08-e03a8b4b82ec}</Project>
       <Name>ViewLibrary</Name>

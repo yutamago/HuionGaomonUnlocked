@@ -23,6 +23,9 @@ namespace HuionTablet
     {
         public const string SettingsFileName = "SettingsFile.xml";
 
+        public static HashSet<string> excludedApplications =
+            new HashSet<string>(new string[] { "huion tablet.exe", "explorer.exe", "devenv.exe" });
+
         public static bool isCommonStartup
         {
             get { return File.Exists(Utils.CommonStartupLinkPath); }

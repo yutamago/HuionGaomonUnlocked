@@ -262,7 +262,7 @@ namespace HuionTablet
                     if (this.kbtn.bWin != (byte) 0)
                         str += "Win+";
                     for (int index = 0; index < 16 && this.kbtn.kbKeys[index] != (byte) 0; ++index)
-                        str += (string) (object) KBTable.getKey8Code(this.kbtn.kbKeys[index]);
+                        str += KBTable.getKey8Code(this.kbtn.kbKeys[index]).ToString();
                 }
 
                 if (Convert.ToBoolean(this.funcBit & 16U))

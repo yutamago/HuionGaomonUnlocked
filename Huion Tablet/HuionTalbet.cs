@@ -12,6 +12,7 @@ using System.Drawing;
 using System.IO;
 using System.Management;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading;
 using System.Timers;
 using System.Windows.Forms;
@@ -37,6 +38,7 @@ namespace HuionTablet
         private Button btnOK;
         private IContainer components = (IContainer) null;
         private ContextMenuStrip contextMenuStrip1;
+        private string currentSettings = "";
         private bool curEnabled = false;
         private int curIsRunning;
         private USB ezUSB = new USB();
@@ -56,9 +58,15 @@ namespace HuionTablet
         private HNPanel panelTabletPen;
         private Panel panelWindow;
         private HNPanel panelWorkArea;
+        private string lastForegroundApplication;
+        private Dictionary<string, HNStruct.PerAppSetting> perAppSettings;
+        private bool perAppSettingsActive;
+        private HNStruct.PerAppSetting? perAppSettingsRest;
+        private string perAppSettingsWorkspace;
         private Timer timer1;
         private Timer timer2;
         private Timer timer3;
+        private Timer checkForegroundWindowInterval;
         private ToolStripMenuItem tsmiExit;
         private ToolStripMenuItem tsmiSettings;
 
@@ -72,6 +80,10 @@ namespace HuionTablet
             this.mForms = new List<Form>();
             ThreadPool.SetMaxThreads(5, 5);
             this.notifyIcon1.Icon = Fixer4Main.getNotifyIcon(false);
+            this.checkForegroundWindowInterval = new Timer();
+            this.checkForegroundWindowInterval.Interval = 500;
+            this.checkForegroundWindowInterval.Tick += checkForegroundWindowTick;
+
             if (Utils.isWin10)
                 SettingsUtil.setAutorun(false);
             else
@@ -92,6 +104,26 @@ namespace HuionTablet
         {
             get { return IsReminder; }
             set { IsReminder = value; }
+        }
+
+        private void checkForegroundWindowTick(object sender, EventArgs e)
+        {
+            IntPtr hwnd = GetForegroundWindow();
+            int processId = GetWindowProcessID(hwnd);
+            if (processId == 1)
+            {
+                return;
+            }
+
+            Process process = Process.GetProcessById(processId);
+            string processFileName = Path.GetFileName(process.MainModule.FileName);
+            if (!processFileName.Equals(lastForegroundApplication))
+            {
+                lastForegroundApplication = processFileName;
+
+                HuionLog.printLog("FocusChanged", processFileName.ToLower());
+                handleFocusChange(processFileName.ToLower());
+            }
         }
 
         private void handleFocusChange(string processName)
@@ -139,13 +171,14 @@ namespace HuionTablet
             }
 
             HuionLog.printLog("FocusChanged", "Info: loading profile");
-
-            HNStruct.HNConfig cfg = new HNStruct.HNConfig();
+            
             IntPtr coTaskMemAuto = Marshal.StringToCoTaskMemAuto(path);
-            uint result = HuionDriverDLL.hnd_read_config(ref cfg, coTaskMemAuto);
-            HuionLog.printLog("FocusChanged", "Info: " + result);
-            HNStruct.globalInfo.userConfig = cfg;
-            new TabletConfigUtils().SetConfig(result);
+            Marshal.AllocHGlobal(Marshal.SizeOf(typeof(HNStruct.HNConfigXML)));
+            IntPtr num = HuionDriverDLL.hnx_read_config(ref HNStruct.globalInfo.tabletInfo, coTaskMemAuto);
+            TabletConfigUtils.config = (HNStruct.HNConfigXML) Marshal.PtrToStructure(num, typeof(HNStruct.HNConfigXML));
+            new TabletConfigUtils().SetConfig(TabletConfigUtils.config);
+            Marshal.FreeHGlobal(coTaskMemAuto);
+            Marshal.FreeHGlobal(num);
             currentSettings = appSetting.settingName;
             Fixer4Main.applayClick(null, null);
 
