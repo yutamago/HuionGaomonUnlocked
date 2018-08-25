@@ -5,9 +5,9 @@ This is a modification of the official driver for **ALL graphics tablets from Hu
 It is based on Huion/Gaomon driver version 14.7.4 (released on 2018/08/24).
 
 This includes:
-- No lock for Gaomon-devices
+- Removed all locks for Gaomon-devices (includes ui/features and general compatibility)
 - New Settings UI for everyone
-- Pressure sensitivity curve
+- New fancy pressure sensitivity curve
 - Game Mode
 - Mouse Mode
 - Less bugs
