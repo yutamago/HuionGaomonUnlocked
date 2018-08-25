@@ -43,11 +43,9 @@ namespace HuionTablet
 
         public static void importConfigClick(object sender, EventArgs e)
         {
-            if ((HNStruct.OemType != OEMType.GAOMON
-                    ? MessageBox.Show(ResourceCulture.GetString("FormInfo_RemindImportMessageText"),
+            if (MessageBox.Show(ResourceCulture.GetString("FormInfo_RemindImportMessageText"),
                         ResourceCulture.GetString("FormInfo_remindText"), MessageBoxButtons.OKCancel,
-                        MessageBoxIcon.Question)
-                    : buttonForm.importConfig()) == DialogResult.OK)
+                        MessageBoxIcon.Question) == DialogResult.OK)
             {
                 OpenFileDialog openFileDialog = new OpenFileDialog();
                 openFileDialog.InitialDirectory = "c:\\";
@@ -73,11 +71,9 @@ namespace HuionTablet
 
         public static void defaultConfigClick(object sender, EventArgs e)
         {
-            if ((HNStruct.OemType != OEMType.GAOMON
-                    ? MessageBox.Show(ResourceCulture.GetString("FormInfo_RemindMessageText"),
+            if (MessageBox.Show(ResourceCulture.GetString("FormInfo_RemindMessageText"),
                         ResourceCulture.GetString("FormInfo_remindText"), MessageBoxButtons.OKCancel,
-                        MessageBoxIcon.Question)
-                    : buttonForm.defaultConfig()) == DialogResult.OK)
+                        MessageBoxIcon.Question) == DialogResult.OK)
             {
                 try
                 {
