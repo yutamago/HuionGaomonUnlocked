@@ -1,4 +1,4 @@
-# Huion Unlocked
+# Huion/Gaomon Unlocked
 
 This is a modification of the official driver for **ALL graphics tablets from Huion and Gaomon** and a few other Chinese manufacturers, unlocked from any limitations and improved by useful features and bugfixes.
 
