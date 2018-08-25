@@ -306,7 +306,7 @@ namespace HuionTablet
                     xmlDocument.Load("SettingsFile.xml");
                     XmlAttributeCollection attributes = xmlDocument.SelectSingleNode("Settings")
                         .SelectSingleNode("Shortcuts").SelectSingleNode("ShowUI").Attributes;
-                    return new HuionKeyEventArgs((Keys) Convert.ToInt32(attributes["key"].Value),
+                    return new HuionKeyEventArgs((Keys) Enum.Parse(typeof(Keys), attributes["key"].Value),
                         Convert.ToBoolean(Convert.ToInt32(attributes["ctrl"].Value)),
                         Convert.ToBoolean(Convert.ToInt32(attributes["alt"].Value)),
                         Convert.ToBoolean(Convert.ToInt32(attributes["shift"].Value)),
