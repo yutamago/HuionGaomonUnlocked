@@ -2,7 +2,7 @@
 // Type: HtmlAgilityPack.HtmlWeb
 // Assembly: HtmlAgilityPack, Version=1.4.6.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a
 // MVID: 83185D3B-3939-439C-A54F-260F9279D9C8
-// Assembly location: D:\Program Files (x86)\Huion Tablet\HtmlAgilityPack.dll
+// Assembly location: D:\Program Files (x86)\Huion Tablet\Release\HtmlAgilityPack.dll
 
 using System;
 using System.Collections.Generic;
@@ -910,18 +910,7 @@ namespace HtmlAgilityPack
             {
                 credentials = new NetworkCredential(userId, password);
                 CredentialCache credentialCache = new CredentialCache()
-                {
-                    {
-                        proxy.Address,
-                        "Basic",
-                        credentials
-                    },
-                    {
-                        proxy.Address,
-                        "Digest",
-                        credentials
-                    }
-                };
+                    {{proxy.Address, "Basic", credentials}, {proxy.Address, "Digest", credentials}};
             }
 
             return this.Load(url, "GET", proxy, credentials);

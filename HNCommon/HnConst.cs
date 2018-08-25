@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HuionTablet.HnConst
-// Assembly: HNCommon, Version=14.4.5.0, Culture=neutral, PublicKeyToken=null
-// MVID: F61A447E-F5B9-4160-AD25-173BA5066379
+// Assembly: HNCommon, Version=14.4.7.4, Culture=neutral, PublicKeyToken=null
+// MVID: 25752B5D-65A2-4F38-BCC4-D8B7ED057FB9
 // Assembly location: D:\Program Files (x86)\Huion Tablet\HNCommon.dll
 
 namespace HuionTablet
@@ -179,6 +179,14 @@ namespace HuionTablet
         public const ushort HN_PID = 110;
         public const int HN_SCREEN_DIV_NUM = 20;
         public const int MAX_KBTNS = 16;
+        public const int HN_MAX_NUM_HEKEY = 16;
+        public const int HN_MAX_NUM_SEKEY = 16;
+        public const int HN_MAX_NUM_PEKEY = 16;
+        public const int HN_MAX_NUM_MEKEY = 2;
+        public const int HN_MAX_NUM_MEKEY_EKEY = 16;
+        public const int HN_MAX_NUM_MEKEY_MUX = 4;
+        public const int HN_MAX_NUM_CONTEXT = 8;
+        public const int HN_MAX_LEN_IDEK = 12;
         public const string HN_Description = "Graphics Tablet Device";
     }
 }

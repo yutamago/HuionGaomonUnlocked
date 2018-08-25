@@ -1,10 +1,11 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HuionTablet.SettingsUtil
-// Assembly: HNCommon, Version=14.4.5.0, Culture=neutral, PublicKeyToken=null
-// MVID: F61A447E-F5B9-4160-AD25-173BA5066379
+// Assembly: HNCommon, Version=14.4.7.4, Culture=neutral, PublicKeyToken=null
+// MVID: 25752B5D-65A2-4F38-BCC4-D8B7ED057FB9
 // Assembly location: D:\Program Files (x86)\Huion Tablet\HNCommon.dll
 
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Security.AccessControl;
 using System.Windows.Forms;
@@ -22,9 +23,6 @@ namespace HuionTablet
     {
         public const string SettingsFileName = "SettingsFile.xml";
 
-        public static HashSet<string> excludedApplications =
-            new HashSet<string>(new string[] {"huion tablet.exe", "explorer.exe", "devenv.exe"});
-
         public static bool isCommonStartup
         {
             get { return File.Exists(Utils.CommonStartupLinkPath); }
@@ -33,13 +31,41 @@ namespace HuionTablet
                 if (value)
                 {
                     IWshShortcut shortcut =
-                        (IWshShortcut) ((IWshShell3) new WshShellClass()).CreateShortcut(Utils.CommonStartupLinkPath);
+                        (IWshShortcut) new WshShellClass().CreateShortcut(Utils.CommonStartupLinkPath);
                     shortcut.TargetPath = Utils.ExecutablePath;
                     shortcut.WindowStyle = 7;
                     shortcut.Save();
                 }
-                else
+                else if (Utils.isWin10)
+                {
                     File.Delete(Utils.CommonStartupLinkPath);
+                }
+                else
+                {
+                    try
+                    {
+                        if (!File.Exists(Utils.CommonStartupLinkPath))
+                            return;
+                        string commonStartupLinkPath = Utils.CommonStartupLinkPath;
+                        FileInfo fileInfo = new FileInfo(commonStartupLinkPath);
+                        if (fileInfo.IsReadOnly)
+                        {
+                            FileSecurity accessControl = fileInfo.GetAccessControl();
+                            accessControl.AddAccessRule(new FileSystemAccessRule("Everyone",
+                                FileSystemRights.FullControl, AccessControlType.Allow));
+                            accessControl.AddAccessRule(new FileSystemAccessRule("Users", FileSystemRights.FullControl,
+                                AccessControlType.Allow));
+                            fileInfo.SetAccessControl(accessControl);
+                            File.Delete(commonStartupLinkPath);
+                        }
+                        else
+                            File.Delete(Utils.CommonStartupLinkPath);
+                    }
+                    catch (Exception ex)
+                    {
+                        HuionLog.saveLog("删除win7启动快捷方式", ex.Message);
+                    }
+                }
             }
         }
 
@@ -267,7 +293,6 @@ namespace HuionTablet
             }
         }
 
-
         public static HuionKeyEventArgs ShowUIShortcut
         {
             get
@@ -278,8 +303,7 @@ namespace HuionTablet
                     xmlDocument.Load("SettingsFile.xml");
                     XmlAttributeCollection attributes = xmlDocument.SelectSingleNode("Settings")
                         .SelectSingleNode("Shortcuts").SelectSingleNode("ShowUI").Attributes;
-                    return new HuionKeyEventArgs(
-                        (Keys) Enum.Parse(typeof(Keys), attributes["key"].Value),
+                    return new HuionKeyEventArgs((Keys) Convert.ToInt32(attributes["key"].Value),
                         Convert.ToBoolean(Convert.ToInt32(attributes["ctrl"].Value)),
                         Convert.ToBoolean(Convert.ToInt32(attributes["alt"].Value)),
                         Convert.ToBoolean(Convert.ToInt32(attributes["shift"].Value)),
@@ -375,13 +399,13 @@ namespace HuionTablet
                 perAppSettingSampleElement.SetAttribute("active", "0");
                 perAppSettingSampleElement.SetAttribute("process-name", "sample.exe");
                 perAppSettingSampleElement.SetAttribute("settings-name", "sample.xml");
-                perAppSettingsElement.AppendChild((XmlNode) perAppSettingSampleElement);
+                perAppSettingsElement.AppendChild((XmlNode)perAppSettingSampleElement);
                 XmlElement perAppSettingRestElement = xmlDocument.CreateElement("Rest");
                 perAppSettingRestElement.SetAttribute("active", "0");
                 perAppSettingRestElement.SetAttribute("settings-name", "sample.xml");
-                perAppSettingsElement.AppendChild((XmlNode) perAppSettingRestElement);
+                perAppSettingsElement.AppendChild((XmlNode)perAppSettingRestElement);
 
-                element1.AppendChild((XmlNode) perAppSettingsElement);
+                element1.AppendChild((XmlNode)perAppSettingsElement);
 
                 XmlElement element3 = xmlDocument.CreateElement("Shortcuts");
                 element1.AppendChild((XmlNode) element3);

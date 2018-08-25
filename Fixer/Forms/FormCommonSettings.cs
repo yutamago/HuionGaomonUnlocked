@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HuionTablet.FormCommonSettings
-// Assembly: Fixer, Version=14.4.5.0, Culture=neutral, PublicKeyToken=null
-// MVID: 0244B443-444F-4961-B0E5-29DA8D9959BB
+// Assembly: Fixer, Version=14.4.7.4, Culture=neutral, PublicKeyToken=null
+// MVID: F573D0D8-B2B9-493C-AB71-EC374499E1DC
 // Assembly location: D:\Program Files (x86)\Huion Tablet\Fixer.dll
 
 using System;
@@ -16,15 +16,14 @@ namespace HuionTablet
     public class FormCommonSettings : Form
     {
         private CheckBox checkAutorun;
-        private CheckBox checkPerAppSettingsEnabled;
         private IContainer components;
 
         public FormCommonSettings()
         {
             this.InitializeComponent();
+            this.checkAutorun.Enabled = Utils.isAdmin();
             this.checkAutorun.Checked = !Utils.isWin10 ? SettingsUtil.isAutorun() : SettingsUtil.isCommonStartup;
             this.checkAutorun.Text = ResourceCulture.GetString("SettingsAutorun");
-            this.checkPerAppSettingsEnabled.Text = "Enable Per-App Settings";
         }
 
         private void checkAutorun_Click(object sender, EventArgs e)
@@ -50,7 +49,7 @@ namespace HuionTablet
             TimerSession.userOperation();
         }
 
-        private void checkPerAppSettingsEnabled_Click(object sender, EventArgs e)
+        private void FormCommonSettings_Load(object sender, EventArgs e)
         {
         }
 
@@ -64,13 +63,10 @@ namespace HuionTablet
         private void InitializeComponent()
         {
             this.checkAutorun = new CheckBox();
-            this.checkPerAppSettingsEnabled = new CheckBox();
             this.SuspendLayout();
-
-
             this.checkAutorun.AutoCheck = false;
             this.checkAutorun.AutoSize = true;
-            this.checkAutorun.Location = new Point(25, 52);
+            this.checkAutorun.Location = new Point(25, 22);
             this.checkAutorun.Name = "checkAutorun";
             this.checkAutorun.RightToLeft = RightToLeft.No;
             this.checkAutorun.Size = new Size(99, 21);
@@ -79,20 +75,6 @@ namespace HuionTablet
             this.checkAutorun.TextAlign = ContentAlignment.TopLeft;
             this.checkAutorun.UseVisualStyleBackColor = true;
             this.checkAutorun.Click += new EventHandler(this.checkAutorun_Click);
-
-            this.checkPerAppSettingsEnabled.AutoCheck = false;
-            this.checkPerAppSettingsEnabled.AutoSize = true;
-            this.checkPerAppSettingsEnabled.Location = new Point(25, 100);
-            this.checkPerAppSettingsEnabled.Name = "checkPerAppSettingsEnabled";
-            this.checkPerAppSettingsEnabled.RightToLeft = RightToLeft.No;
-            this.checkPerAppSettingsEnabled.Size = new Size(99, 21);
-            this.checkPerAppSettingsEnabled.TabIndex = 1;
-            this.checkPerAppSettingsEnabled.Text = "开机自动运ads行";
-            this.checkPerAppSettingsEnabled.TextAlign = ContentAlignment.TopLeft;
-            this.checkPerAppSettingsEnabled.UseVisualStyleBackColor = true;
-            this.checkPerAppSettingsEnabled.Click += new EventHandler(this.checkPerAppSettingsEnabled_Click);
-            this.Controls.Add(this.checkPerAppSettingsEnabled);
-
             this.AutoScaleDimensions = new SizeF(96f, 96f);
             this.AutoScaleMode = AutoScaleMode.Dpi;
             this.BackColor = SystemColors.Control;
@@ -109,6 +91,7 @@ namespace HuionTablet
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.Text = nameof(FormCommonSettings);
+            this.Load += new EventHandler(this.FormCommonSettings_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
         }

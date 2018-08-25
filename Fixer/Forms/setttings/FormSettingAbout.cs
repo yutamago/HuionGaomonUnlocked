@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HuionTablet.FormSettingAbout
-// Assembly: Fixer, Version=14.4.5.0, Culture=neutral, PublicKeyToken=null
-// MVID: 0244B443-444F-4961-B0E5-29DA8D9959BB
+// Assembly: Fixer, Version=14.4.7.4, Culture=neutral, PublicKeyToken=null
+// MVID: F573D0D8-B2B9-493C-AB71-EC374499E1DC
 // Assembly location: D:\Program Files (x86)\Huion Tablet\Fixer.dll
 
 using System;
@@ -35,7 +35,7 @@ namespace HuionTablet
         public FormSettingAbout()
         {
             this.InitializeComponent();
-            this.labelCurrentVersion.Text = "v14.5.0";
+            this.labelCurrentVersion.Text = "v14.7.4";
             this.Versionlabel.Text = ResourceCulture.GetString("FormInfo_lbVersionText");
         }
 
@@ -53,7 +53,7 @@ namespace HuionTablet
         private void FormSettingAbout_Load(object sender, EventArgs e)
         {
             this.linkLabel1.Visible = false;
-            this.labelCurrentVersion.Text = "v14.5.0";
+            this.labelCurrentVersion.Text = "v14.7.4";
             this.btnCheckVersion.AutoEllipsis = true;
             this.btnCheckVersion.Text = ResourceCulture.GetString("Check_Update");
         }
@@ -140,7 +140,7 @@ namespace HuionTablet
             }
         }
 
-        private static int IsProcrssRunning(string processName)
+        public static int IsProcrssRunning(string processName)
         {
             Process[] processesByName = Process.GetProcessesByName(processName);
             int index = 0;
@@ -226,7 +226,7 @@ namespace HuionTablet
             this.AutoScaleDimensions = new SizeF(96f, 96f);
             this.AutoScaleMode = AutoScaleMode.Dpi;
             this.BackColor = SystemColors.Control;
-            this.ClientSize = new Size(400, 249);
+            this.ClientSize = new Size(400, 332);
             this.ControlBox = false;
             this.Controls.Add((Control) this.panel1);
             this.Controls.Add((Control) this.Versionlabel);

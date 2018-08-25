@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HuionTablet.Depot
-// Assembly: Depot, Version=14.4.5.0, Culture=neutral, PublicKeyToken=null
-// MVID: 7A5EDBC9-3259-4706-97F7-C6DF31A213B5
+// Assembly: Depot, Version=14.4.5.1, Culture=neutral, PublicKeyToken=null
+// MVID: A3F0FEF4-BBE4-4840-AEFB-765D0FBD07E2
 // Assembly location: D:\Program Files (x86)\Huion Tablet\Depot.dll
 
 using System.IO;

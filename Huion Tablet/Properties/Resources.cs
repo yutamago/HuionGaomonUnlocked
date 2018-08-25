@@ -1,8 +1,8 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HuionTablet.Properties.Resources
-// Assembly: Huion Tablet, Version=14.4.5.0, Culture=neutral, PublicKeyToken=null
-// MVID: E9BBED94-79CD-4774-8A97-2E0171DB986F
-// Assembly location: D:\Program Files (x86)\Huion Tablet\Huion Tablet.exe
+// Assembly: Huion Tablet, Version=14.4.7.4, Culture=neutral, PublicKeyToken=null
+// MVID: 89741050-C3D9-47F7-9E24-1E7879C81D96
+// Assembly location: D:\Program Files (x86)\Huion Tablet\app.publish\Huion Tablet.exe
 
 using System.CodeDom.Compiler;
 using System.ComponentModel;

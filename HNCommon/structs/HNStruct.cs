@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HuionTablet.HNStruct
-// Assembly: HNCommon, Version=14.4.5.0, Culture=neutral, PublicKeyToken=null
-// MVID: F61A447E-F5B9-4160-AD25-173BA5066379
+// Assembly: HNCommon, Version=14.4.7.4, Culture=neutral, PublicKeyToken=null
+// MVID: 25752B5D-65A2-4F38-BCC4-D8B7ED057FB9
 // Assembly location: D:\Program Files (x86)\Huion Tablet\HNCommon.dll
 
 using System;
@@ -12,6 +12,24 @@ namespace HuionTablet
 {
     public class HNStruct
     {
+        [Flags]
+        public enum ColorPreset
+        {
+            SRGB = 1,
+            DISPLAY_NATIVE = 2,
+            _4000K = DISPLAY_NATIVE | SRGB, // 0x00000003
+            _5000K = 4,
+            _6500K = _5000K | SRGB, // 0x00000005
+            _7500K = _5000K | DISPLAY_NATIVE, // 0x00000006
+            _8200K = _7500K | SRGB, // 0x00000007
+            _9300K = 8,
+            _10000K = _9300K | SRGB, // 0x00000009
+            _11500K = _9300K | DISPLAY_NATIVE, // 0x0000000A
+            USER1 = _11500K | SRGB, // 0x0000000B
+            USER2 = _9300K | _5000K, // 0x0000000C
+            USER3 = USER2 | SRGB, // 0x0000000D
+        }
+
         public enum HNEkeyType
         {
             HNEKT_NONE,
@@ -24,6 +42,63 @@ namespace HuionTablet
             HNEKT_SWITCH_BRUSH,
         }
 
+        [Flags]
+        public enum InputSource
+        {
+            ANALOG_VIDEO1 = 1,
+            ANALOG_VIDEO2 = 2,
+            DVI1 = ANALOG_VIDEO2 | ANALOG_VIDEO1, // 0x00000003
+            DVI2 = 4,
+            HDMI1 = 17, // 0x00000011
+            HDMI2 = 18, // 0x00000012
+            DISPLAY_PORT1 = 15, // 0x0000000F
+            DISPLAY_PORT2 = 16, // 0x00000010
+        }
+
+        public enum ParseState
+        {
+            DEFAULT,
+            VCP,
+            PROT,
+            TYPE,
+            CMDS,
+            MODEL,
+            SKIP,
+            MSWHQL,
+            ASSET_EEP,
+            MCCS_VER,
+            ERROR,
+        }
+
+        public enum VCPFeature
+        {
+            RESTORE_FACTORY_DEFAULTS = 4,
+            RESTORE_FACTORY_LUMINANCE_DEFAULTS = 5,
+            RESTORE_FACTORY_COLOR_DEFAULTS = 8,
+            LUMINANCE = 16, // 0x00000010
+            CONTRAST = 18, // 0x00000012
+            COLOR_PRESET = 20, // 0x00000014
+            VIDEO_GAIN_RED = 22, // 0x00000016
+            VIDEO_GAIN_GREEN = 24, // 0x00000018
+            VIDEO_GAIN_BLUE = 26, // 0x0000001A
+            INPUT_SOURCE = 96, // 0x00000060
+            SPEAKER_VOLUME = 98, // 0x00000062
+            VIDEO_BLACK_LEVEL_RED = 108, // 0x0000006C
+            VIDEO_BLACK_LEVEL_GREEN = 110, // 0x0000006E
+            VIDEO_BLACK_LEVEL_BLUE = 112, // 0x00000070
+            STORE_RESTORE_SETTINGS = 176, // 0x000000B0
+        }
+
+        public enum VcpState
+        {
+            DEFAULT,
+            INPUT_SOURCE,
+            COLOR_PRESET,
+            SKIP,
+        }
+
+        public static readonly int REQUEST_TIMEOUT = 200;
+        public static readonly int REQUEST_REPEATS = 4;
         public static HNGlobalInfo globalInfo;
         public static string tabletTextInfo;
         public static string devTypeString;
@@ -49,6 +124,7 @@ namespace HuionTablet
             }
         }
 
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct HNRect
         {
             public int left;
@@ -57,22 +133,17 @@ namespace HuionTablet
             public int bottom;
         }
 
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct HNSize
         {
             public int cx;
             public int cy;
         }
 
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct HNRectRatio
         {
-            public static HNRectRatio DEFAULT = new HNRectRatio()
-            {
-                l = 0.0f,
-                t = 0.0f,
-                b = 1f,
-                r = 1f
-            };
-
+            public static HNRectRatio DEFAULT = new HNRectRatio() {l = 0.0f, t = 0.0f, b = 1f, r = 1f};
             public float l;
             public float t;
             public float r;
@@ -85,6 +156,7 @@ namespace HuionTablet
             }
         }
 
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct HNPoint
         {
             public int x;
@@ -124,18 +196,22 @@ namespace HuionTablet
             public byte bPassive;
             public byte bMonitor;
 
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
             public string sDevType;
 
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
-            public string companyName;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
+            public string sPenType;
+
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
+            public string sDevVer;
 
             public string getFirmwareVersion()
             {
-                return ResourceCulture.GetString("FirmwareVersion") + this.sDevType;
+                return ResourceCulture.GetString("FirmwareVersion") + this.sDevVer;
             }
         }
 
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct HNKbtn
         {
             public byte bCtrl;
@@ -156,8 +232,12 @@ namespace HuionTablet
             [FieldOffset(0)] public HNKbtn kbtn;
         }
 
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct HNEkey
         {
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 12, ArraySubType = UnmanagedType.U2)]
+            public char[] ekid;
+
             public uint funcBit;
             public ulong funcEvent;
 
@@ -182,7 +262,7 @@ namespace HuionTablet
                     if (this.kbtn.bWin != (byte) 0)
                         str += "Win+";
                     for (int index = 0; index < 16 && this.kbtn.kbKeys[index] != (byte) 0; ++index)
-                        str += KBTable.getKey8Code(this.kbtn.kbKeys[index]).ToString();
+                        str += (string) (object) KBTable.getKey8Code(this.kbtn.kbKeys[index]);
                 }
 
                 if (Convert.ToBoolean(this.funcBit & 16U))
@@ -245,18 +325,56 @@ namespace HuionTablet
             }
         }
 
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct HNMEkey
         {
-            public uint num;
-            public IntPtr ekeys;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 12, ArraySubType = UnmanagedType.U2)]
+            public char[] mekid;
+
+            public byte num;
+
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16, ArraySubType = UnmanagedType.Struct)]
+            public HNEkey[] eks;
         }
 
-        public struct HNConfig
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        public struct HNMuxMEkey
+        {
+            public byte ekNum;
+            public byte muxNum;
+            public byte muxIndex;
+
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4, ArraySubType = UnmanagedType.Struct)]
+            public HNMEkey[] eks;
+        }
+
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        public struct HNContextEkeys
+        {
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 260, ArraySubType = UnmanagedType.U2)]
+            public char[] pid;
+
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16, ArraySubType = UnmanagedType.Struct)]
+            public HNEkey[] hbtns;
+
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16, ArraySubType = UnmanagedType.Struct)]
+            public HNEkey[] sbtns;
+
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4, ArraySubType = UnmanagedType.Struct)]
+            public HNEkey[] pbtns;
+
+            public byte mmeksNum;
+
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4, ArraySubType = UnmanagedType.Struct)]
+            public HNMuxMEkey[] ctxMek;
+        }
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+        public struct HNConfigXML
         {
             public byte bGame;
             public byte bImproveLinearity;
             public byte bTabletpc;
-            public byte bWintab;
             public byte bEnableHBtn;
             public byte bEnableSBtn;
             public byte bEnableMBtn;
@@ -271,15 +389,14 @@ namespace HuionTablet
             public int pressFactor;
             public uint rotateAngle;
             public uint cursor;
-            public uint mekeyNum;
-            public IntPtr pbtns;
-            public IntPtr hbtns;
-            public IntPtr sbtns;
-            public IntPtr mekeys;
             public HNRectRatio workAreaRatio;
             public HNRectRatio screenAreaRatio;
+
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8, ArraySubType = UnmanagedType.Struct)]
+            public HNContextEkeys[] ctxEkeys;
         }
 
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct HNLayoutEkey
         {
             public HNRect rect;
@@ -287,12 +404,14 @@ namespace HuionTablet
             public HNPoint center;
         }
 
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct HNMEkeyName
         {
             public uint num;
             public IntPtr names;
         }
 
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct HNLayoutTablet
         {
             public HNSize size;
@@ -309,6 +428,7 @@ namespace HuionTablet
             public IntPtr ekLayouts;
         }
 
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct HNLayoutPen
         {
             public HNSize size;
@@ -319,7 +439,6 @@ namespace HuionTablet
         public struct HNGlobalInfo
         {
             public HNTabletInfo tabletInfo;
-            public HNConfig userConfig;
             public HNLayoutTablet layoutTablet;
             public HNRectRatio penareaRatio;
             public HNLayoutPen layoutPen;
@@ -328,7 +447,7 @@ namespace HuionTablet
             public HNEkey[] hbtns;
             public HNEkey[] pbtns;
             public HNEkey[] sbtns;
-            public HNMEkey[] meKeys;
+            public HNContextEkeys[] eKeys;
             public HNEkey[] mbtns;
             public HNLayoutEkey[] hbtnLayouts;
             public HNLayoutEkey[] sbtnLayouts;
@@ -340,6 +459,7 @@ namespace HuionTablet
             public HNPenData penData;
         }
 
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct RECT
         {
             public int Left;
@@ -348,7 +468,7 @@ namespace HuionTablet
             public int Bottom;
         }
 
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct MONITORINFOEX
         {
             public int Size;
@@ -356,8 +476,8 @@ namespace HuionTablet
             public RECT WorkArea;
             public uint Flags;
 
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
-            public string DeviceName;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32, ArraySubType = UnmanagedType.U2)]
+            public char[] DeviceName;
         }
 
         public struct HNDevice
@@ -394,6 +514,23 @@ namespace HuionTablet
             public IntPtr dwData;
             public int cbData;
             public IntPtr lpData;
+        }
+
+        public struct VCPRect
+        {
+            public int left;
+            public int top;
+            public int right;
+            public int bottom;
+        }
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+        public struct PHYSICAL_MONITOR
+        {
+            public IntPtr hphysicalMonitor;
+
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 128)]
+            public string szPhysicalMonitorDescription;
         }
     }
 }

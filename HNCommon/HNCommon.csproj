@@ -4,11 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A321A697-4DB7-4F32-8E63-6BFFACD4A399}</ProjectGuid>
+    <ProjectGuid>{33CFEFF5-C015-4D6C-8A5F-8CF853DF92BD}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AssemblyName>HNCommon</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <ApplicationVersion>14.4.5.0</ApplicationVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <RootNamespace>HuionTablet</RootNamespace>
     <FileUpgradeFlags>
@@ -16,6 +15,22 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>3.5</OldToolsVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>14.4.7.4</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -37,31 +52,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="System" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Management" />
-    <Reference Include="System" />
     <Reference Include="System.Drawing" />
-    <Reference Include="HNApiCs">
-      <HintPath>lib\HNApiCs.dll</HintPath>
-    </Reference>
-    <Reference Include="Depot">
-      <HintPath>lib\Depot.dll</HintPath>
-    </Reference>
-    <Reference Include="HuionView">
-      <HintPath>lib\HuionView.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml" />
-    <Reference Include="Log">
-      <HintPath>lib\Log.dll</HintPath>
-    </Reference>
-    <Reference Include="Interop.IWshRuntimeLibrary">
-      <HintPath>lib\Interop.IWshRuntimeLibrary.dll</HintPath>
-    </Reference>
-    <Reference Include="Session">
-      <HintPath>lib\Session.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="log\HuionLog.cs" />
+    <Compile Include="Depot.cs" />
     <Compile Include="callback\DeviceStatusUtils.cs" />
     <Compile Include="callback\MiddleModule.cs" />
     <Compile Include="callback\USBControllerDevice.cs" />
@@ -75,6 +74,10 @@
     <Compile Include="utils\ResourceCulture.cs" />
     <Compile Include="utils\TabletConfigUtils.cs" />
     <Compile Include="utils\TouchInfoReader.cs" />
+    <Compile Include="view\Monitors.cs" />
+    <Compile Include="view\VcpFeature.cs" />
+    <Compile Include="session\SystemSessionService.cs" />
+    <Compile Include="session\TimerSession.cs" />
     <Compile Include="view\HuionWorkAreaPictureRect.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -92,11 +95,13 @@
     <Compile Include="utils\Runnable.cs" />
     <Compile Include="utils\Void.cs" />
     <Compile Include="utils\Boolean.cs" />
+    <Compile Include="utils\Int.cs" />
     <Compile Include="utils\Utils.cs" />
     <Compile Include="entity\HuionKeyLayout.cs" />
     <Compile Include="entity\HuionKeyType.cs" />
     <Compile Include="entity\MouseLocationType.cs" />
     <Compile Include="entity\PointGravity.cs" />
+    <Compile Include="log\MiniDump.cs" />
     <Compile Include="Send.cs" />
     <Compile Include="Post.cs" />
     <Compile Include="SendSreenNum.cs" />
@@ -107,6 +112,111 @@
     <Compile Include="IDestroy.cs" />
     <Compile Include="HnConst.cs" />
     <Compile Include="AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="res\221.png" />
+    <EmbeddedResource Include="res\Gaomon\128.ico" />
+    <EmbeddedResource Include="res\Gaomon\16.ico" />
+    <EmbeddedResource Include="res\Gaomon\16_off.ico" />
+    <EmbeddedResource Include="res\Gaomon\32.ico" />
+    <EmbeddedResource Include="res\Gaomon\64.ico" />
+    <EmbeddedResource Include="res\Gaomon\icon.ico" />
+    <EmbeddedResource Include="res\Gaomon\logo.png" />
+    <EmbeddedResource Include="res\Huion\128.ico" />
+    <EmbeddedResource Include="res\Huion\16.ico" />
+    <EmbeddedResource Include="res\Huion\16_off.ico" />
+    <EmbeddedResource Include="res\Huion\32.ico" />
+    <EmbeddedResource Include="res\Huion\64.ico" />
+    <EmbeddedResource Include="res\Huion\BANNER.jpg" />
+    <EmbeddedResource Include="res\Huion\icon.ico" />
+    <EmbeddedResource Include="res\Huion\info.jpg" />
+    <EmbeddedResource Include="res\Huion\logo.png" />
+    <EmbeddedResource Include="res\NEW1060PLUS.png" />
+    <EmbeddedResource Include="res\pen_COMMON.png" />
+    <EmbeddedResource Include="res\pen_HUION_P151.png" />
+    <EmbeddedResource Include="res\pen_HUION_P152.png" />
+    <EmbeddedResource Include="res\pen_HUION_P153.png" />
+    <EmbeddedResource Include="res\pen_HUION_P161.png" />
+    <EmbeddedResource Include="res\pen_HUION_P162.png" />
+    <EmbeddedResource Include="res\pen_HUION_P171.png" />
+    <EmbeddedResource Include="res\pen_HUION_P173.png" />
+    <EmbeddedResource Include="res\pen_HUION_P174.png" />
+    <EmbeddedResource Include="res\pen_HUION_P175.png" />
+    <EmbeddedResource Include="res\pen_HUION_P176.png" />
+    <EmbeddedResource Include="res\pen_HUION_P179.png" />
+    <EmbeddedResource Include="res\pen_HUION_P17b.png" />
+    <EmbeddedResource Include="res\pen_HUION_P180.png" />
+    <EmbeddedResource Include="res\pen_HUION_P184.png" />
+    <EmbeddedResource Include="res\pen_OEM00_P171.png" />
+    <EmbeddedResource Include="res\pen_OEM07_P163.png" />
+    <EmbeddedResource Include="res\pen_OEM07_T163.png" />
+    <EmbeddedResource Include="res\settingnew--.png" />
+    <EmbeddedResource Include="res\settings.png" />
+    <EmbeddedResource Include="res\tablet_HUION_M161.png" />
+    <EmbeddedResource Include="res\tablet_HUION_M162.png" />
+    <EmbeddedResource Include="res\tablet_HUION_M167.png" />
+    <EmbeddedResource Include="res\tablet_HUION_M168.png" />
+    <EmbeddedResource Include="res\tablet_HUION_M174.png" />
+    <EmbeddedResource Include="res\tablet_HUION_M175.png" />
+    <EmbeddedResource Include="res\tablet_HUION_M182.png" />
+    <EmbeddedResource Include="res\tablet_HUION_M189.png" />
+    <EmbeddedResource Include="res\tablet_HUION_T153.png" />
+    <EmbeddedResource Include="res\tablet_HUION_T161.png" />
+    <EmbeddedResource Include="res\tablet_HUION_T162.png" />
+    <EmbeddedResource Include="res\tablet_HUION_T164.png" />
+    <EmbeddedResource Include="res\tablet_HUION_T166.png" />
+    <EmbeddedResource Include="res\tablet_HUION_T167.png" />
+    <EmbeddedResource Include="res\tablet_HUION_T172.png" />
+    <EmbeddedResource Include="res\tablet_HUION_T173.png" />
+    <EmbeddedResource Include="res\tablet_HUION_T174.png" />
+    <EmbeddedResource Include="res\tablet_HUION_T175.png" />
+    <EmbeddedResource Include="res\tablet_HUION_T176.png" />
+    <EmbeddedResource Include="res\tablet_OEM00_M166.png" />
+    <EmbeddedResource Include="res\tablet_OEM00_M173.png" />
+    <EmbeddedResource Include="res\tablet_OEM02_M165.png" />
+    <EmbeddedResource Include="res\tablet_OEM02_M166.png" />
+    <EmbeddedResource Include="res\tablet_OEM02_M167.png" />
+    <EmbeddedResource Include="res\tablet_OEM02_M171.png" />
+    <EmbeddedResource Include="res\tablet_OEM02_T151.png" />
+    <EmbeddedResource Include="res\tablet_OEM02_T156.png" />
+    <EmbeddedResource Include="res\tablet_OEM02_T174.png" />
+    <EmbeddedResource Include="res\tablet_OEM02_T178.png" />
+    <EmbeddedResource Include="res\tablet_OEM02_T17b.png" />
+    <EmbeddedResource Include="res\tablet_OEM02_T17c.png" />
+    <EmbeddedResource Include="res\tablet_OEM07_T168.png" />
+    <EmbeddedResource Include="res\TabletDriver\128.ico" />
+    <EmbeddedResource Include="res\TabletDriver\16.ico" />
+    <EmbeddedResource Include="res\TabletDriver\16_off.ico" />
+    <EmbeddedResource Include="res\TabletDriver\32.ico" />
+    <EmbeddedResource Include="res\TabletDriver\64.ico" />
+    <EmbeddedResource Include="res\TabletDriver\icon.ico" />
+    <EmbeddedResource Include="res\TabletDriver\logo.png" />
+    <EmbeddedResource Include="res\TabletDriverUI.rc2" />
+    <EmbeddedResource Include="res\warnning.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ViewLibrary\ViewLibrary.csproj">
+      <Project>{ea3bb2ac-4a02-4611-8f08-e03a8b4b82ec}</Project>
+      <Name>ViewLibrary</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="IWshRuntimeLibrary">
+      <Guid>{F935DC20-1CF0-11D0-ADB9-00C04FD58A0B}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

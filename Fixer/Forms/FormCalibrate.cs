@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HuionTablet.FormCalibrate
-// Assembly: Fixer, Version=14.4.5.0, Culture=neutral, PublicKeyToken=null
-// MVID: 0244B443-444F-4961-B0E5-29DA8D9959BB
+// Assembly: Fixer, Version=14.4.7.4, Culture=neutral, PublicKeyToken=null
+// MVID: F573D0D8-B2B9-493C-AB71-EC374499E1DC
 // Assembly location: D:\Program Files (x86)\Huion Tablet\Fixer.dll
 
 using System;
@@ -15,6 +15,7 @@ namespace HuionTablet
 {
     public class FormCalibrate : Form
     {
+        private static string sourcePath = Application.StartupPath + "\\res\\config_user.xml";
         private Button btnDefault;
         private Button btnStart;
         private Button btnStop;
@@ -135,8 +136,17 @@ namespace HuionTablet
 
         private void btnDefault_Click(object sender, EventArgs e)
         {
-            HNStruct.globalInfo.userConfig.bCalibrated = (byte) 0;
-            int num = (int) HuionDriverDLL.hnd_save_config(ref HNStruct.globalInfo.userConfig, IntPtr.Zero);
+            TabletConfigUtils.config.bCalibrated = (byte) 0;
+            IntPtr num1 = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(HNStruct.HNConfigXML)));
+            Marshal.StructureToPtr((object) TabletConfigUtils.config, num1, true);
+            IntPtr num2 = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(HNStruct.HNTabletInfo)));
+            Marshal.StructureToPtr((object) HNStruct.globalInfo.tabletInfo, num2, true);
+            IntPtr coTaskMemAuto = Marshal.StringToCoTaskMemAuto(sourcePath);
+            int num3 = (int) HuionDriverDLL.hnx_save_config(num1, num2, coTaskMemAuto, coTaskMemAuto);
+            HuionDriverDLL.hnd_notify_config_changed();
+            Marshal.FreeHGlobal(num2);
+            Marshal.FreeHGlobal(coTaskMemAuto);
+            Marshal.FreeHGlobal(num1);
             this.Close();
             this.Dispose();
         }
@@ -152,9 +162,17 @@ namespace HuionTablet
         {
             try
             {
-                HuionDriverDLL.hnc_calibrate_monitor(ref HNStruct.globalInfo.tabletInfo,
-                    ref HNStruct.globalInfo.userConfig, ptr);
-                int num = (int) HuionDriverDLL.hnd_save_config(ref HNStruct.globalInfo.userConfig, IntPtr.Zero);
+                IntPtr num1 = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(HNStruct.HNConfigXML)));
+                Marshal.StructureToPtr((object) TabletConfigUtils.config, num1, true);
+                IntPtr num2 = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(HNStruct.HNTabletInfo)));
+                Marshal.StructureToPtr((object) HNStruct.globalInfo.tabletInfo, num2, true);
+                IntPtr coTaskMemAuto = Marshal.StringToCoTaskMemAuto(sourcePath);
+                HuionDriverDLL.hnc_calibrate_monitor(num2, num1, ptr);
+                int num3 = (int) HuionDriverDLL.hnx_save_config(num1, num2, coTaskMemAuto, coTaskMemAuto);
+                HuionDriverDLL.hnd_notify_config_changed();
+                Marshal.FreeHGlobal(coTaskMemAuto);
+                Marshal.FreeHGlobal(num2);
+                Marshal.FreeHGlobal(num1);
             }
             catch (Exception ex)
             {

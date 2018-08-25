@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HuionTablet.USB
-// Assembly: HNCommon, Version=14.4.5.0, Culture=neutral, PublicKeyToken=null
-// MVID: F61A447E-F5B9-4160-AD25-173BA5066379
+// Assembly: HNCommon, Version=14.4.7.4, Culture=neutral, PublicKeyToken=null
+// MVID: 25752B5D-65A2-4F38-BCC4-D8B7ED057FB9
 // Assembly location: D:\Program Files (x86)\Huion Tablet\HNCommon.dll
 
 using System;
@@ -42,7 +42,6 @@ namespace HuionTablet
                         "TargetInstance isa 'Win32_USBControllerDevice'");
                     this.insertWatcher = new ManagementEventWatcher(scope, (EventQuery) wqlEventQuery);
                     this.insertWatcher.EventArrived += usbInsertHandler;
-                    this.insertWatcher.Start();
                 }
 
                 if (usbRemoveHandler != null)
@@ -51,13 +50,13 @@ namespace HuionTablet
                         "TargetInstance isa 'Win32_USBControllerDevice'");
                     this.removeWatcher = new ManagementEventWatcher(scope, (EventQuery) wqlEventQuery);
                     this.removeWatcher.EventArrived += usbRemoveHandler;
-                    this.removeWatcher.Start();
                 }
 
                 return true;
             }
             catch (Exception ex)
             {
+                HuionLog.saveLog("usb", ex.Message);
                 this.RemoveUSBEventWatcher();
                 return false;
             }

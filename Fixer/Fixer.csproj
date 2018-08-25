@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{60F01841-9FDA-4AF0-954A-564FE096BF5C}</ProjectGuid>
+    <ProjectGuid>{29BFEC4B-6B2D-4947-8BD1-E774C0116BA6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AssemblyName>Fixer</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <RootNamespace>HuionTablet</RootNamespace>
     <FileUpgradeFlags>
@@ -26,10 +26,11 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>14.4.5.0</ApplicationVersion>
+    <ApplicationVersion>14.4.7.4</ApplicationVersion>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -40,7 +41,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -50,7 +50,6 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System.Drawing" />
@@ -59,10 +58,22 @@
     <Reference Include="System.Management" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Forms\setttings\FormShortcut.cs">
+    <Compile Include="Fixers\Fixer4DrawLine.cs" />
+    <Compile Include="Fixers\Fixer4Info.cs" />
+    <Compile Include="Fixers\Fixer4Main.cs" />
+    <Compile Include="Fixers\Fixer4TabletPen.cs" />
+    <Compile Include="Forms\BaseForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Fixers\Fixer4DrawLine.cs" />
+    <Compile Include="Forms\buttonForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormCalibrate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormEKey_New.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\FormIdentify.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -78,10 +89,10 @@
     <Compile Include="Forms\FormUpdateMessage.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Fixers\Fixer4Info.cs" />
-    <Compile Include="Fixers\Fixer4Main.cs" />
-    <Compile Include="Fixers\Fixer4TabletPen.cs" />
-    <Compile Include="Forms\BaseForm.cs">
+    <Compile Include="Forms\FormUpdater.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\HuionMessageBox.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\FormCommonSettings.cs">
@@ -90,34 +101,25 @@
     <Compile Include="Forms\setttings\FormSettingAbout.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\buttonForm.cs">
+    <Compile Include="Forms\setttings\FormShortcut.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\setttings\FormSettings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormCalibrate.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FormWorkArea.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FormEKey_New.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FormUpdater.cs">
+    <Compile Include="Forms\FormEKey.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\FormHotKey.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormEKey.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\HuionMessageBox.cs">
+    <Compile Include="Forms\FormWorkArea.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Properties\Resources.Designer.cs" />
+    <Compile Include="Forms\keyDisplay.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="PressValueChanged.cs" />
     <Compile Include="TabType.cs" />
     <Compile Include="EKeyCallback.cs" />
@@ -127,15 +129,14 @@
     <EmbeddedResource Include="BaseForm.resx" />
     <EmbeddedResource Include="buttonForm.resx" />
     <EmbeddedResource Include="FormCalibrate.resx" />
-    <EmbeddedResource Include="FormCommonSettings.resx">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
+    <EmbeddedResource Include="FormCommonSettings.resx" />
     <EmbeddedResource Include="FormEKey.resx" />
     <EmbeddedResource Include="FormEKey_New.resx" />
     <EmbeddedResource Include="FormHotKey.resx" />
     <EmbeddedResource Include="FormIdentify.resx" />
     <EmbeddedResource Include="FormInfo.resx" />
     <EmbeddedResource Include="FormInsatll.resx" />
+    <EmbeddedResource Include="Forms\keyDisplay.resx" />
     <EmbeddedResource Include="FormSetingBrightness.resx" />
     <EmbeddedResource Include="FormSettingAbout.resx" />
     <EmbeddedResource Include="FormSettings.resx" />
@@ -154,29 +155,17 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HNApiCs\HNApiCs.csproj">
-      <Project>{188d2b3e-e87c-401a-b38b-afb6df22ee3d}</Project>
-      <Name>HNApiCs</Name>
-    </ProjectReference>
     <ProjectReference Include="..\HNCommon\HNCommon.csproj">
-      <Project>{a321a697-4db7-4f32-8e63-6bffacd4a399}</Project>
+      <Project>{33cfeff5-c015-4d6c-8a5f-8cf853df92bd}</Project>
       <Name>HNCommon</Name>
     </ProjectReference>
     <ProjectReference Include="..\HtmlAgilityPack\HtmlAgilityPack.csproj">
-      <Project>{df0338bc-a23f-4d78-9fb1-ef4a29b58f6b}</Project>
+      <Project>{090ca7d9-f1ed-4d10-a36d-97cd7a1b27b9}</Project>
       <Name>HtmlAgilityPack</Name>
     </ProjectReference>
-    <ProjectReference Include="..\HuionView\HuionView.csproj">
-      <Project>{5ce031db-1fe9-4cba-9014-0b5dbd186c32}</Project>
-      <Name>HuionView</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Log\Log.csproj">
-      <Project>{c9a66c0c-2079-4793-8c6e-fda67744b1d0}</Project>
-      <Name>Log</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Session\Session.csproj">
-      <Project>{450ff20e-10a5-42d2-8957-7ab8fb5a8ea9}</Project>
-      <Name>Session</Name>
+    <ProjectReference Include="..\ViewLibrary\ViewLibrary.csproj">
+      <Project>{ea3bb2ac-4a02-4611-8f08-e03a8b4b82ec}</Project>
+      <Name>ViewLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

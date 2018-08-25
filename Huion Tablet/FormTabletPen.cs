@@ -1,13 +1,14 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HuionTablet.FormTabletPen
-// Assembly: Huion Tablet, Version=14.4.5.0, Culture=neutral, PublicKeyToken=null
-// MVID: E9BBED94-79CD-4774-8A97-2E0171DB986F
-// Assembly location: D:\Program Files (x86)\Huion Tablet\Huion Tablet.exe
+// Assembly: Huion Tablet, Version=14.4.7.4, Culture=neutral, PublicKeyToken=null
+// MVID: 89741050-C3D9-47F7-9E24-1E7879C81D96
+// Assembly location: D:\Program Files (x86)\Huion Tablet\app.publish\Huion Tablet.exe
 
 using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Huion;
 using HuionTablet.Entity;
@@ -72,18 +73,21 @@ namespace HuionTablet
             Pen pen2 = new Pen(Color.DarkGray, 1f);
             graphics.DrawRectangle(pen1, 0, 0, this.pictureBoxPressCurve.Width, this.pictureBoxPressCurve.Height);
             uint width = (uint) this.pictureBoxPressCurve.Width;
+            IntPtr num3 = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(HNStruct.HNConfigXML)));
+            Marshal.StructureToPtr((object) TabletConfigUtils.config, num3, true);
             for (int index = 0; index < this.pictureBoxPressCurve.Width; ++index)
             {
                 graphics.DrawLine(pen2, (float) num1, (float) num2, (float) index,
                     (float) ((long) this.pictureBoxPressCurve.Height -
-                             (long) Fixer4TabletPen.calibratePressVal(HNStruct.globalInfo.userConfig, (uint) index,
-                                 width)));
+                             (long) HuionDriverDLL.hnc_calibrate_press_tablet(num3, ref HNStruct.globalInfo.tabletInfo,
+                                 (uint) index, width)));
                 num1 = index;
                 num2 = (int) ((long) this.pictureBoxPressCurve.Height -
-                              (long) Fixer4TabletPen.calibratePressVal(HNStruct.globalInfo.userConfig, (uint) index,
-                                  width));
+                              (long) HuionDriverDLL.hnc_calibrate_press_tablet(num3, ref HNStruct.globalInfo.tabletInfo,
+                                  (uint) index, width));
             }
 
+            Marshal.FreeHGlobal(num3);
             pen1.Dispose();
             pen2.Dispose();
         }
@@ -147,19 +151,23 @@ namespace HuionTablet
                 this.penLayouts[index].KeyType = HuionKeyType.PENKEY;
             }
 
-            if ( /*HNStruct.OemType != OEMType.HUION || */Convert.ToBoolean(HNStruct.globalInfo.tabletInfo.bMonitor))
+            if (HNStruct.OemType != OEMType.HUION || Convert.ToBoolean(HNStruct.globalInfo.tabletInfo.bMonitor))
+            {
+                this.checkBoxMouseMode.Checked = true;
                 this.checkBoxMouseMode.Hide();
+            }
+
             this.trackBar1.Top = this.pictureBoxPressCurve.Top - 5;
             this.trackBar1.Height = this.pictureBoxPressCurve.Height + 10;
             this.labelMaxPressValue.Text = string.Concat((object) this.trackBar1.Maximum);
             this.labelMinPressValue.Text = string.Concat((object) this.trackBar1.Minimum);
             this.btnAbove.Text = HNStruct.globalInfo.pbtns[2].ToString();
             this.btnBelow.Text = HNStruct.globalInfo.pbtns[1].ToString();
-            this.trackBar1.Value = HNStruct.globalInfo.userConfig.pressFactor;
-            this.checkInk.Checked = Convert.ToBoolean(HNStruct.globalInfo.userConfig.bTabletpc);
-            this.checkTab.Checked = Convert.ToBoolean(HNStruct.globalInfo.userConfig.bImproveLinearity);
-            this.checkBoxMouseMode.Checked = HNStruct.globalInfo.userConfig.bAbsoluteMode == (byte) 0;
-            this.checkBgame.Checked = HNStruct.globalInfo.userConfig.bGame == (byte) 1;
+            this.trackBar1.Value = TabletConfigUtils.config.pressFactor;
+            this.checkInk.Checked = Convert.ToBoolean(TabletConfigUtils.config.bTabletpc);
+            this.checkTab.Checked = Convert.ToBoolean(TabletConfigUtils.config.bImproveLinearity);
+            this.checkBoxMouseMode.Checked = TabletConfigUtils.config.bAbsoluteMode == (byte) 0;
+            this.checkBgame.Checked = TabletConfigUtils.config.bGame == (byte) 1;
             this.labelMaxPressValue.Location =
                 new Point(this.trackBar1.Right - this.labelMaxPressValue.Width, this.trackBar1.Top);
             this.label1.Location = new Point(this.labelMaxPressValue.Left,
@@ -220,6 +228,7 @@ namespace HuionTablet
             else
                 this.drawLineHelper.stopDrawLine();
             this.touchPressBar1.Value = 0;
+            this.touchPressBar1.Visible = this.bTest;
         }
 
         private void buttonClear_Click(object sender, EventArgs e)
@@ -319,7 +328,7 @@ namespace HuionTablet
 
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
-            HNStruct.globalInfo.userConfig.pressFactor = this.trackBar1.Value;
+            TabletConfigUtils.config.pressFactor = this.trackBar1.Value;
             this.pictureBoxPressCurve.Refresh();
             if (!DeployConfig.isNewUI)
                 return;
@@ -333,7 +342,10 @@ namespace HuionTablet
                 TimerSession.userOperation();
             if (m.Msg == 32752)
             {
-                HNStruct.globalInfo.penData.ps = HuionApi.Msg2Packet(m).pkNormalPressure;
+                PACKET? nullable = HuionApi.SafeMsg2Packet(m);
+                if (!nullable.HasValue)
+                    return;
+                HNStruct.globalInfo.penData.ps = nullable.Value.pkNormalPressure;
                 this.onPressValueHandle((int) HNStruct.globalInfo.penData.ps);
                 this.drawLineHelper.onDrawline();
             }
@@ -384,7 +396,7 @@ namespace HuionTablet
             ((ISupportInitialize) this.pictureBoxPressCurve).BeginInit();
             this.trackBar1.BeginInit();
             ((ISupportInitialize) this.pictureBoxDrawTest).BeginInit();
-            // this.pictureBoxDrawLine.BeginInit();
+            ((ISupportInitialize) this.pictureBoxDrawLine).BeginInit();
             this.SuspendLayout();
             this.imgPen.BackColor = Color.Transparent;
             this.imgPen.BackgroundImageLayout = ImageLayout.None;
@@ -613,7 +625,7 @@ namespace HuionTablet
             ((ISupportInitialize) this.pictureBoxPressCurve).EndInit();
             this.trackBar1.EndInit();
             ((ISupportInitialize) this.pictureBoxDrawTest).EndInit();
-            // this.pictureBoxDrawLine.EndInit();
+            ((ISupportInitialize) this.pictureBoxDrawLine).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
         }

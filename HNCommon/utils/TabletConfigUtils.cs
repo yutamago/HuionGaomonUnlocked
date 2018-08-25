@@ -1,12 +1,13 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HuionTablet.TabletConfigUtils
-// Assembly: HNCommon, Version=14.4.5.0, Culture=neutral, PublicKeyToken=null
-// MVID: F61A447E-F5B9-4160-AD25-173BA5066379
+// Assembly: HNCommon, Version=14.4.7.4, Culture=neutral, PublicKeyToken=null
+// MVID: 25752B5D-65A2-4F38-BCC4-D8B7ED057FB9
 // Assembly location: D:\Program Files (x86)\Huion Tablet\HNCommon.dll
 
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 using HuionTablet.Lib;
 
 namespace HuionTablet
@@ -20,56 +21,58 @@ namespace HuionTablet
         public const string TYPE_YINENG = "OEM07";
         public const string TYPE_SHIJUN = "OEM08";
         public const string TYPE_KJC = "OEM10";
+        public static HNStruct.HNConfigXML config;
 
         public void readConfig()
         {
-            HNStruct.globalInfo.isDeviceConnected = new bool?(HNStruct.globalInfo.bOpenedTablet);
             HNStruct.devTypeString =
                 Marshal.PtrToStringAuto(
-                    HuionDriverDLL.hnc_get_tablet_image((HnConst.HNTabletType) HNStruct.globalInfo.tabletInfo.devType));
+                    HuionDriverDLL.hnp_get_tablet_image((HnConst.HNTabletType) HNStruct.globalInfo.tabletInfo.devType));
             HNStruct.tabletTextInfo = HNStruct.globalInfo.bOpenedTablet
                 ? ResourceCulture.GetString("FormHuionTablet_lbOpenTabletText")
                 : ResourceCulture.GetString("FormHuionTablet_lbCloseTabletText");
             if (!HNStruct.globalInfo.bOpenedTablet)
                 return;
-            this.SetLayoutTablet();
-            KBTable.init_KBTable();
+            IntPtr coTaskMemAuto = Marshal.StringToCoTaskMemAuto(Application.StartupPath + "\\res\\config_user.xml");
+            Marshal.AllocHGlobal(Marshal.SizeOf(typeof(HNStruct.HNConfigXML)));
+            IntPtr num = HuionDriverDLL.hnx_read_config(ref HNStruct.globalInfo.tabletInfo, coTaskMemAuto);
+            config = (HNStruct.HNConfigXML) Marshal.PtrToStructure(num, typeof(HNStruct.HNConfigXML));
+            this.SetLayoutTablet(num);
+            Marshal.FreeHGlobal(coTaskMemAuto);
+            HuionDriverDLL.hnx_free_PHNConfig(num);
             this.SetLayoutPen();
-            this.SetConfig(HuionDriverDLL.hnd_read_config(ref HNStruct.globalInfo.userConfig, IntPtr.Zero));
+            this.SetConfig(config);
         }
 
-        public void SetConfig(uint result)
+        public static IntPtr getAddr(object o)
         {
-            if (result == 0U)
-                return;
-            HNStruct.HNGlobalInfo globalInfo = HNStruct.globalInfo;
+            return GCHandle.ToIntPtr(GCHandle.Alloc(o, GCHandleType.WeakTrackResurrection));
+        }
+
+        public void SetConfig(HNStruct.HNConfigXML config)
+        {
             HNStruct.globalInfo.hbtns = new HNStruct.HNEkey[(int) HNStruct.globalInfo.layoutTablet.hbtnNum];
-            int num1 = 0;
-            foreach (HNStruct.HNEkey hnEkey in MarshalPtrToStructArray<HNStruct.HNEkey>(
-                HNStruct.globalInfo.userConfig.hbtns, (int) HNStruct.globalInfo.layoutTablet.hbtnNum))
-                HNStruct.globalInfo.hbtns[num1++] = hnEkey;
             HNStruct.globalInfo.sbtns = new HNStruct.HNEkey[(int) HNStruct.globalInfo.layoutTablet.sbtnNum];
-            int num2 = 0;
-            foreach (HNStruct.HNEkey hnEkey in MarshalPtrToStructArray<HNStruct.HNEkey>(
-                HNStruct.globalInfo.userConfig.sbtns, (int) HNStruct.globalInfo.layoutTablet.sbtnNum))
-                HNStruct.globalInfo.sbtns[num2++] = hnEkey;
-            HNStruct.globalInfo.pbtns = new HNStruct.HNEkey[(int) HNStruct.globalInfo.layoutPen.ekNum];
-            int num3 = 0;
-            foreach (HNStruct.HNEkey hnEkey in MarshalPtrToStructArray<HNStruct.HNEkey>(
-                HNStruct.globalInfo.userConfig.pbtns, (int) HNStruct.globalInfo.layoutPen.ekNum))
-                HNStruct.globalInfo.pbtns[num3++] = hnEkey;
-            HNStruct.globalInfo.meKeys = new HNStruct.HNMEkey[(int) HNStruct.globalInfo.userConfig.mekeyNum];
-            int num4 = 0;
-            foreach (HNStruct.HNMEkey hnmEkey in MarshalPtrToStructArray<HNStruct.HNMEkey>(
-                HNStruct.globalInfo.userConfig.mekeys, (int) HNStruct.globalInfo.layoutTablet.mekeyNum))
+            HNStruct.globalInfo.pbtns = new HNStruct.HNEkey[(int) HNStruct.globalInfo.tabletInfo.pbtnNum];
+            HNStruct.globalInfo.mbtns = new HNStruct.HNEkey[16];
+            for (int index = 0; (long) index < (long) HNStruct.globalInfo.layoutTablet.hbtnNum; ++index)
+                HNStruct.globalInfo.hbtns[index] = config.ctxEkeys[0].hbtns[index];
+            for (int index = 0; (long) index < (long) HNStruct.globalInfo.layoutTablet.sbtnNum; ++index)
+                HNStruct.globalInfo.sbtns[index] = config.ctxEkeys[0].sbtns[index];
+            for (int index = 0; index < 3; ++index)
+                HNStruct.globalInfo.pbtns[index] = config.ctxEkeys[0].pbtns[index];
+            for (int index1 = 0; index1 < (int) config.ctxEkeys[0].mmeksNum; ++index1)
             {
-                HNStruct.globalInfo.meKeys[num4++] = hnmEkey;
-                HNStruct.globalInfo.mbtns = new HNStruct.HNEkey[(int) hnmEkey.num];
-                int num5 = 0;
-                foreach (HNStruct.HNEkey hnEkey in MarshalPtrToStructArray<HNStruct.HNEkey>(hnmEkey.ekeys,
-                    (int) hnmEkey.num))
-                    HNStruct.globalInfo.mbtns[num5++] = hnEkey;
+                config.ctxEkeys[0].ctxMek[index1] = config.ctxEkeys[0].ctxMek[index1];
+                config.ctxEkeys[0].ctxMek[index1].eks[0] = config.ctxEkeys[0].ctxMek[index1].eks[0];
+                for (int index2 = 0; index2 < (int) config.ctxEkeys[0].ctxMek[index1].eks[0].num; ++index2)
+                    HNStruct.globalInfo.mbtns[index2] = config.ctxEkeys[0].ctxMek[index1].eks[0].eks[index2];
             }
+        }
+
+        public static int getEKIndexOfCurMEKey(byte mekeyIndex, byte index, byte ekIndex)
+        {
+            return (int) mekeyIndex * 16 * 16 + (int) index * 16 + (int) ekIndex;
         }
 
         public void readDisConnectConfig()
@@ -80,80 +83,106 @@ namespace HuionTablet
                 : ResourceCulture.GetString("FormHuionTablet_lbCloseTabletText");
         }
 
-        public void SetLayoutTablet()
+        public void SetLayoutTablet(IntPtr pconfig)
         {
-            IntPtr tabletLayout = HuionDriverDLL.hnd_get_tablet_layout();
-            HNStruct.globalInfo.layoutTablet =
-                (HNStruct.HNLayoutTablet) Marshal.PtrToStructure(tabletLayout, typeof(HNStruct.HNLayoutTablet));
-            HNStruct.globalInfo.hbtnLayouts = new HNStruct.HNLayoutEkey[(int) HNStruct.globalInfo.layoutTablet.hbtnNum];
-            int num1 = 0;
-            foreach (HNStruct.HNLayoutEkey hnLayoutEkey in MarshalPtrToStructArray<HNStruct.HNLayoutEkey>(
-                HNStruct.globalInfo.layoutTablet.hbtnLayouts, (int) HNStruct.globalInfo.layoutTablet.hbtnNum))
-                HNStruct.globalInfo.hbtnLayouts[num1++] = hnLayoutEkey;
-            HNStruct.globalInfo.sbtnLayouts = new HNStruct.HNLayoutEkey[(int) HNStruct.globalInfo.layoutTablet.sbtnNum];
+            IntPtr coTaskMemAuto = Marshal.StringToCoTaskMemAuto(Application.StartupPath + "\\res\\layout_tablet.xml");
+            Marshal.AllocHGlobal(Marshal.SizeOf(typeof(HNStruct.HNLayoutTablet)));
+            IntPtr num1 =
+                HuionDriverDLL.hnx_read_layout_tablet(ref HNStruct.globalInfo.tabletInfo, pconfig, coTaskMemAuto);
+            HNStruct.HNLayoutTablet hnLayoutTablet = new HNStruct.HNLayoutTablet();
+            HNStruct.HNLayoutTablet structure =
+                (HNStruct.HNLayoutTablet) Marshal.PtrToStructure(num1, typeof(HNStruct.HNLayoutTablet));
+            HNStruct.globalInfo.layoutTablet = structure;
+            HNStruct.globalInfo.hbtnLayouts = new HNStruct.HNLayoutEkey[(int) structure.hbtnNum];
             int num2 = 0;
+            Console.WriteLine("sizeof(HNLayoutTablet)={0}", (object) Marshal.SizeOf(typeof(HNStruct.HNLayoutTablet)));
             foreach (HNStruct.HNLayoutEkey hnLayoutEkey in MarshalPtrToStructArray<HNStruct.HNLayoutEkey>(
-                HNStruct.globalInfo.layoutTablet.sbtnLayouts, (int) HNStruct.globalInfo.layoutTablet.sbtnNum))
-                HNStruct.globalInfo.sbtnLayouts[num2++] = hnLayoutEkey;
-            HNStruct.globalInfo.mekeyLayouts =
-                new HNStruct.HNLayoutEkey[(int) HNStruct.globalInfo.layoutTablet.mekeyNum];
+                structure.hbtnLayouts, (int) structure.hbtnNum))
+                HNStruct.globalInfo.hbtnLayouts[num2++] = hnLayoutEkey;
+            HNStruct.globalInfo.sbtnLayouts = new HNStruct.HNLayoutEkey[(int) structure.sbtnNum];
             int num3 = 0;
             foreach (HNStruct.HNLayoutEkey hnLayoutEkey in MarshalPtrToStructArray<HNStruct.HNLayoutEkey>(
-                HNStruct.globalInfo.layoutTablet.mekeyLayouts, (int) HNStruct.globalInfo.layoutTablet.mekeyNum))
-                HNStruct.globalInfo.mekeyLayouts[num3++] = hnLayoutEkey;
-            HNStruct.globalInfo.mekeyNames = new HNStruct.HNMEkeyName[(int) HNStruct.globalInfo.layoutTablet.mekeyNum];
-            int index1 = 0;
-            foreach (HNStruct.HNMEkeyName hnmEkeyName in MarshalPtrToStructArray<HNStruct.HNMEkeyName>(
-                HNStruct.globalInfo.layoutTablet.mekeyNames, (int) HNStruct.globalInfo.layoutTablet.mekeyNum))
-            {
-                HNStruct.globalInfo.mekeyNames[index1] = hnmEkeyName;
-                HNStruct.globalInfo.names = new string[(int) HNStruct.globalInfo.mekeyNames[index1].num];
-                IntPtr ptr = HNStruct.globalInfo.mekeyNames[index1].names;
-                for (int index2 = 0; (long) index2 < (long) HNStruct.globalInfo.mekeyNames[0].num; ++index2)
-                {
-                    switch (IntPtr.Size)
-                    {
-                        case 4:
-                            HNStruct.globalInfo.names[index2] =
-                                Marshal.PtrToStringAuto(new IntPtr((int) Marshal.PtrToStructure(ptr, typeof(int))));
-                            ptr = new IntPtr(ptr.ToInt64() + 4L);
-                            break;
-                        case 8:
-                            HNStruct.globalInfo.names[index2] =
-                                Marshal.PtrToStringAuto(new IntPtr((long) Marshal.PtrToStructure(ptr, typeof(long))));
-                            ptr = new IntPtr(ptr.ToInt64() + 8L);
-                            break;
-                    }
-                }
-
-                ++index1;
-            }
-
-            HNStruct.globalInfo.ekLayouts = new HNStruct.HNLayoutEkey[(int) HNStruct.globalInfo.layoutTablet.ekNum];
+                structure.sbtnLayouts, (int) structure.sbtnNum))
+                HNStruct.globalInfo.sbtnLayouts[num3++] = hnLayoutEkey;
+            HNStruct.globalInfo.mekeyLayouts = new HNStruct.HNLayoutEkey[(int) structure.mekeyNum];
             int num4 = 0;
             foreach (HNStruct.HNLayoutEkey hnLayoutEkey in MarshalPtrToStructArray<HNStruct.HNLayoutEkey>(
-                HNStruct.globalInfo.layoutTablet.ekLayouts, (int) HNStruct.globalInfo.layoutTablet.ekNum))
-                HNStruct.globalInfo.ekLayouts[num4++] = hnLayoutEkey;
-            HNStruct.HNRect penArea = HNStruct.globalInfo.layoutTablet.penArea;
-            HNStruct.HNSize size = HNStruct.globalInfo.layoutTablet.size;
+                structure.mekeyLayouts, (int) structure.mekeyNum))
+            {
+                if (!HNStruct.globalInfo.tabletInfo.sDevType.Equals("HUION_M182"))
+                    HNStruct.globalInfo.mekeyLayouts[num4++] = hnLayoutEkey;
+                else
+                    break;
+            }
+
+            HNStruct.globalInfo.mekeyNames = new HNStruct.HNMEkeyName[(int) structure.mekeyNum];
+            int index1 = 0;
+            foreach (HNStruct.HNMEkeyName hnmEkeyName in MarshalPtrToStructArray<HNStruct.HNMEkeyName>(
+                structure.mekeyNames, (int) structure.mekeyNum))
+            {
+                Console.WriteLine(HNStruct.globalInfo.tabletInfo.sDevType);
+                if (!HNStruct.globalInfo.tabletInfo.sDevType.Equals("HUION_M182"))
+                {
+                    HNStruct.globalInfo.mekeyNames[index1] = hnmEkeyName;
+                    HNStruct.globalInfo.names = new string[(int) HNStruct.globalInfo.mekeyNames[index1].num];
+                    IntPtr ptr = HNStruct.globalInfo.mekeyNames[index1].names;
+                    for (int index2 = 0; (long) index2 < (long) HNStruct.globalInfo.mekeyNames[0].num; ++index2)
+                    {
+                        switch (IntPtr.Size)
+                        {
+                            case 4:
+                                HNStruct.globalInfo.names[index2] =
+                                    Marshal.PtrToStringAuto(new IntPtr((int) Marshal.PtrToStructure(ptr, typeof(int))));
+                                ptr = new IntPtr(ptr.ToInt64() + 4L);
+                                break;
+                            case 8:
+                                HNStruct.globalInfo.names[index2] =
+                                    Marshal.PtrToStringAuto(
+                                        new IntPtr((long) Marshal.PtrToStructure(ptr, typeof(long))));
+                                ptr = new IntPtr(ptr.ToInt64() + 8L);
+                                break;
+                        }
+                    }
+
+                    ++index1;
+                }
+                else
+                    break;
+            }
+
+            HNStruct.globalInfo.ekLayouts = new HNStruct.HNLayoutEkey[(int) structure.ekNum];
+            int num5 = 0;
+            foreach (HNStruct.HNLayoutEkey hnLayoutEkey in MarshalPtrToStructArray<HNStruct.HNLayoutEkey>(
+                structure.ekLayouts, (int) structure.ekNum))
+                HNStruct.globalInfo.ekLayouts[num5++] = hnLayoutEkey;
+            HNStruct.HNRect penArea = structure.penArea;
+            HNStruct.HNSize size = structure.size;
             HNStruct.HNRectRatio hnRectRatio;
             hnRectRatio.l = (float) penArea.left / (float) size.cx;
             hnRectRatio.r = (float) penArea.right / (float) size.cx;
             hnRectRatio.t = (float) penArea.top / (float) size.cy;
             hnRectRatio.b = (float) penArea.bottom / (float) size.cy;
             HNStruct.globalInfo.penareaRatio = hnRectRatio;
+            Marshal.FreeHGlobal(coTaskMemAuto);
+            HuionDriverDLL.hnx_free_PHNLayoutTablet(num1);
         }
 
         public void SetLayoutPen()
         {
-            string stringAuto = Marshal.PtrToStringAuto(
-                HuionDriverDLL.hnc_get_pen_node((HnConst.HNTabletType) HNStruct.globalInfo.tabletInfo.devType));
-            int num1 = (int) HuionDriverDLL.hnd_read_layout_pen(ref HNStruct.globalInfo.layoutPen, stringAuto);
+            Marshal.PtrToStringAuto(
+                HuionDriverDLL.hnp_get_pen_node((HnConst.HNTabletType) HNStruct.globalInfo.tabletInfo.devType));
+            IntPtr coTaskMemAuto = Marshal.StringToCoTaskMemAuto(Application.StartupPath + "\\res\\layout_pen.xml");
+            Marshal.AllocHGlobal(Marshal.SizeOf((object) new HNStruct.HNLayoutPen()));
+            IntPtr num1 = HuionDriverDLL.hnx_read_layout_pen(ref HNStruct.globalInfo.tabletInfo, coTaskMemAuto);
+            HNStruct.globalInfo.layoutPen =
+                (HNStruct.HNLayoutPen) Marshal.PtrToStructure(num1, typeof(HNStruct.HNLayoutPen));
             HNStruct.globalInfo.penLayouts = new HNStruct.HNLayoutEkey[(int) HNStruct.globalInfo.layoutPen.ekNum];
             int num2 = 0;
             foreach (HNStruct.HNLayoutEkey hnLayoutEkey in MarshalPtrToStructArray<HNStruct.HNLayoutEkey>(
                 HNStruct.globalInfo.layoutPen.ekLayouts, (int) HNStruct.globalInfo.layoutPen.ekNum))
                 HNStruct.globalInfo.penLayouts[num2++] = hnLayoutEkey;
+            Marshal.FreeHGlobal(coTaskMemAuto);
+            HuionDriverDLL.hnx_free_PHNLayoutPen(num1);
         }
 
         public static List<T> MarshalPtrToStructArray<T>(IntPtr p, int count)

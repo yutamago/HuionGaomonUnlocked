@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <!--Project was exported from assembly: D:\Program Files (x86)\Huion Tablet\Huion Tablet.exe-->
+  <!--Project was exported from assembly: D:\Program Files (x86)\Huion Tablet\app.publish\Huion Tablet.exe-->
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{DDBA5C79-796A-4DC0-A41B-BECEA0501F92}</ProjectGuid>
+    <ProjectGuid>{EA239339-FF4B-4536-8D41-20C16A1FD164}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AssemblyName>Huion Tablet</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <RootNamespace>HuionTablet</RootNamespace>
     <FileUpgradeFlags>
@@ -26,10 +26,11 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>14.4.5.0</ApplicationVersion>
+    <ApplicationVersion>14.4.7.4</ApplicationVersion>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -51,59 +52,40 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Management" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="UIAutomationClient" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FormTabletPen.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Program.cs" />
     <Compile Include="HuionTalbet.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Program.cs" />
+    <Compile Include="FormTabletPen.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Properties\Resources.cs" />
     <Compile Include="AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="FormTabletPen.resx">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
+    <EmbeddedResource Include="FormTabletPen.resx" />
     <EmbeddedResource Include="huion.ico" />
     <EmbeddedResource Include="HuionTalbet.resx" />
     <EmbeddedResource Include="Properties\Resources.resx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Fixer\Fixer.csproj">
-      <Project>{60f01841-9fda-4af0-954a-564fe096bf5c}</Project>
+      <Project>{29bfec4b-6b2d-4947-8bd1-e774c0116ba6}</Project>
       <Name>Fixer</Name>
     </ProjectReference>
-    <ProjectReference Include="..\HNApiCs\HNApiCs.csproj">
-      <Project>{bcd1b38a-e31f-4935-8b8a-02a81ae5092d}</Project>
-      <Name>HNApiCs</Name>
-    </ProjectReference>
     <ProjectReference Include="..\HNCommon\HNCommon.csproj">
-      <Project>{53986094-1cac-4e29-b3f4-a58213bc401b}</Project>
+      <Project>{33cfeff5-c015-4d6c-8a5f-8cf853df92bd}</Project>
       <Name>HNCommon</Name>
     </ProjectReference>
-    <ProjectReference Include="..\HuionView\HuionView.csproj">
-      <Project>{5ce031db-1fe9-4cba-9014-0b5dbd186c32}</Project>
-      <Name>HuionView</Name>
+    <ProjectReference Include="..\ViewLibrary\ViewLibrary.csproj">
+      <Project>{ea3bb2ac-4a02-4611-8f08-e03a8b4b82ec}</Project>
+      <Name>ViewLibrary</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Log\Log.csproj">
-      <Project>{c9a66c0c-2079-4793-8c6e-fda67744b1d0}</Project>
-      <Name>Log</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Session\Session.csproj">
-      <Project>{450ff20e-10a5-42d2-8957-7ab8fb5a8ea9}</Project>
-      <Name>Session</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
@@ -112,5 +94,11 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(ProjectDir)\other" "$(TargetDir)" /d /e /h /i /k /r /s /y /q /c</PostBuildEvent>
+  </PropertyGroup>
 </Project>
