@@ -52,10 +52,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System" />
     <Reference Include="System.Management" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Fixers\Fixer4DrawLine.cs" />
@@ -98,6 +100,18 @@
     <Compile Include="Forms\FormCommonSettings.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\profileSwitcher\FormProfileSwitcher.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\profileSwitcher\FormProfileSwitcher.Designer.cs">
+      <DependentUpon>FormProfileSwitcher.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\profileSwitcher\FormSelectRunningProcess.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\profileSwitcher\FormSelectRunningProcess.Designer.cs">
+      <DependentUpon>FormSelectRunningProcess.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\setttings\FormSettingAbout.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -116,6 +130,7 @@
     <Compile Include="Forms\FormWorkArea.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\Resources.Designer.cs" />
     <Compile Include="Forms\keyDisplay.cs">
       <SubType>Form</SubType>
@@ -141,6 +156,12 @@
     <EmbeddedResource Include="FormSettingAbout.resx" />
     <EmbeddedResource Include="FormSettings.resx" />
     <EmbeddedResource Include="FormShortcut.resx" />
+    <EmbeddedResource Include="Forms\profileSwitcher\FormProfileSwitcher.resx">
+      <DependentUpon>FormProfileSwitcher.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\profileSwitcher\FormSelectRunningProcess.resx">
+      <DependentUpon>FormSelectRunningProcess.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormUpdateMessage.resx" />
     <EmbeddedResource Include="FormUpdater.resx" />
     <EmbeddedResource Include="FormWorkArea.resx" />
@@ -171,6 +192,9 @@
       <Project>{ea3bb2ac-4a02-4611-8f08-e03a8b4b82ec}</Project>
       <Name>ViewLibrary</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\DataSources\SettingsUtil.datasource" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

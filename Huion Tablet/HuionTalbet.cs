@@ -19,6 +19,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.Layout;
 using Huion;
 using HuionTablet.Forms;
+using HuionTablet.Forms.profileSwitcher;
 using HuionTablet.Lib;
 using HuionTablet.Properties;
 using HuionTablet.utils;
@@ -61,8 +62,8 @@ namespace HuionTablet
         private string lastForegroundApplication;
         private Dictionary<string, HNStruct.PerAppSetting> perAppSettings;
         private bool perAppSettingsActive;
-        private HNStruct.PerAppSetting? perAppSettingsRest;
-        private string perAppSettingsWorkspace;
+        private HNStruct.RestSetting perAppSettingsRest;
+        private string perAppSettingsProfilesDir;
         private Timer timer1;
         private Timer timer2;
         private Timer timer3;
@@ -89,15 +90,17 @@ namespace HuionTablet
             else
                 SettingsUtil.isCommonStartup = false;
 
-            this.perAppSettingsActive = SettingsUtil.isPerAppSettingsActive;
-            this.perAppSettings = SettingsUtil.perAppSettings;
-            this.perAppSettingsRest = SettingsUtil.perAppSettingsRest;
-            this.perAppSettingsWorkspace = SettingsUtil.perAppSettingsWorkspace;
+            this.perAppSettingsActive = SettingsUtil.isPerAppSettingsEnabled;
+            this.perAppSettings = SettingsUtil.appSettings;
+            this.perAppSettingsRest = SettingsUtil.restSettings;
+            this.perAppSettingsProfilesDir = SettingsUtil.perAppSettingsProfilesDir;
 
             if (this.perAppSettingsActive)
             {
                 this.checkForegroundWindowInterval.Start();
             }
+
+            new FormProfileSwitcher().Show();
         }
 
         public static bool isReminder
@@ -129,7 +132,7 @@ namespace HuionTablet
         private void handleFocusChange(string processName)
         {
             if (processName.Equals(Path.GetFileName(Process.GetCurrentProcess().MainModule.FileName.ToLower())) ||
-                SettingsUtil.excludedApplications.Contains(processName))
+                SettingsUtil.excludedApplications.Contains(processName.Substring(processName.LastIndexOf("\\"))))
             {
                 // Excluded app
                 return;
@@ -140,9 +143,9 @@ namespace HuionTablet
             {
                 appSetting = this.perAppSettings[processName];
             }
-            else if (this.perAppSettingsRest.HasValue)
+            else if (this.perAppSettingsRest != null)
             {
-                appSetting = this.perAppSettingsRest.Value;
+                appSetting = this.perAppSettingsRest;
             }
             else
             {
@@ -150,20 +153,20 @@ namespace HuionTablet
                 return;
             }
 
-            if (this.currentSettings == appSetting.settingName)
+            if (this.currentSettings == appSetting.profile)
             {
-                HuionLog.printLog("FocusChanged", "Error: already active");
-                // already active
+                HuionLog.printLog("FocusChanged", "Error: already enabled");
+                // already enabled
                 return;
             }
-            else if (!appSetting.active)
+            else if (!appSetting.enabled)
             {
                 HuionLog.printLog("FocusChanged", "Error: not enabled");
                 // setting not enabled
                 return;
             }
 
-            string path = Path.GetFullPath(Path.Combine(this.perAppSettingsWorkspace, appSetting.settingName));
+            string path = Path.GetFullPath(Path.Combine(this.perAppSettingsProfilesDir, appSetting.profile));
             if (!File.Exists(path))
             {
                 HuionLog.printLog("FocusChanged", "Error: file not found");
@@ -179,14 +182,14 @@ namespace HuionTablet
             new TabletConfigUtils().SetConfig(TabletConfigUtils.config);
             Marshal.FreeHGlobal(coTaskMemAuto);
             Marshal.FreeHGlobal(num);
-            currentSettings = appSetting.settingName;
+            currentSettings = appSetting.profile;
             Fixer4Main.applayClick(null, null);
 
             HuionLog.printLog("FocusChanged", "Info: profile loaded");
 
-            this.notifyIcon1.ShowBalloonTip(3, "Profile switched", appSetting.settingName, ToolTipIcon.Info);
+            this.notifyIcon1.ShowBalloonTip(3, "Profile switched", appSetting.profile, ToolTipIcon.Info);
             this.notifyIcon1.Text = ResourceCulture.GetString("FormHuionTabletNotifyIconText") + " (" +
-                                    appSetting.settingName + ")";
+                                    appSetting.profile + ")";
             this.ResumeLayout(false);
         }
 

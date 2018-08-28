@@ -104,23 +104,48 @@ namespace HuionTablet
         public static string devTypeString;
         public static OEMType OemType;
 
-        public struct PerAppSetting
-        {
-            public string processName;
-            public string settingName;
-            public bool active;
+        
 
-            public PerAppSetting(string processName, string settingName, bool active)
+        public class PerAppSetting
+        {
+            public string name;
+            public string processPath;
+            public string profile;
+            public bool enabled;
+
+            public PerAppSetting(string name, string processPath, string profile, bool enabled)
             {
-                this.processName = processName;
-                this.settingName = settingName;
-                this.active = active;
+                this.name = name;
+                this.processPath = processPath;
+                this.profile = profile;
+                this.enabled = enabled;
             }
 
             public override string ToString()
             {
-                return "{ ProcessName: \"" + processName + "\", SettingsName: \"" + settingName + "\", active: " +
-                       (active ? "True" : "False") + " }";
+                return
+                    "{ " +
+                    $"Name: \"{name}\", " +
+                    $"ProcessPath: \"{processPath}\", " +
+                    $"Profile: \"{profile}\", " +
+                    $"enabled: {(enabled ? "True" : "False")}" +
+                    " }";
+            }
+        }
+
+        public class RestSetting : PerAppSetting
+        {
+            public RestSetting(string profile, bool enabled) : base("__rest__", "", profile, enabled)
+            {
+            }
+
+            public override string ToString()
+            {
+                return
+                    "{ " +
+                    $"Profile: \"{profile}\", " +
+                    $"enabled: {(enabled ? "True" : "False")}" +
+                    " }";
             }
         }
 
