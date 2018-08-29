@@ -112,7 +112,6 @@ namespace HuionTablet
                             return new PerAppSetting("__default__", defaultPath, true);
                         }
                     }
-
                 }
                 catch (Exception ex)
                 {
@@ -494,14 +493,18 @@ namespace HuionTablet
                 element1.AppendChild((XmlNode) updateReminder);
 
                 XmlElement perAppSettingsElement = xmlDocument.CreateElement("PerAppSettings");
-                perAppSettingsElement.SetAttribute("enabled", "0");
+                perAppSettingsElement.SetAttribute("enabled", "1");
 
-                string defaultProfileDir =
-                    Path.Combine(Environment.SpecialFolder.MyDocuments.ToString(), "Huion Tablet", "profiles");
+
+                string defaultProfileDir = "profiles";
+
                 Directory.CreateDirectory(defaultProfileDir);
                 perAppSettingsElement.SetAttribute("profileDir", defaultProfileDir);
                 perAppSettingsElement.SetAttribute("manualMode", "0");
 
+                XmlComment comment = xmlDocument.CreateComment(" App and Default tags will be ignored if manualMode=\"0\" ");
+                perAppSettingsElement.AppendChild(comment);
+                
                 XmlElement perAppSettingSampleElement = xmlDocument.CreateElement("App");
                 perAppSettingSampleElement.SetAttribute("enabled", "0");
                 perAppSettingSampleElement.SetAttribute("processFileName", "sample.exe");

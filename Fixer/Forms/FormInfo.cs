@@ -110,7 +110,7 @@ namespace HuionTablet
         private void SetAllControlImage()
         {
             Image image;
-            if (true)//this.mOemType == OEMType.HUION)
+            if (this.mOemType == OEMType.HUION)
             {
                 image = (Image) HuionRender.blowupImage(ImageHelper.getDllImage("logo.png", OEMType.HUION),
                     DpiHelper.getInstance().XDpi);
