@@ -1,4 +1,4 @@
-# Huion/Gaomon Unlocked v14.7.4.0-alpha.1
+# Huion/Gaomon Unlocked v14.7.4.1
 
 This is a modification of the official driver for **ALL graphics tablets from Huion and Gaomon** and a few other Chinese manufacturers, unlocked from any limitations and improved by useful features and bugfixes.
 
