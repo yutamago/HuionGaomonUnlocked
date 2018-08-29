@@ -12,7 +12,7 @@ You can download it here: https://github.com/yutamago/HuionGaomonUnlocked/releas
 - Game Mode
 - Mouse Mode
 - **Per-App Profiles**: Export your favorite settings for each application! Whenever you switch, the profile switches automatically!
-- **Disable Update Notifications**: You can choose if you like to be reminded to update or not. However: any official update will overwrite this patch. Don't update if you own a Gaomon device, the official driver will not work for you!
+- **Disable Update Notifications**: You can choose if you like to be reminded to update or not. However: any official update will overwrite this patch. Don't update if you own a Gaomon device, the unmodified Huion driver will not work for you!
 
 ## Compatibility
 - All Huion Graphic Tablets
