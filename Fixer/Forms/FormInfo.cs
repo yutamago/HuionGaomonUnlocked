@@ -5,6 +5,7 @@
 // Assembly location: D:\Program Files (x86)\Huion Tablet\Fixer.dll
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
@@ -22,18 +23,29 @@ namespace HuionTablet
         private Button buttonImport;
         private Button buttonLOGO;
         private Button buttonWeb;
+        private Button buttonRefreshProfiles;
         private IContainer components;
         private Label HuionTypeLabel;
         private Label labelCompany;
         private Label labelRight;
         private Label labelVersion;
+        private Label labelRefreshProfiles;
         private OEMType mOemType;
         private Panel panel1;
         private Panel panelButton;
         private Panel panelInfo;
 
-        public FormInfo(OEMType oemType)
+        private Action _updateProfiles;
+        private readonly string _currentProfile;
+        private readonly Dictionary<string, HNStruct.PerAppSetting> _settings;
+
+
+        public FormInfo(OEMType oemType, Action updateProfiles, string currentProfile, Dictionary<string, HNStruct.PerAppSetting> settings)
         {
+            this._updateProfiles = updateProfiles;
+            this._currentProfile = currentProfile;
+            this._settings = settings;
+
             this.InitializeComponent();
             this.mOemType = oemType;
             if (this.mOemType != OEMType.HUION)
@@ -41,9 +53,15 @@ namespace HuionTablet
             this.setViewText8Locale();
             this.buttonExport.Click += new EventHandler(Fixer4Info.exportConfigClick);
             this.buttonImport.Click += new EventHandler(Fixer4Info.importConfigClick);
+            this.buttonRefreshProfiles.Click += new EventHandler(refreshProfilesClick);
             this.buttonDefault.Click += new EventHandler(Fixer4Info.defaultConfigClick);
             this.buttonLOGO.Click += new EventHandler(Fixer4Info.logoConfigClick);
             this.buttonWeb.Click += new EventHandler(Fixer4Info.logoConfigClick);
+        }
+
+        private void refreshProfilesClick(object sender, EventArgs e)
+        {
+            _updateProfiles();
         }
 
         public void onDestroy()
@@ -74,6 +92,7 @@ namespace HuionTablet
         {
             this.buttonExport.Enabled = HNStruct.globalInfo.bOpenedTablet;
             this.buttonImport.Enabled = HNStruct.globalInfo.bOpenedTablet;
+            this.buttonRefreshProfiles.Enabled = HNStruct.globalInfo.bOpenedTablet;
             this.buttonDefault.Enabled = HNStruct.globalInfo.bOpenedTablet;
         }
 
@@ -91,7 +110,7 @@ namespace HuionTablet
         private void SetAllControlImage()
         {
             Image image;
-            if (this.mOemType == OEMType.HUION)
+            if (true)//this.mOemType == OEMType.HUION)
             {
                 image = (Image) HuionRender.blowupImage(ImageHelper.getDllImage("logo.png", OEMType.HUION),
                     DpiHelper.getInstance().XDpi);
@@ -124,6 +143,7 @@ namespace HuionTablet
             this.labelVersion.Text = ResourceCulture.GetString("FormInfo_lbVersionText") + "v14.7.4";
             this.labelRight.Text = ResourceCulture.GetString("FormInfo_lbReservedText") + "2011-2018";
             this.buttonExport.Text = ResourceCulture.GetString("FormInfo_btEmportText");
+            this.buttonRefreshProfiles.Text = "Refresh Profiles";
             this.buttonImport.Text = ResourceCulture.GetString("FormInfo_btImportText");
             this.buttonDefault.Text = ResourceCulture.GetString("FormInfo_btDefaultText");
         }
@@ -149,8 +169,10 @@ namespace HuionTablet
             this.labelCompany = new Label();
             this.labelVersion = new Label();
             this.labelRight = new Label();
+            this.labelRefreshProfiles = new Label();
             this.buttonExport = new Button();
             this.buttonImport = new Button();
+            this.buttonRefreshProfiles = new Button();
             this.buttonDefault = new Button();
             this.HuionTypeLabel = new Label();
             this.panelButton = new Panel();
@@ -215,6 +237,29 @@ namespace HuionTablet
             this.buttonExport.TabIndex = 1;
             this.buttonExport.Text = "Export Config";
             this.buttonExport.UseVisualStyleBackColor = true;
+
+            this.buttonRefreshProfiles.AutoEllipsis = true;
+            this.buttonRefreshProfiles.FlatAppearance.BorderColor = Color.DarkGray;
+            this.buttonRefreshProfiles.FlatStyle = FlatStyle.Flat;
+            this.buttonRefreshProfiles.Location = new Point(400, 418);
+            this.buttonRefreshProfiles.Margin = new Padding(3, 4, 3, 4);
+            this.buttonRefreshProfiles.Name = "buttonRefreshProfiles";
+            this.buttonRefreshProfiles.Size = new Size(165, 27);
+            this.buttonRefreshProfiles.TabIndex = 1;
+            this.buttonRefreshProfiles.Text = "Refresh Profiles";
+            this.buttonRefreshProfiles.UseVisualStyleBackColor = true;
+            this.Controls.Add(buttonRefreshProfiles);
+
+            this.labelRefreshProfiles.AutoSize = true;
+            this.labelRefreshProfiles.Font = new Font("微软雅黑", 9f, FontStyle.Regular, GraphicsUnit.Point, (byte)134);
+            this.labelRefreshProfiles.Location = new Point(400, 448);
+            this.labelRefreshProfiles.Name = "labelRefreshProfiles";
+            this.labelRefreshProfiles.Size = new Size(189, 17);
+            this.labelRefreshProfiles.TabIndex = 0;
+            this.labelRefreshProfiles.Text = $"Profiles loaded: { _settings?.Count }. Current: { _currentProfile }";
+            this.labelRefreshProfiles.Enabled = SettingsUtil.isPerAppSettingsEnabled;
+            this.Controls.Add(labelRefreshProfiles);
+
             this.buttonImport.AutoEllipsis = true;
             this.buttonImport.FlatAppearance.BorderColor = Color.DarkGray;
             this.buttonImport.FlatStyle = FlatStyle.Flat;

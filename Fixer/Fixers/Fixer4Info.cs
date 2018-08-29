@@ -19,6 +19,7 @@ namespace HuionTablet
         public static void exportConfigClick(object sender, EventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.InitialDirectory = Path.GetFullPath(SettingsUtil.perAppSettingsProfileDir);
             saveFileDialog.Filter = ResourceCulture.GetString("FormInfo_TextFile") + "|*.xml";
             saveFileDialog.FilterIndex = 2;
             saveFileDialog.RestoreDirectory = true;
@@ -48,7 +49,7 @@ namespace HuionTablet
                         MessageBoxIcon.Question) == DialogResult.OK)
             {
                 OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.InitialDirectory = "c:\\";
+                openFileDialog.InitialDirectory = Path.GetFullPath(SettingsUtil.perAppSettingsProfileDir);
                 openFileDialog.Filter = ResourceCulture.GetString("FormInfo_TextFile") + "|*.xml";
                 openFileDialog.RestoreDirectory = true;
                 openFileDialog.FilterIndex = 1;
@@ -105,5 +106,6 @@ namespace HuionTablet
             else
                 Process.Start(DeployConfig.Website);
         }
+
     }
 }

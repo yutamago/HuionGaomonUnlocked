@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using HuionTablet.Lib;
@@ -25,6 +26,15 @@ namespace HuionTablet
 
         public void readConfig()
         {
+            string configFilePath = Application.StartupPath + "\\res\\config_user.xml";
+
+            if (SettingsUtil.isPerAppSettingsEnabled && SettingsUtil.perAppSettingsDefault.HasValue &&
+                SettingsUtil.perAppSettingsDefault.Value.enabled)
+            {
+                configFilePath = Path.GetFullPath(Path.Combine(SettingsUtil.perAppSettingsProfileDir,
+                    SettingsUtil.perAppSettingsDefault.Value.profile));
+            }
+
             HNStruct.devTypeString =
                 Marshal.PtrToStringAuto(
                     HuionDriverDLL.hnp_get_tablet_image((HnConst.HNTabletType) HNStruct.globalInfo.tabletInfo.devType));
@@ -33,7 +43,7 @@ namespace HuionTablet
                 : ResourceCulture.GetString("FormHuionTablet_lbCloseTabletText");
             if (!HNStruct.globalInfo.bOpenedTablet)
                 return;
-            IntPtr coTaskMemAuto = Marshal.StringToCoTaskMemAuto(Application.StartupPath + "\\res\\config_user.xml");
+            IntPtr coTaskMemAuto = Marshal.StringToCoTaskMemAuto(configFilePath);
             Marshal.AllocHGlobal(Marshal.SizeOf(typeof(HNStruct.HNConfigXML)));
             IntPtr num = HuionDriverDLL.hnx_read_config(ref HNStruct.globalInfo.tabletInfo, coTaskMemAuto);
             config = (HNStruct.HNConfigXML) Marshal.PtrToStructure(num, typeof(HNStruct.HNConfigXML));

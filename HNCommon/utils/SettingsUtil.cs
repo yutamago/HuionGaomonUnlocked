@@ -24,7 +24,7 @@ namespace HuionTablet
         public const string SettingsFileName = "SettingsFile.xml";
 
         public static HashSet<string> excludedApplications =
-            new HashSet<string>(new string[] { "huion tablet.exe", "explorer.exe", "devenv.exe" });
+            new HashSet<string>(new string[] {"huion tablet.exe", "explorer.exe", "devenv.exe"});
 
         public static bool isCommonStartup
         {
@@ -77,7 +77,7 @@ namespace HuionTablet
             get { return new HuionKeyEventArgs(Keys.H, true, true, false, false); }
         }
 
-        public static PerAppSetting? perAppSettingsRest
+        public static PerAppSetting? perAppSettingsDefault
         {
             get
             {
@@ -85,21 +85,39 @@ namespace HuionTablet
                 try
                 {
                     xmlDocument.Load("SettingsFile.xml");
-                    XmlNode rest = xmlDocument.SelectSingleNode("Settings").SelectSingleNode("PerAppSettings")
-                        .SelectSingleNode("Rest");
-                    if (rest == null)
+                    XmlNode perAppSettingsNode = xmlDocument
+                        .SelectSingleNode("Settings")?
+                        .SelectSingleNode("PerAppSettings");
+
+                    if ("1".Equals(perAppSettingsNode?
+                        .Attributes["manualMode"]
+                        .Value))
                     {
-                        return null;
+                        XmlNode defaultNode = perAppSettingsNode?.SelectSingleNode("Default");
+                        if (defaultNode == null)
+                        {
+                            return null;
+                        }
+
+                        XmlAttributeCollection attributes = defaultNode.Attributes;
+                        return new PerAppSetting("__default__",
+                            attributes["profile"].Value,
+                            Convert.ToBoolean(Convert.ToInt32(attributes["enabled"].Value)));
+                    }
+                    else
+                    {
+                        string defaultPath = Path.Combine(perAppSettingsProfileDir, "default.xml");
+                        if (File.Exists(defaultPath))
+                        {
+                            return new PerAppSetting("__default__", defaultPath, true);
+                        }
                     }
 
-                    XmlAttributeCollection attributes = rest.Attributes;
-                    return new PerAppSetting("__rest__", attributes["settings-name"].Value,
-                        Convert.ToBoolean(Convert.ToInt32(attributes["active"].Value)));
                 }
                 catch (Exception ex)
                 {
-                    HuionLog.printSaveLog("Read PerAppSettings Apps Rest", ex.Message);
-                    HuionLog.printSaveLog("Read PerAppSettings Apps Rest", ex.StackTrace);
+                    HuionLog.printSaveLog("Read PerAppSettings Apps Default", ex.Message);
+                    HuionLog.printSaveLog("Read PerAppSettings Apps Default", ex.StackTrace);
                 }
 
                 return null;
@@ -113,9 +131,9 @@ namespace HuionTablet
                     xmlDocument.Load("SettingsFile.xml");
                     XmlNode perAppSettings =
                         xmlDocument.SelectSingleNode("Settings").SelectSingleNode("PerAppSettings");
-                    if (perAppSettings.SelectSingleNode("Rest") != null)
+                    if (perAppSettings.SelectSingleNode("Default") != null)
                     {
-                        perAppSettings.RemoveChild(perAppSettings.SelectSingleNode("Rest"));
+                        perAppSettings.RemoveChild(perAppSettings.SelectSingleNode("Default"));
                     }
 
                     if (!value.HasValue)
@@ -123,17 +141,17 @@ namespace HuionTablet
                         return;
                     }
 
-                    XmlElement perAppSettingRestElement = xmlDocument.CreateElement("Rest");
-                    perAppSettingRestElement.SetAttribute("active", value.Value.active ? "1" : "0");
-                    perAppSettingRestElement.SetAttribute("settings-name", value.Value.settingName);
-                    perAppSettings.AppendChild(perAppSettingRestElement);
+                    XmlElement perAppSettingDefaultElement = xmlDocument.CreateElement("Default");
+                    perAppSettingDefaultElement.SetAttribute("enabled", value.Value.enabled ? "1" : "0");
+                    perAppSettingDefaultElement.SetAttribute("profile", value.Value.profile);
+                    perAppSettings.AppendChild(perAppSettingDefaultElement);
 
                     xmlDocument.Save("SettingsFile.xml");
                 }
                 catch (Exception ex)
                 {
-                    HuionLog.printSaveLog("Read PerAppSettings Apps Rest", ex.Message);
-                    HuionLog.printSaveLog("Read PerAppSettings Apps Rest", ex.StackTrace);
+                    HuionLog.printSaveLog("Read PerAppSettings Apps Default", ex.Message);
+                    HuionLog.printSaveLog("Read PerAppSettings Apps Default", ex.StackTrace);
                 }
             }
         }
@@ -146,25 +164,44 @@ namespace HuionTablet
                 try
                 {
                     xmlDocument.Load("SettingsFile.xml");
-                    XmlNodeList applications = xmlDocument.SelectSingleNode("Settings")
-                        .SelectSingleNode("PerAppSettings").ChildNodes;
+                    XmlNode perAppSettingsNode = xmlDocument.SelectSingleNode("Settings")?
+                        .SelectSingleNode("PerAppSettings");
+                    XmlNodeList applications = perAppSettingsNode?.ChildNodes;
 
                     Dictionary<string, PerAppSetting> applicationsMap = new Dictionary<string, PerAppSetting>();
-                    foreach (XmlNode app in applications)
+                    if ("1".Equals(perAppSettingsNode.Attributes["manualMode"].Value))
                     {
-                        if (!app.Name.Equals("App"))
+                        foreach (XmlNode app in applications)
                         {
-                            continue;
-                        }
+                            if (!app.Name.Equals("App"))
+                            {
+                                continue;
+                            }
 
-                        applicationsMap.Add(
-                            app.Attributes["process-name"].Value.ToLower(),
-                            new PerAppSetting(
-                                app.Attributes["process-name"].Value,
-                                app.Attributes["settings-name"].Value,
-                                Convert.ToBoolean(Convert.ToInt32(app.Attributes["active"].Value))
-                            )
-                        );
+                            applicationsMap.Add(
+                                app.Attributes["processFileName"].Value.ToLower(),
+                                new PerAppSetting(
+                                    app.Attributes["processFileName"].Value,
+                                    app.Attributes["profile"].Value,
+                                    Convert.ToBoolean(Convert.ToInt32(app.Attributes["enabled"].Value))
+                                )
+                            );
+                        }
+                    }
+                    else
+                    {
+                        foreach (string file in Directory.GetFiles(Path.GetFullPath(perAppSettingsProfileDir), "*.xml",
+                            SearchOption.AllDirectories))
+                        {
+                            applicationsMap.Add(
+                                Path.GetFileNameWithoutExtension(file).ToLower() + ".exe",
+                                new PerAppSetting(
+                                    Path.GetFileNameWithoutExtension(file).ToLower() + ".exe",
+                                    Path.GetFileName(file),
+                                    true
+                                )
+                            );
+                        }
                     }
 
 
@@ -185,8 +222,10 @@ namespace HuionTablet
                 try
                 {
                     xmlDocument.Load("SettingsFile.xml");
-                    XmlNode perAppSettings =
-                        xmlDocument.SelectSingleNode("Settings").SelectSingleNode("PerAppSettings");
+                    XmlNode perAppSettings = xmlDocument
+                        .SelectSingleNode("Settings")?
+                        .SelectSingleNode("PerAppSettings");
+
                     foreach (XmlNode child in perAppSettings.ChildNodes)
                     {
                         if (!child.Name.Equals("App"))
@@ -200,9 +239,9 @@ namespace HuionTablet
                     foreach (PerAppSetting app in value.Values)
                     {
                         XmlElement appElement = xmlDocument.CreateElement("App");
-                        appElement.SetAttribute("active", app.active ? "1" : "0");
-                        appElement.SetAttribute("process-name", app.processName);
-                        appElement.SetAttribute("settings-name", app.settingName);
+                        appElement.SetAttribute("enabled", app.enabled ? "1" : "0");
+                        appElement.SetAttribute("processFileName", app.processFileName);
+                        appElement.SetAttribute("profile", app.profile);
                         perAppSettings.AppendChild(appElement);
                     }
 
@@ -216,7 +255,7 @@ namespace HuionTablet
             }
         }
 
-        public static string perAppSettingsWorkspace
+        public static string perAppSettingsProfileDir
         {
             get
             {
@@ -224,14 +263,16 @@ namespace HuionTablet
                 try
                 {
                     xmlDocument.Load("SettingsFile.xml");
-                    XmlAttributeCollection attributes = xmlDocument.SelectSingleNode("Settings")
-                        .SelectSingleNode("PerAppSettings").Attributes;
-                    return attributes["workspace"].Value;
+                    XmlAttributeCollection attributes = xmlDocument
+                        .SelectSingleNode("Settings")?
+                        .SelectSingleNode("PerAppSettings")?
+                        .Attributes;
+                    return Path.GetFullPath(attributes["profileDir"].Value);
                 }
                 catch (Exception ex)
                 {
-                    HuionLog.printSaveLog("Read PerAppSettings workspace", ex.Message);
-                    HuionLog.printSaveLog("Read PerAppSettings workspace", ex.StackTrace);
+                    HuionLog.printSaveLog("Read PerAppSettings profileDir", ex.Message);
+                    HuionLog.printSaveLog("Read PerAppSettings profileDir", ex.StackTrace);
                 }
 
                 return "";
@@ -243,20 +284,22 @@ namespace HuionTablet
                 try
                 {
                     xmlDocument.Load("SettingsFile.xml");
-                    XmlAttributeCollection attributes = xmlDocument.SelectSingleNode("Settings")
-                        .SelectSingleNode("PerAppSettings").Attributes;
-                    attributes["workspace"].Value = string.Concat(value);
+                    XmlAttributeCollection attributes = xmlDocument
+                        .SelectSingleNode("Settings")?
+                        .SelectSingleNode("PerAppSettings")?
+                        .Attributes;
+                    attributes["profileDir"].Value = string.Concat(value);
                     xmlDocument.Save("SettingsFile.xml");
                 }
                 catch (Exception ex)
                 {
-                    HuionLog.printSaveLog("Read PerAppSettings workspace", ex.Message);
-                    HuionLog.printSaveLog("Read PerAppSettings workspace", ex.StackTrace);
+                    HuionLog.printSaveLog("Read PerAppSettings profileDir", ex.Message);
+                    HuionLog.printSaveLog("Read PerAppSettings profileDir", ex.StackTrace);
                 }
             }
         }
 
-        public static bool isPerAppSettingsActive
+        public static bool isPerAppSettingsEnabled
         {
             get
             {
@@ -264,14 +307,16 @@ namespace HuionTablet
                 try
                 {
                     xmlDocument.Load("SettingsFile.xml");
-                    XmlAttributeCollection attributes = xmlDocument.SelectSingleNode("Settings")
-                        .SelectSingleNode("PerAppSettings").Attributes;
-                    return Convert.ToBoolean(Convert.ToInt32(attributes["active"].Value));
+                    XmlAttributeCollection attributes = xmlDocument
+                        .SelectSingleNode("Settings")?
+                        .SelectSingleNode("PerAppSettings")?
+                        .Attributes;
+                    return Convert.ToBoolean(Convert.ToInt32(attributes["enabled"].Value));
                 }
                 catch (Exception ex)
                 {
-                    HuionLog.printSaveLog("Read PerAppSettings active", ex.Message);
-                    HuionLog.printSaveLog("Read PerAppSettings active", ex.StackTrace);
+                    HuionLog.printSaveLog("Read PerAppSettings enabled", ex.Message);
+                    HuionLog.printSaveLog("Read PerAppSettings enabled", ex.StackTrace);
                 }
 
                 return false;
@@ -285,13 +330,13 @@ namespace HuionTablet
                     xmlDocument.Load("SettingsFile.xml");
                     XmlAttributeCollection attributes = xmlDocument.SelectSingleNode("Settings")
                         .SelectSingleNode("PerAppSettings").Attributes;
-                    attributes["active"].Value = value ? "1" : "0";
+                    attributes["enabled"].Value = value ? "1" : "0";
                     xmlDocument.Save("SettingsFile.xml");
                 }
                 catch (Exception ex)
                 {
-                    HuionLog.printSaveLog("Read PerAppSettings active", ex.Message);
-                    HuionLog.printSaveLog("Read PerAppSettings active", ex.StackTrace);
+                    HuionLog.printSaveLog("Read PerAppSettings enabled", ex.Message);
+                    HuionLog.printSaveLog("Read PerAppSettings enabled", ex.StackTrace);
                 }
             }
         }
@@ -304,8 +349,11 @@ namespace HuionTablet
                 try
                 {
                     xmlDocument.Load("SettingsFile.xml");
-                    XmlAttributeCollection attributes = xmlDocument.SelectSingleNode("Settings")
-                        .SelectSingleNode("Shortcuts").SelectSingleNode("ShowUI").Attributes;
+                    XmlAttributeCollection attributes = xmlDocument
+                        .SelectSingleNode("Settings")?
+                        .SelectSingleNode("Shortcuts")?
+                        .SelectSingleNode("ShowUI")?
+                        .Attributes;
                     return new HuionKeyEventArgs((Keys) Enum.Parse(typeof(Keys), attributes["key"].Value),
                         Convert.ToBoolean(Convert.ToInt32(attributes["ctrl"].Value)),
                         Convert.ToBoolean(Convert.ToInt32(attributes["alt"].Value)),
@@ -327,8 +375,11 @@ namespace HuionTablet
                 try
                 {
                     xmlDocument.Load("SettingsFile.xml");
-                    XmlAttributeCollection attributes = xmlDocument.SelectSingleNode("Settings")
-                        .SelectSingleNode("Shortcuts").SelectSingleNode("ShowUI").Attributes;
+                    XmlAttributeCollection attributes = xmlDocument
+                        .SelectSingleNode("Settings")?
+                        .SelectSingleNode("Shortcuts")?
+                        .SelectSingleNode("ShowUI")?
+                        .Attributes;
                     attributes["key"].Value = string.Concat((object) value.KeyCode);
                     attributes["ctrl"].Value = value.Control ? "1" : "0";
                     attributes["alt"].Value = value.Alt ? "1" : "0";
@@ -378,6 +429,50 @@ namespace HuionTablet
             }
         }
 
+        public static bool isUpdateReminderEnabled
+        {
+            get
+            {
+                XmlDocument xmlDocument = new XmlDocument();
+                try
+                {
+                    xmlDocument.Load("SettingsFile.xml");
+                    XmlAttributeCollection attributes = xmlDocument
+                        .SelectSingleNode("Settings")?
+                        .SelectSingleNode("UpdateReminder")?
+                        .Attributes;
+                    return Convert.ToBoolean(Convert.ToInt32(attributes["enabled"]?.Value));
+                }
+                catch (Exception ex)
+                {
+                    HuionLog.printSaveLog("Read UpdateReminder", ex.Message);
+                    HuionLog.printSaveLog("Read UpdateReminder", ex.StackTrace);
+                }
+
+                return true;
+            }
+            set
+            {
+                CreateSettingsXml();
+                XmlDocument xmlDocument = new XmlDocument();
+                try
+                {
+                    xmlDocument.Load("SettingsFile.xml");
+                    XmlAttributeCollection attributes = xmlDocument
+                        .SelectSingleNode("Settings")?
+                        .SelectSingleNode("UpdateReminder")?
+                        .Attributes;
+                    attributes["enabled"].Value = value ? "1" : "0";
+                    xmlDocument.Save("SettingsFile.xml");
+                }
+                catch (Exception ex)
+                {
+                    HuionLog.printSaveLog("Write UpdateReminder", ex.Message);
+                    HuionLog.printSaveLog("Write UpdateReminder", ex.StackTrace);
+                }
+            }
+        }
+
         public static void CreateSettingsXml()
         {
             if (File.Exists("SettingsFile.xml"))
@@ -394,21 +489,30 @@ namespace HuionTablet
                 element2.SetAttribute("value", "1");
                 element1.AppendChild((XmlNode) element2);
 
+                XmlElement updateReminder = xmlDocument.CreateElement("UpdateReminder");
+                updateReminder.SetAttribute("enabled", "0");
+                element1.AppendChild((XmlNode) updateReminder);
+
                 XmlElement perAppSettingsElement = xmlDocument.CreateElement("PerAppSettings");
-                perAppSettingsElement.SetAttribute("active", "0");
-                perAppSettingsElement.SetAttribute("workspace", "");
+                perAppSettingsElement.SetAttribute("enabled", "0");
+
+                string defaultProfileDir =
+                    Path.Combine(Environment.SpecialFolder.MyDocuments.ToString(), "Huion Tablet", "profiles");
+                Directory.CreateDirectory(defaultProfileDir);
+                perAppSettingsElement.SetAttribute("profileDir", defaultProfileDir);
+                perAppSettingsElement.SetAttribute("manualMode", "0");
 
                 XmlElement perAppSettingSampleElement = xmlDocument.CreateElement("App");
-                perAppSettingSampleElement.SetAttribute("active", "0");
-                perAppSettingSampleElement.SetAttribute("process-name", "sample.exe");
-                perAppSettingSampleElement.SetAttribute("settings-name", "sample.xml");
-                perAppSettingsElement.AppendChild((XmlNode)perAppSettingSampleElement);
-                XmlElement perAppSettingRestElement = xmlDocument.CreateElement("Rest");
-                perAppSettingRestElement.SetAttribute("active", "0");
-                perAppSettingRestElement.SetAttribute("settings-name", "sample.xml");
-                perAppSettingsElement.AppendChild((XmlNode)perAppSettingRestElement);
+                perAppSettingSampleElement.SetAttribute("enabled", "0");
+                perAppSettingSampleElement.SetAttribute("processFileName", "sample.exe");
+                perAppSettingSampleElement.SetAttribute("profile", "sample.xml");
+                perAppSettingsElement.AppendChild((XmlNode) perAppSettingSampleElement);
+                XmlElement perAppSettingDefaultElement = xmlDocument.CreateElement("Default");
+                perAppSettingDefaultElement.SetAttribute("enabled", "0");
+                perAppSettingDefaultElement.SetAttribute("profile", "sample.xml");
+                perAppSettingsElement.AppendChild((XmlNode) perAppSettingDefaultElement);
 
-                element1.AppendChild((XmlNode)perAppSettingsElement);
+                element1.AppendChild((XmlNode) perAppSettingsElement);
 
                 XmlElement element3 = xmlDocument.CreateElement("Shortcuts");
                 element1.AppendChild((XmlNode) element3);

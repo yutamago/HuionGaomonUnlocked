@@ -106,21 +106,21 @@ namespace HuionTablet
 
         public struct PerAppSetting
         {
-            public string processName;
-            public string settingName;
-            public bool active;
+            public string processFileName;
+            public string profile;
+            public bool enabled;
 
-            public PerAppSetting(string processName, string settingName, bool active)
+            public PerAppSetting(string processFileName, string profile, bool enabled)
             {
-                this.processName = processName;
-                this.settingName = settingName;
-                this.active = active;
+                this.processFileName = processFileName;
+                this.profile = profile;
+                this.enabled = enabled;
             }
 
             public override string ToString()
             {
-                return "{ ProcessName: \"" + processName + "\", SettingsName: \"" + settingName + "\", active: " +
-                       (active ? "True" : "False") + " }";
+                return "{ ProcessName: \"" + processFileName + "\", SettingsName: \"" + profile + "\", enabled: " +
+                       (enabled ? "True" : "False") + " }";
             }
         }
 

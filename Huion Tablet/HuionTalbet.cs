@@ -38,7 +38,7 @@ namespace HuionTablet
         private Button btnOK;
         private IContainer components = (IContainer) null;
         private ContextMenuStrip contextMenuStrip1;
-        private string currentSettings = "";
+        private string currentSettings = null;
         private bool curEnabled = false;
         private int curIsRunning;
         private USB ezUSB = new USB();
@@ -60,9 +60,9 @@ namespace HuionTablet
         private HNPanel panelWorkArea;
         private string lastForegroundApplication;
         private Dictionary<string, HNStruct.PerAppSetting> perAppSettings;
-        private bool perAppSettingsActive;
-        private HNStruct.PerAppSetting? perAppSettingsRest;
-        private string perAppSettingsWorkspace;
+        private bool perAppSettingsEnabled;
+        private HNStruct.PerAppSetting? perAppSettingsDefault;
+        private string perAppSettingsProfileDir;
         private Timer timer1;
         private Timer timer2;
         private Timer timer3;
@@ -80,24 +80,39 @@ namespace HuionTablet
             this.mForms = new List<Form>();
             ThreadPool.SetMaxThreads(5, 5);
             this.notifyIcon1.Icon = Fixer4Main.getNotifyIcon(false);
-            this.checkForegroundWindowInterval = new Timer();
-            this.checkForegroundWindowInterval.Interval = 500;
-            this.checkForegroundWindowInterval.Tick += checkForegroundWindowTick;
 
             if (Utils.isWin10)
                 SettingsUtil.setAutorun(false);
             else
                 SettingsUtil.isCommonStartup = false;
 
-            this.perAppSettingsActive = SettingsUtil.isPerAppSettingsActive;
-            this.perAppSettings = SettingsUtil.perAppSettings;
-            this.perAppSettingsRest = SettingsUtil.perAppSettingsRest;
-            this.perAppSettingsWorkspace = SettingsUtil.perAppSettingsWorkspace;
+            this.checkForegroundWindowInterval = new Timer();
+            this.checkForegroundWindowInterval.Interval = 500;
+            this.checkForegroundWindowInterval.Tick += checkForegroundWindowTick;
+            initPerAppSettings();
+        }
 
-            if (this.perAppSettingsActive)
+        public void initPerAppSettings()
+        {
+            this.currentSettings = null;
+            this.perAppSettingsEnabled = SettingsUtil.isPerAppSettingsEnabled;
+            this.perAppSettings = SettingsUtil.perAppSettings;
+            this.perAppSettingsDefault = SettingsUtil.perAppSettingsDefault;
+            this.perAppSettingsProfileDir = SettingsUtil.perAppSettingsProfileDir;
+
+            if (this.perAppSettingsEnabled)
             {
                 this.checkForegroundWindowInterval.Start();
             }
+            else
+            {
+                this.checkForegroundWindowInterval.Stop();
+            }
+        }
+
+        public void buttonRefreshClick()
+        {
+            initPerAppSettings();
         }
 
         public static bool isReminder
@@ -126,23 +141,29 @@ namespace HuionTablet
             }
         }
 
-        private void handleFocusChange(string processName)
+        private void handleFocusChange(string processFileName)
         {
-            if (processName.Equals(Path.GetFileName(Process.GetCurrentProcess().MainModule.FileName.ToLower())) ||
-                SettingsUtil.excludedApplications.Contains(processName))
+            if (!HNStruct.globalInfo.bOpenedTablet)
+            {
+                // Too early, driver not loaded
+                return;
+            }
+            if (this.currentSettings != null &&
+                (processFileName.Equals(Path.GetFileName(Process.GetCurrentProcess().MainModule.FileName.ToLower())) ||
+                 SettingsUtil.excludedApplications.Contains(processFileName)))
             {
                 // Excluded app
                 return;
             }
 
             HNStruct.PerAppSetting appSetting;
-            if (this.perAppSettings.ContainsKey(processName))
+            if (this.perAppSettings.ContainsKey(processFileName) && this.perAppSettings[processFileName].enabled)
             {
-                appSetting = this.perAppSettings[processName];
+                appSetting = this.perAppSettings[processFileName];
             }
-            else if (this.perAppSettingsRest.HasValue)
+            else if (this.perAppSettingsDefault.HasValue && this.perAppSettingsDefault.Value.enabled)
             {
-                appSetting = this.perAppSettingsRest.Value;
+                appSetting = this.perAppSettingsDefault.Value;
             }
             else
             {
@@ -150,20 +171,14 @@ namespace HuionTablet
                 return;
             }
 
-            if (this.currentSettings == appSetting.settingName)
+            if (appSetting.profile.Equals(this.currentSettings))
             {
                 HuionLog.printLog("FocusChanged", "Error: already active");
                 // already active
                 return;
             }
-            else if (!appSetting.active)
-            {
-                HuionLog.printLog("FocusChanged", "Error: not enabled");
-                // setting not enabled
-                return;
-            }
 
-            string path = Path.GetFullPath(Path.Combine(this.perAppSettingsWorkspace, appSetting.settingName));
+            string path = Path.GetFullPath(Path.Combine(this.perAppSettingsProfileDir, appSetting.profile));
             if (!File.Exists(path))
             {
                 HuionLog.printLog("FocusChanged", "Error: file not found");
@@ -171,22 +186,33 @@ namespace HuionTablet
             }
 
             HuionLog.printLog("FocusChanged", "Info: loading profile");
-            
+
+
             IntPtr coTaskMemAuto = Marshal.StringToCoTaskMemAuto(path);
             Marshal.AllocHGlobal(Marshal.SizeOf(typeof(HNStruct.HNConfigXML)));
             IntPtr num = HuionDriverDLL.hnx_read_config(ref HNStruct.globalInfo.tabletInfo, coTaskMemAuto);
-            TabletConfigUtils.config = (HNStruct.HNConfigXML) Marshal.PtrToStructure(num, typeof(HNStruct.HNConfigXML));
+            TabletConfigUtils.config =
+                (HNStruct.HNConfigXML) Marshal.PtrToStructure(num, typeof(HNStruct.HNConfigXML));
             new TabletConfigUtils().SetConfig(TabletConfigUtils.config);
             Marshal.FreeHGlobal(coTaskMemAuto);
             Marshal.FreeHGlobal(num);
-            currentSettings = appSetting.settingName;
+            currentSettings = appSetting.profile;
             Fixer4Main.applayClick(null, null);
 
             HuionLog.printLog("FocusChanged", "Info: profile loaded");
 
-            this.notifyIcon1.ShowBalloonTip(3, "Profile switched", appSetting.settingName, ToolTipIcon.Info);
-            this.notifyIcon1.Text = ResourceCulture.GetString("FormHuionTabletNotifyIconText") + " (" +
-                                    appSetting.settingName + ")";
+            this.notifyIcon1.ShowBalloonTip(3, "Profile switched",
+                Path.GetFileNameWithoutExtension(appSetting.profile), ToolTipIcon.Info);
+            this.notifyIcon1.Text = $"{ResourceCulture.GetString("FormHuionTabletNotifyIconText")}" +
+                                    $" ({Path.GetFileNameWithoutExtension(appSetting.profile)})";
+            
+
+            // Refresh Info
+            if (this.panelWindow.Controls.Count > 0)
+            {
+                this.mTabType = TabType.TabWorkArea;
+                this.buttonInfo_Click(null, null);
+            }
             this.ResumeLayout(false);
         }
 
@@ -384,7 +410,8 @@ namespace HuionTablet
             if (this.mTabType == TabType.TabInfo)
                 return;
             this.setTabPanelClicked((Panel) this.panelInfo, TabType.TabInfo);
-            FormInfo formInfo = new FormInfo(HNStruct.OemType);
+            FormInfo formInfo = new FormInfo(HNStruct.OemType, buttonRefreshClick,
+                Path.GetFileNameWithoutExtension(currentSettings), perAppSettings);
             formInfo.FormBorderStyle = FormBorderStyle.None;
             formInfo.TopLevel = false;
             formInfo.Show();
@@ -641,7 +668,7 @@ namespace HuionTablet
         {
             try
             {
-                if (!IsUpdate || this.openNum >= 1)
+                if (!IsUpdate || this.openNum >= 1 || !SettingsUtil.isUpdateReminderEnabled)
                     return;
                 Console.WriteLine(this.openNum.ToString());
                 ++this.openNum;
