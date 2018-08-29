@@ -31,8 +31,8 @@ BEFORE YOU START: Uninstall previously installed drivers from Huion and Gaomon. 
 ### Simple
 1. Customize your settings for any application and export it to your profile directory. Save it as the same filename as your target application has. (i.e. photoshop.exe -> photoshop.xml, zbrush.exe -> zbrush.xml, osu!.exe -> osu!.xml)
 If you haven't set a profile directory, you can find it in your **Huion Tablet** directory under **profiles**)
-2. If you want, you can set a Default.xml profile, that will be activated, whenever you leave your target applications.
-3. When you've created new profiles (or deleted them) you will have to reload the registered profiles in your Huion Tablet control panel.
+2. If you want, you can set a default.xml profile, that will be activated, whenever you leave your target applications.
+3. When you've created new profiles (or deleted them) you will have to reload the registered profiles in your Huion Tablet control panel (or restart the control panel)!
 
 ### Advanced [Optional]
 - You can manually assign profiles to each application by setting **manualMode to 1** in your SettingsFile.xml. You can even set multiple applications to use the same profile.
