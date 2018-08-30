@@ -1,9 +1,9 @@
-# Huion/Gaomon Unlocked v14.7.4.3
+# Huion/Gaomon Unlocked v14.7.4.4
 
 This is a modification of the official driver for **ALL graphics tablets from Huion and Gaomon** and a few other Chinese manufacturers, unlocked from any limitations and improved by useful features and bugfixes.
 
 It is based on Huion/Gaomon driver version 14.7.4 (released on 2018/08/24).
-You can download it here: https://github.com/yutamago/HuionGaomonUnlocked/releases/tag/v14.7.4.3
+You can download it here: https://github.com/yutamago/HuionGaomonUnlocked/releases/tag/v14.7.4.4
 
 ## Features
 - Removed all locks for Gaomon-devices
@@ -24,7 +24,7 @@ You can download it here: https://github.com/yutamago/HuionGaomonUnlocked/releas
 BEFORE YOU START: Uninstall previously installed drivers from Huion and Gaomon. Also delete the existing SettingsFile.xml in your driver folder.
 
 1. Install the official Huion driver v14.7.4. You can find it included in my zip file.
-2. Copy all files from the included **Patch 14.7.4.3** folder over the already existing files in your **HuionTablet** folder.
+2. Copy all files from the included **Patch 14.7.4.4** folder over the already existing files in your **HuionTablet** folder.
 3. Restart the Huion Tablet Settings
 
 ## How to setup custom profiles
