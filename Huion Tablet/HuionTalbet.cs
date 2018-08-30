@@ -131,14 +131,18 @@ namespace HuionTablet
             }
 
             Process process = Process.GetProcessById(processId);
-            string processFileName = Path.GetFileName(process.MainModule.FileName);
-            if (!processFileName.Equals(lastForegroundApplication))
+            try
             {
-                lastForegroundApplication = processFileName;
+                string processFileName = Path.GetFileName(process.MainModule.FileName);
+                if (!processFileName.Equals(lastForegroundApplication))
+                {
+                    lastForegroundApplication = processFileName;
 
-                HuionLog.printLog("FocusChanged", processFileName.ToLower());
-                handleFocusChange(processFileName.ToLower());
+                    HuionLog.printLog("FocusChanged", processFileName.ToLower());
+                    handleFocusChange(processFileName.ToLower());
+                }
             }
+            catch (Win32Exception) { }
         }
 
         private void handleFocusChange(string processFileName)
