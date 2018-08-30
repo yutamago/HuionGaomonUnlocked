@@ -18,6 +18,7 @@ namespace HuionTablet
     {
         public static void exportConfigClick(object sender, EventArgs e)
         {
+            Directory.CreateDirectory(SettingsUtil.perAppSettingsProfileDir);
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.InitialDirectory = Path.GetFullPath(SettingsUtil.perAppSettingsProfileDir);
             saveFileDialog.Filter = ResourceCulture.GetString("FormInfo_TextFile") + "|*.xml";
@@ -48,6 +49,7 @@ namespace HuionTablet
                         ResourceCulture.GetString("FormInfo_remindText"), MessageBoxButtons.OKCancel,
                         MessageBoxIcon.Question) == DialogResult.OK)
             {
+                Directory.CreateDirectory(SettingsUtil.perAppSettingsProfileDir);
                 OpenFileDialog openFileDialog = new OpenFileDialog();
                 openFileDialog.InitialDirectory = Path.GetFullPath(SettingsUtil.perAppSettingsProfileDir);
                 openFileDialog.Filter = ResourceCulture.GetString("FormInfo_TextFile") + "|*.xml";

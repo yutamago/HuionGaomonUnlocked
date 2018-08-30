@@ -496,7 +496,7 @@ namespace HuionTablet
                 perAppSettingsElement.SetAttribute("enabled", "1");
 
 
-                string defaultProfileDir = "profiles";
+                string defaultProfileDir = Path.GetFullPath(Environment.ExpandEnvironmentVariables("%userprofile%\\.Huion Tablet\\profiles"));
 
                 Directory.CreateDirectory(defaultProfileDir);
                 perAppSettingsElement.SetAttribute("profileDir", defaultProfileDir);
