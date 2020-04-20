@@ -14,8 +14,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HNCommon", "HNCommon\HNComm
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HtmlAgilityPack", "HtmlAgilityPack\HtmlAgilityPack.csproj", "{090CA7D9-F1ED-4D10-A36D-97CD7A1B27B9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Log", "Log\Log.csproj", "{5E57FEDF-49F0-45A9-903B-78BA1F766C43}"
-EndProject
+
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Session", "Session\Session.csproj", "{54607867-DDA0-4F93-872D-9E06F7CA5DCD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViewLibrary", "ViewLibrary\ViewLibrary.csproj", "{EA3BB2AC-4A02-4611-8F08-E03A8B4B82EC}"

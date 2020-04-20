@@ -50,7 +50,7 @@ namespace HuionTablet
             }
             catch
             {
-                str = "No id:" + id + ", please add.";
+                str = id ;
             }
 
             return str;
